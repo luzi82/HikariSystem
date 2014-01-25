@@ -20,7 +20,7 @@ class Migration(SchemaMigration):
         # Adding model 'AmLevelType'
         db.create_table(u'am_level_amleveltype', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['am_i18n.AmTextKey'])),
+            ('name', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['am_i18n.AmText'])),
         ))
         db.send_create_signal(u'am_level', ['AmLevelType'])
 
@@ -46,8 +46,8 @@ class Migration(SchemaMigration):
 
 
     models = {
-        u'am_i18n.amtextkey': {
-            'Meta': {'object_name': 'AmTextKey'},
+        u'am_i18n.amtext': {
+            'Meta': {'object_name': 'AmText'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'info': ('django.db.models.fields.TextField', [], {}),
             'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
@@ -62,7 +62,7 @@ class Migration(SchemaMigration):
         u'am_level.amleveltype': {
             'Meta': {'object_name': 'AmLevelType'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['am_i18n.AmTextKey']"})
+            'name': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['am_i18n.AmText']"})
         },
         u'am_level.amuserlevel': {
             'Meta': {'object_name': 'AmUserLevel'},

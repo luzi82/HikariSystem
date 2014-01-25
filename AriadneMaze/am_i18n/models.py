@@ -9,7 +9,7 @@ class AmLang(models.Model):
     
     name = models.CharField(max_length=LANG_NAME_LENGTH,db_index=True)
 
-class AmTextKey(models.Model):
+class AmText(models.Model):
     
     key = models.CharField(max_length=KEY_NAME_LENGTH,db_index=True)
     info = models.TextField()
@@ -17,5 +17,5 @@ class AmTextKey(models.Model):
 class AmTextI18n(models.Model):
     
     lang = models.ForeignKey(AmLang,db_index=True)
-    textkey = models.ForeignKey(AmTextKey,db_index=True)
-    text = models.TextField()
+    text = models.ForeignKey(AmText,db_index=True)
+    i18n = models.TextField()

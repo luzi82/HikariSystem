@@ -4,7 +4,7 @@ from django.contrib.auth import models as auth_models
 
 class AmLevelType(models.Model):
     
-    name = models.ForeignKey(i18n_models.AmTextKey)
+    name = models.ForeignKey(i18n_models.AmText)
 
 class AmLevelExp(models.Model):
 
