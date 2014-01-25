@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'am_i18n',
     'am_profile',
     'am_level',
+    'am_resource',
     
     'south',
 )
