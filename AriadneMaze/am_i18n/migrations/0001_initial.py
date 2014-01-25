@@ -18,6 +18,7 @@ class Migration(SchemaMigration):
         # Adding model 'AmTextKey'
         db.create_table(u'am_i18n_amtextkey', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
             ('info', self.gf('django.db.models.fields.TextField')()),
         ))
         db.send_create_signal(u'am_i18n', ['AmTextKey'])
@@ -26,7 +27,7 @@ class Migration(SchemaMigration):
         db.create_table(u'am_i18n_amtexti18n', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('lang', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['am_i18n.AmLang'])),
-            ('text_key', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['am_i18n.AmTextKey'])),
+            ('textkey', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['am_i18n.AmTextKey'])),
             ('text', self.gf('django.db.models.fields.TextField')()),
         ))
         db.send_create_signal(u'am_i18n', ['AmTextI18n'])
@@ -54,12 +55,13 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'lang': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['am_i18n.AmLang']"}),
             'text': ('django.db.models.fields.TextField', [], {}),
-            'text_key': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['am_i18n.AmTextKey']"})
+            'textkey': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['am_i18n.AmTextKey']"})
         },
         u'am_i18n.amtextkey': {
             'Meta': {'object_name': 'AmTextKey'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'info': ('django.db.models.fields.TextField', [], {})
+            'info': ('django.db.models.fields.TextField', [], {}),
+            'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
         }
     }
 
