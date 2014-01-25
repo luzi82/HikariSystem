@@ -51,7 +51,7 @@ class Migration(SchemaMigration):
         # Adding model 'AmItemType'
         db.create_table(u'am_item_amitemtype', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('itemgroup', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['am_item.AmItemTypeGroup'])),
+            ('itemtypegroup', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['am_item.AmItemTypeGroup'])),
             ('name', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['am_i18n.AmText'])),
         ))
         db.send_create_signal(u'am_item', ['AmItemType'])
@@ -87,7 +87,7 @@ class Migration(SchemaMigration):
         u'am_item.amitemtype': {
             'Meta': {'object_name': 'AmItemType'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'itemgroup': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['am_item.AmItemTypeGroup']"}),
+            'itemtypegroup': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['am_item.AmItemTypeGroup']"}),
             'name': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['am_i18n.AmText']"})
         },
         u'am_item.amitemtypegroup': {

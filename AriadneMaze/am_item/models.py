@@ -10,7 +10,7 @@ class AmItemTypeGroup(models.Model):
 
 class AmItemType(models.Model):
     
-    itemgroup = models.ForeignKey(AmItemTypeGroup,db_index=True)
+    itemtypegroup = models.ForeignKey(AmItemTypeGroup,db_index=True)
     name = models.ForeignKey(i18n_models.AmText)
 
 class AmItemValueType(models.Model):
