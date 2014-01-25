@@ -8,23 +8,23 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'AmProfile'
-        db.create_table(u'am_profile_amprofile', (
+        # Adding model 'AmUserProfile'
+        db.create_table(u'am_profile_amuserprofile', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
         ))
-        db.send_create_signal(u'am_profile', ['AmProfile'])
+        db.send_create_signal(u'am_profile', ['AmUserProfile'])
 
 
     def backwards(self, orm):
-        # Deleting model 'AmProfile'
-        db.delete_table(u'am_profile_amprofile')
+        # Deleting model 'AmUserProfile'
+        db.delete_table(u'am_profile_amuserprofile')
 
 
     models = {
-        u'am_profile.amprofile': {
-            'Meta': {'object_name': 'AmProfile'},
+        u'am_profile.amuserprofile': {
+            'Meta': {'object_name': 'AmUserProfile'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
