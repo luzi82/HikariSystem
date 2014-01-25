@@ -43,7 +43,7 @@ INSTALLED_APPS = (
     'am_profile',
     'am_level',
     'am_resource',
-    'am_card',
+    'am_item',
     
     'south',
 )
