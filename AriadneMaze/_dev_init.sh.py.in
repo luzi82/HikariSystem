@@ -1,0 +1,14 @@
+from django.contrib.auth.models import User
+
+# conf part
+
+username = "admin"
+password = "password"
+
+# init admin account
+
+user = User(username=username)
+user.is_staff = True
+user.is_superuser = True
+user.set_password(password)
+user.save()
