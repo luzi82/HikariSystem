@@ -36,6 +36,7 @@ class Migration(SchemaMigration):
         db.create_table(u'am_item_amitemvalue', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('itemvaluetype', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['am_item.AmItemValueType'])),
+            ('itemtype', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['am_item.AmItemType'])),
             ('value', self.gf('django.db.models.fields.IntegerField')()),
         ))
         db.send_create_signal(u'am_item', ['AmItemValue'])
@@ -98,6 +99,7 @@ class Migration(SchemaMigration):
         u'am_item.amitemvalue': {
             'Meta': {'object_name': 'AmItemValue'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'itemtype': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['am_item.AmItemType']"}),
             'itemvaluetype': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['am_item.AmItemValueType']"}),
             'value': ('django.db.models.fields.IntegerField', [], {})
         },

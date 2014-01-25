@@ -21,6 +21,7 @@ class AmItemValueType(models.Model):
 class AmItemValue(models.Model):
     
     itemvaluetype = models.ForeignKey(AmItemValueType,db_index=True)
+    itemtype = models.ForeignKey(AmItemType,db_index=True)
     value = models.IntegerField()
 
 class AmUserItem(models.Model):
