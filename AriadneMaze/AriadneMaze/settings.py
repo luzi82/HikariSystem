@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'am_item',
     
     'south',
+    'ajax',
 )
 
 MIDDLEWARE_CLASSES = (
