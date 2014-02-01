@@ -3,6 +3,7 @@
 PROJECT_PATH=`dirname ${PWD}`
 
 apt-get install -y git python-pip python-dev nginx python-flup
+easy_install decorator
 
 ln -s ${PROJECT_PATH} /opt/AriadneMaze
 
