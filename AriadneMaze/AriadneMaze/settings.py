@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'am_level',
     'am_resource',
     'am_item',
+    'am_user',
     
     'south',
     'ajax',
