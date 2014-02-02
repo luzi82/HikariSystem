@@ -39,12 +39,12 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    'am_i18n',
-    'am_profile',
-    'am_level',
-    'am_resource',
-    'am_item',
-    'am_user',
+    'hs_i18n',
+    'hs_profile',
+    'hs_level',
+    'hs_resource',
+    'hs_item',
+    'hs_user',
     
     'south',
     'ajax',

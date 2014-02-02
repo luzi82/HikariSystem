@@ -1,4 +1,4 @@
-am_resource
+hs_resource
 
 Feature
 =======
@@ -12,8 +12,8 @@ Depends
 =======
 
 - django.contrib.auth
-- am_i18n
-- am_level
+- hs_i18n
+- hs_level
 
 Limitation
 ==========

@@ -17,4 +17,4 @@ class Migration(SchemaMigration):
         
     }
 
-    complete_apps = ['am_item']
+    complete_apps = ['hs_user']

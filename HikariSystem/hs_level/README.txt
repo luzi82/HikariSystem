@@ -8,4 +8,4 @@ Depends
 =======
 
 - django.contrib.auth
-- am_i18n
+- hs_i18n

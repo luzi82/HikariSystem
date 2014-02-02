@@ -1,5 +1,5 @@
 from django.db import models
-import am_i18n.models as i18n_models
+import hs_i18n.models as i18n_models
 from django.contrib.auth import models as auth_models
 
 class AmLevelType(models.Model):

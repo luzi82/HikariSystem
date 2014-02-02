@@ -1,6 +1,6 @@
 from django.db import models
-import am_i18n.models as i18n_models
-import am_level.models as i18n_level
+import hs_i18n.models as i18n_models
+import hs_level.models as i18n_level
 from django.contrib.auth import models as auth_models
 
 class AmResourceType(models.Model):

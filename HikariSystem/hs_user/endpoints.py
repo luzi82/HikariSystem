@@ -1,5 +1,5 @@
 from ajax.exceptions import AJAXError
-import am_user
+import hs_user
 
 # def hello(request):
 #     print request
@@ -13,7 +13,7 @@ def create_user(request):
     
 #     device_id = request.POST["device_id"]
 
-    user_data = am_user.create_random_user()
+    user_data = hs_user.create_random_user()
 
     return {
         'username': user_data['username'],

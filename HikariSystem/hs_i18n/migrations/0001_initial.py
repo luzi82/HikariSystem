@@ -17,4 +17,4 @@ class Migration(SchemaMigration):
         
     }
 
-    complete_apps = ['am_level']
+    complete_apps = ['hs_i18n']

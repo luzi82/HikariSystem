@@ -8,67 +8,25 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'AmUserLevel'
-        db.create_table(u'am_level_amuserlevel', (
+        # Adding model 'AmUserProfile'
+        db.create_table(u'hs_profile_amuserprofile', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['am_level.AmLevelType'])),
-            ('exp', self.gf('django.db.models.fields.IntegerField')(db_index=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
         ))
-        db.send_create_signal(u'am_level', ['AmUserLevel'])
-
-        # Adding model 'AmLevelType'
-        db.create_table(u'am_level_amleveltype', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['am_i18n.AmText'])),
-        ))
-        db.send_create_signal(u'am_level', ['AmLevelType'])
-
-        # Adding model 'AmLevelExp'
-        db.create_table(u'am_level_amlevelexp', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['am_level.AmLevelType'])),
-            ('level', self.gf('django.db.models.fields.IntegerField')(db_index=True)),
-            ('exp_min', self.gf('django.db.models.fields.IntegerField')(db_index=True)),
-        ))
-        db.send_create_signal(u'am_level', ['AmLevelExp'])
+        db.send_create_signal(u'hs_profile', ['AmUserProfile'])
 
 
     def backwards(self, orm):
-        # Deleting model 'AmUserLevel'
-        db.delete_table(u'am_level_amuserlevel')
-
-        # Deleting model 'AmLevelType'
-        db.delete_table(u'am_level_amleveltype')
-
-        # Deleting model 'AmLevelExp'
-        db.delete_table(u'am_level_amlevelexp')
+        # Deleting model 'AmUserProfile'
+        db.delete_table(u'hs_profile_amuserprofile')
 
 
     models = {
-        u'am_i18n.amtext': {
-            'Meta': {'object_name': 'AmText'},
+        u'hs_profile.amuserprofile': {
+            'Meta': {'object_name': 'AmUserProfile'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'info': ('django.db.models.fields.TextField', [], {}),
-            'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
-        },
-        u'am_level.amlevelexp': {
-            'Meta': {'object_name': 'AmLevelExp'},
-            'exp_min': ('django.db.models.fields.IntegerField', [], {'db_index': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'level': ('django.db.models.fields.IntegerField', [], {'db_index': 'True'}),
-            'type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['am_level.AmLevelType']"})
-        },
-        u'am_level.amleveltype': {
-            'Meta': {'object_name': 'AmLevelType'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['am_i18n.AmText']"})
-        },
-        u'am_level.amuserlevel': {
-            'Meta': {'object_name': 'AmUserLevel'},
-            'exp': ('django.db.models.fields.IntegerField', [], {'db_index': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['am_level.AmLevelType']"}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
         },
         u'auth.group': {
@@ -109,4 +67,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['am_level']
+    complete_apps = ['hs_profile']

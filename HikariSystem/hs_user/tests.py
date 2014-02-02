@@ -16,8 +16,8 @@ class SimpleTest(TestCase):
         
         client = Client()
         
-#        response = client.post(reverse('ajax')+"/am_user/hello.json",{
-        response = client.post("/ajax/am_user/create_user.json",{"json":simplejson.dumps({
+#        response = client.post(reverse('ajax')+"/hs_user/hello.json",{
+        response = client.post("/ajax/hs_user/create_user.json",{"json":simplejson.dumps({
             "device_id":SimpleTest.TEST_DEVICE_ID
         })})
         content=response.content
