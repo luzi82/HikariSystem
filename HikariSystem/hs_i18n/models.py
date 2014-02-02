@@ -5,17 +5,17 @@ KEY_NAME_LENGTH = 64
 
 # Create your models here.
 
-class AmLang(models.Model):
+class HsLang(models.Model):
     
     name = models.CharField(max_length=LANG_NAME_LENGTH,db_index=True)
 
-class AmText(models.Model):
+class HsText(models.Model):
     
     key = models.CharField(max_length=KEY_NAME_LENGTH,db_index=True)
     info = models.TextField()
 
-class AmTextI18n(models.Model):
+class HsTextI18n(models.Model):
     
-    lang = models.ForeignKey(AmLang,db_index=True)
-    text = models.ForeignKey(AmText,db_index=True)
+    lang = models.ForeignKey(HsLang,db_index=True)
+    text = models.ForeignKey(HsText,db_index=True)
     i18n = models.TextField()

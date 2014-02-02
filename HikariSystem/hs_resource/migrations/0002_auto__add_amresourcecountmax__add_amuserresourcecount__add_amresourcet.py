@@ -8,95 +8,57 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'AmResourceCountMax'
-        db.create_table(u'hs_resource_amresourcecountmax', (
+        # Adding model 'HsResourceCountMax'
+        db.create_table(u'hs_resource_hsresourcecountmax', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('level', self.gf('django.db.models.fields.IntegerField')(db_index=True)),
             ('count_max', self.gf('django.db.models.fields.IntegerField')()),
         ))
-        db.send_create_signal(u'hs_resource', ['AmResourceCountMax'])
+        db.send_create_signal(u'hs_resource', ['HsResourceCountMax'])
 
-        # Adding model 'AmUserResourceCount'
-        db.create_table(u'hs_resource_amuserresourcecount', (
+        # Adding model 'HsUserResourceCount'
+        db.create_table(u'hs_resource_hsuserresourcecount', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_resource.AmResourceType'])),
+            ('type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_resource.HsResourceType'])),
             ('count', self.gf('django.db.models.fields.IntegerField')(db_index=True)),
             ('update', self.gf('django.db.models.fields.BigIntegerField')()),
         ))
-        db.send_create_signal(u'hs_resource', ['AmUserResourceCount'])
+        db.send_create_signal(u'hs_resource', ['HsUserResourceCount'])
 
-        # Adding model 'AmResourceType'
-        db.create_table(u'hs_resource_amresourcetype', (
+        # Adding model 'HsResourceType'
+        db.create_table(u'hs_resource_hsresourcetype', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_i18n.AmText'])),
-            ('count_max_leveltype', self.gf('django.db.models.fields.related.ForeignKey')(related_name='amresourcetype_count_max_leveltype', null=True, to=orm['hs_level.AmLevelType'])),
-            ('count_increase_leveltype', self.gf('django.db.models.fields.related.ForeignKey')(related_name='amresourcetype_count_increase_leveltype', null=True, to=orm['hs_level.AmLevelType'])),
+            ('name', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_i18n.HsText'])),
+            ('count_max_leveltype', self.gf('django.db.models.fields.related.ForeignKey')(related_name='hsresourcetype_count_max_leveltype', null=True, to=orm['hs_level.HsLevelType'])),
+            ('count_increase_leveltype', self.gf('django.db.models.fields.related.ForeignKey')(related_name='hsresourcetype_count_increase_leveltype', null=True, to=orm['hs_level.HsLevelType'])),
         ))
-        db.send_create_signal(u'hs_resource', ['AmResourceType'])
+        db.send_create_signal(u'hs_resource', ['HsResourceType'])
 
-        # Adding model 'AmResourceCountIncrease'
-        db.create_table(u'hs_resource_amresourcecountincrease', (
+        # Adding model 'HsResourceCountIncrease'
+        db.create_table(u'hs_resource_hsresourcecountincrease', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('level', self.gf('django.db.models.fields.IntegerField')(db_index=True)),
             ('count_increase', self.gf('django.db.models.fields.IntegerField')()),
         ))
-        db.send_create_signal(u'hs_resource', ['AmResourceCountIncrease'])
+        db.send_create_signal(u'hs_resource', ['HsResourceCountIncrease'])
 
 
     def backwards(self, orm):
-        # Deleting model 'AmResourceCountMax'
-        db.delete_table(u'hs_resource_amresourcecountmax')
+        # Deleting model 'HsResourceCountMax'
+        db.delete_table(u'hs_resource_hsresourcecountmax')
 
-        # Deleting model 'AmUserResourceCount'
-        db.delete_table(u'hs_resource_amuserresourcecount')
+        # Deleting model 'HsUserResourceCount'
+        db.delete_table(u'hs_resource_hsuserresourcecount')
 
-        # Deleting model 'AmResourceType'
-        db.delete_table(u'hs_resource_amresourcetype')
+        # Deleting model 'HsResourceType'
+        db.delete_table(u'hs_resource_hsresourcetype')
 
-        # Deleting model 'AmResourceCountIncrease'
-        db.delete_table(u'hs_resource_amresourcecountincrease')
+        # Deleting model 'HsResourceCountIncrease'
+        db.delete_table(u'hs_resource_hsresourcecountincrease')
 
 
     models = {
-        u'hs_i18n.amtext': {
-            'Meta': {'object_name': 'AmText'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'info': ('django.db.models.fields.TextField', [], {}),
-            'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
-        },
-        u'hs_level.amleveltype': {
-            'Meta': {'object_name': 'AmLevelType'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_i18n.AmText']"})
-        },
-        u'hs_resource.amresourcecountincrease': {
-            'Meta': {'object_name': 'AmResourceCountIncrease'},
-            'count_increase': ('django.db.models.fields.IntegerField', [], {}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'level': ('django.db.models.fields.IntegerField', [], {'db_index': 'True'})
-        },
-        u'hs_resource.amresourcecountmax': {
-            'Meta': {'object_name': 'AmResourceCountMax'},
-            'count_max': ('django.db.models.fields.IntegerField', [], {}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'level': ('django.db.models.fields.IntegerField', [], {'db_index': 'True'})
-        },
-        u'hs_resource.amresourcetype': {
-            'Meta': {'object_name': 'AmResourceType'},
-            'count_increase_leveltype': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'amresourcetype_count_increase_leveltype'", 'null': 'True', 'to': u"orm['hs_level.AmLevelType']"}),
-            'count_max_leveltype': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'amresourcetype_count_max_leveltype'", 'null': 'True', 'to': u"orm['hs_level.AmLevelType']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_i18n.AmText']"})
-        },
-        u'hs_resource.amuserresourcecount': {
-            'Meta': {'object_name': 'AmUserResourceCount'},
-            'count': ('django.db.models.fields.IntegerField', [], {'db_index': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_resource.AmResourceType']"}),
-            'update': ('django.db.models.fields.BigIntegerField', [], {}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
-        },
         u'auth.group': {
             'Meta': {'object_name': 'Group'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -132,6 +94,44 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        },
+        u'hs_i18n.hstext': {
+            'Meta': {'object_name': 'HsText'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'info': ('django.db.models.fields.TextField', [], {}),
+            'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
+        },
+        u'hs_level.hsleveltype': {
+            'Meta': {'object_name': 'HsLevelType'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_i18n.HsText']"})
+        },
+        u'hs_resource.hsresourcecountincrease': {
+            'Meta': {'object_name': 'HsResourceCountIncrease'},
+            'count_increase': ('django.db.models.fields.IntegerField', [], {}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'level': ('django.db.models.fields.IntegerField', [], {'db_index': 'True'})
+        },
+        u'hs_resource.hsresourcecountmax': {
+            'Meta': {'object_name': 'HsResourceCountMax'},
+            'count_max': ('django.db.models.fields.IntegerField', [], {}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'level': ('django.db.models.fields.IntegerField', [], {'db_index': 'True'})
+        },
+        u'hs_resource.hsresourcetype': {
+            'Meta': {'object_name': 'HsResourceType'},
+            'count_increase_leveltype': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'hsresourcetype_count_increase_leveltype'", 'null': 'True', 'to': u"orm['hs_level.HsLevelType']"}),
+            'count_max_leveltype': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'hsresourcetype_count_max_leveltype'", 'null': 'True', 'to': u"orm['hs_level.HsLevelType']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_i18n.HsText']"})
+        },
+        u'hs_resource.hsuserresourcecount': {
+            'Meta': {'object_name': 'HsUserResourceCount'},
+            'count': ('django.db.models.fields.IntegerField', [], {'db_index': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_resource.HsResourceType']"}),
+            'update': ('django.db.models.fields.BigIntegerField', [], {}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
         }
     }
 

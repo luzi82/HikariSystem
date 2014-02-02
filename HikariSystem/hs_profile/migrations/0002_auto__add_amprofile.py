@@ -8,27 +8,21 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'AmUserProfile'
-        db.create_table(u'hs_profile_amuserprofile', (
+        # Adding model 'HsUserProfile'
+        db.create_table(u'hs_profile_hsuserprofile', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
         ))
-        db.send_create_signal(u'hs_profile', ['AmUserProfile'])
+        db.send_create_signal(u'hs_profile', ['HsUserProfile'])
 
 
     def backwards(self, orm):
-        # Deleting model 'AmUserProfile'
-        db.delete_table(u'hs_profile_amuserprofile')
+        # Deleting model 'HsUserProfile'
+        db.delete_table(u'hs_profile_hsuserprofile')
 
 
     models = {
-        u'hs_profile.amuserprofile': {
-            'Meta': {'object_name': 'AmUserProfile'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
-        },
         u'auth.group': {
             'Meta': {'object_name': 'Group'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -64,6 +58,12 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        },
+        u'hs_profile.hsuserprofile': {
+            'Meta': {'object_name': 'HsUserProfile'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
         }
     }
 

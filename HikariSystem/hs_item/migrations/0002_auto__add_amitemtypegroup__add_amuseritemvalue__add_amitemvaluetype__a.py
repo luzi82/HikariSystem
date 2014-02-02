@@ -8,120 +8,77 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'AmItemTypeGroup'
-        db.create_table(u'hs_item_amitemtypegroup', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_i18n.AmText'])),
-        ))
-        db.send_create_signal(u'hs_item', ['AmItemTypeGroup'])
-
-        # Adding model 'AmUserItemValue'
-        db.create_table(u'hs_item_amuseritemvalue', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('useritem', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_item.AmUserItem'])),
-            ('itemvaluetype', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_item.AmItemValueType'])),
-            ('value', self.gf('django.db.models.fields.IntegerField')()),
-        ))
-        db.send_create_signal(u'hs_item', ['AmUserItemValue'])
-
-        # Adding model 'AmItemValueType'
-        db.create_table(u'hs_item_amitemvaluetype', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_i18n.AmText'])),
-            ('value_max', self.gf('django.db.models.fields.IntegerField')()),
-        ))
-        db.send_create_signal(u'hs_item', ['AmItemValueType'])
-
-        # Adding model 'AmItemValue'
-        db.create_table(u'hs_item_amitemvalue', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('itemvaluetype', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_item.AmItemValueType'])),
-            ('itemtype', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_item.AmItemType'])),
-            ('value', self.gf('django.db.models.fields.IntegerField')()),
-        ))
-        db.send_create_signal(u'hs_item', ['AmItemValue'])
-
-        # Adding model 'AmUserItem'
-        db.create_table(u'hs_item_amuseritem', (
+        # Adding model 'HsUserItem'
+        db.create_table(u'hs_item_hsuseritem', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('itemtype', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_item.AmItemType'])),
+            ('itemtype', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_item.HsItemType'])),
         ))
-        db.send_create_signal(u'hs_item', ['AmUserItem'])
+        db.send_create_signal(u'hs_item', ['HsUserItem'])
 
-        # Adding model 'AmItemType'
-        db.create_table(u'hs_item_amitemtype', (
+        # Adding model 'HsItemValueType'
+        db.create_table(u'hs_item_hsitemvaluetype', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('itemtypegroup', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_item.AmItemTypeGroup'])),
-            ('name', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_i18n.AmText'])),
+            ('name', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_i18n.HsText'])),
+            ('value_max', self.gf('django.db.models.fields.IntegerField')()),
         ))
-        db.send_create_signal(u'hs_item', ['AmItemType'])
+        db.send_create_signal(u'hs_item', ['HsItemValueType'])
+
+        # Adding model 'HsUserItemValue'
+        db.create_table(u'hs_item_hsuseritemvalue', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('useritem', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_item.HsUserItem'])),
+            ('itemvaluetype', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_item.HsItemValueType'])),
+            ('value', self.gf('django.db.models.fields.IntegerField')()),
+        ))
+        db.send_create_signal(u'hs_item', ['HsUserItemValue'])
+
+        # Adding model 'HsItemType'
+        db.create_table(u'hs_item_hsitemtype', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('itemtypegroup', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_item.HsItemTypeGroup'])),
+            ('name', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_i18n.HsText'])),
+        ))
+        db.send_create_signal(u'hs_item', ['HsItemType'])
+
+        # Adding model 'HsItemTypeGroup'
+        db.create_table(u'hs_item_hsitemtypegroup', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_i18n.HsText'])),
+        ))
+        db.send_create_signal(u'hs_item', ['HsItemTypeGroup'])
+
+        # Adding model 'HsItemValue'
+        db.create_table(u'hs_item_hsitemvalue', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('itemvaluetype', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_item.HsItemValueType'])),
+            ('itemtype', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hs_item.HsItemType'])),
+            ('value', self.gf('django.db.models.fields.IntegerField')()),
+        ))
+        db.send_create_signal(u'hs_item', ['HsItemValue'])
 
 
     def backwards(self, orm):
-        # Deleting model 'AmItemTypeGroup'
-        db.delete_table(u'hs_item_amitemtypegroup')
+        # Deleting model 'HsUserItem'
+        db.delete_table(u'hs_item_hsuseritem')
 
-        # Deleting model 'AmUserItemValue'
-        db.delete_table(u'hs_item_amuseritemvalue')
+        # Deleting model 'HsItemValueType'
+        db.delete_table(u'hs_item_hsitemvaluetype')
 
-        # Deleting model 'AmItemValueType'
-        db.delete_table(u'hs_item_amitemvaluetype')
+        # Deleting model 'HsUserItemValue'
+        db.delete_table(u'hs_item_hsuseritemvalue')
 
-        # Deleting model 'AmItemValue'
-        db.delete_table(u'hs_item_amitemvalue')
+        # Deleting model 'HsItemType'
+        db.delete_table(u'hs_item_hsitemtype')
 
-        # Deleting model 'AmUserItem'
-        db.delete_table(u'hs_item_amuseritem')
+        # Deleting model 'HsItemTypeGroup'
+        db.delete_table(u'hs_item_hsitemtypegroup')
 
-        # Deleting model 'AmItemType'
-        db.delete_table(u'hs_item_amitemtype')
+        # Deleting model 'HsItemValue'
+        db.delete_table(u'hs_item_hsitemvalue')
 
 
     models = {
-        u'hs_i18n.amtext': {
-            'Meta': {'object_name': 'AmText'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'info': ('django.db.models.fields.TextField', [], {}),
-            'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
-        },
-        u'hs_item.amitemtype': {
-            'Meta': {'object_name': 'AmItemType'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'itemtypegroup': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_item.AmItemTypeGroup']"}),
-            'name': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_i18n.AmText']"})
-        },
-        u'hs_item.amitemtypegroup': {
-            'Meta': {'object_name': 'AmItemTypeGroup'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_i18n.AmText']"})
-        },
-        u'hs_item.amitemvalue': {
-            'Meta': {'object_name': 'AmItemValue'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'itemtype': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_item.AmItemType']"}),
-            'itemvaluetype': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_item.AmItemValueType']"}),
-            'value': ('django.db.models.fields.IntegerField', [], {})
-        },
-        u'hs_item.amitemvaluetype': {
-            'Meta': {'object_name': 'AmItemValueType'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_i18n.AmText']"}),
-            'value_max': ('django.db.models.fields.IntegerField', [], {})
-        },
-        u'hs_item.amuseritem': {
-            'Meta': {'object_name': 'AmUserItem'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'itemtype': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_item.AmItemType']"}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
-        },
-        u'hs_item.amuseritemvalue': {
-            'Meta': {'object_name': 'AmUserItemValue'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'itemvaluetype': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_item.AmItemValueType']"}),
-            'useritem': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_item.AmUserItem']"}),
-            'value': ('django.db.models.fields.IntegerField', [], {})
-        },
         u'auth.group': {
             'Meta': {'object_name': 'Group'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -157,6 +114,49 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        },
+        u'hs_i18n.hstext': {
+            'Meta': {'object_name': 'HsText'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'info': ('django.db.models.fields.TextField', [], {}),
+            'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
+        },
+        u'hs_item.hsitemtype': {
+            'Meta': {'object_name': 'HsItemType'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'itemtypegroup': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_item.HsItemTypeGroup']"}),
+            'name': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_i18n.HsText']"})
+        },
+        u'hs_item.hsitemtypegroup': {
+            'Meta': {'object_name': 'HsItemTypeGroup'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_i18n.HsText']"})
+        },
+        u'hs_item.hsitemvalue': {
+            'Meta': {'object_name': 'HsItemValue'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'itemtype': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_item.HsItemType']"}),
+            'itemvaluetype': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_item.HsItemValueType']"}),
+            'value': ('django.db.models.fields.IntegerField', [], {})
+        },
+        u'hs_item.hsitemvaluetype': {
+            'Meta': {'object_name': 'HsItemValueType'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_i18n.HsText']"}),
+            'value_max': ('django.db.models.fields.IntegerField', [], {})
+        },
+        u'hs_item.hsuseritem': {
+            'Meta': {'object_name': 'HsUserItem'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'itemtype': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_item.HsItemType']"}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
+        },
+        u'hs_item.hsuseritemvalue': {
+            'Meta': {'object_name': 'HsUserItemValue'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'itemvaluetype': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_item.HsItemValueType']"}),
+            'useritem': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hs_item.HsUserItem']"}),
+            'value': ('django.db.models.fields.IntegerField', [], {})
         }
     }
 
