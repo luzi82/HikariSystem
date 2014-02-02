@@ -14,19 +14,19 @@
 #
 
 #### SERVER SPECIFIC CONFIGURATION
-PROJECT_ROOT=/opt/AriadneMaze
+PROJECT_ROOT=/opt/HikariSystem
 RUNFILES_PATH=$PROJECT_ROOT
 HOST=127.0.0.1
 PORT=8080
-RUN_AS=ariadnemaze
+RUN_AS=hikarisystem
 FCGI_METHOD=threaded
-APP_NAME=AriadneMaze
+APP_NAME=HikariSystem
 #### DO NOT CHANGE ANYTHING AFTER THIS LINE!
 
 set -e
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-DESC="AriadneMaze Django"
+DESC="HikariSystem Django"
 NAME=$0
 SCRIPTNAME=/etc/init.d/$NAME
 

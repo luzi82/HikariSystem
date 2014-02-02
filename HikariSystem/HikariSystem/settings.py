@@ -1,5 +1,5 @@
 """
-Django settings for AriadneMaze project.
+Django settings for HikariSystem project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.6/topics/settings/
@@ -59,9 +59,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'AriadneMaze.urls'
+ROOT_URLCONF = 'HikariSystem.urls'
 
-WSGI_APPLICATION = 'AriadneMaze.wsgi.application'
+WSGI_APPLICATION = 'HikariSystem.wsgi.application'
 
 
 # Database

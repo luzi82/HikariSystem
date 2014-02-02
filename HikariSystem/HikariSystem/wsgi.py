@@ -1,5 +1,5 @@
 """
-WSGI config for AriadneMaze project.
+WSGI config for HikariSystem project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -8,7 +8,7 @@ https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 """
 
 import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "AriadneMaze.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "HikariSystem.settings")
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
