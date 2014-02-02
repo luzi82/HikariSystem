@@ -2,8 +2,6 @@
 
 . ./_env.sh
 
-cd src
-
 if [ "$#" = "0" ]; then
 	#python manage.py test --failfast || exit 1
 	python manage.py test --failfast am_profile || exit 1

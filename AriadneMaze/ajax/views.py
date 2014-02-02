@@ -8,6 +8,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from ajax.exceptions import AJAXError, NotRegistered
 from ajax.decorators import json_response
 import ajax
+import sys
 
 
 logger = getLogger('django.request')
@@ -57,13 +58,18 @@ def endpoint_loader(request, application, model, **kwargs):
         except NotRegistered:
             raise AJAXError(500, _('Invalid model.'))
 
-    data = endpoint(request)
+    try:
+        data = endpoint(request)
+    except Exception as e:
+        print sys.exc_info()[0]
+        raise e
+        
     if isinstance(data, HttpResponse):
         return data
     else:
         payload = {
             'success': True,
-            'data': data,
+            'data': data
         }
-        return HttpResponse(json.dumps(payload, cls=DjangoJSONEncoder,
-            separators=(',', ':')))
+        v = json.dumps(payload, separators=(',', ':'));
+        return HttpResponse(v)
