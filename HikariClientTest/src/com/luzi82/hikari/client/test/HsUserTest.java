@@ -19,7 +19,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.HsMemStorage;
 import com.luzi82.hikari.client.HsUser;
-import com.luzi82.hikari.client.HsUser.CreateUserResult;
+import com.luzi82.hikari.client.protocol.HsUserProtocol;
+import com.luzi82.hikari.client.protocol.HsUserProtocol.CreateUserResult;
 
 public class HsUserTest {
 
@@ -33,15 +34,15 @@ public class HsUserTest {
 
 		// HsWaiter<HsUserCreateUserResult> createUserWaiter = new
 		// HsWaiter<HsUser.CreateUserResult>();
-		final CreateUserResult[] curv = new CreateUserResult[1];
-		Future<CreateUserResult> f = HsUser.createUser(client, "test_dev",
-				new FutureCallback<HsUser.CreateUserResult>() {
+		final HsUserProtocol.CreateUserResult[] curv = new HsUserProtocol.CreateUserResult[1];
+		Future<HsUserProtocol.CreateUserResult> f = HsUser.createUser(client, "test_dev",
+				new FutureCallback<HsUserProtocol.CreateUserResult>() {
 					@Override
 					public void cancelled() {
 					}
 
 					@Override
-					public void completed(CreateUserResult arg0) {
+					public void completed(HsUserProtocol.CreateUserResult arg0) {
 						curv[0] = arg0;
 					}
 
