@@ -13,5 +13,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/httpclient-cache-4.3.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/httpcore-4.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/httpcore-nio-4.3.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/HikariProtocolDef"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/HikariClientEndpoint"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

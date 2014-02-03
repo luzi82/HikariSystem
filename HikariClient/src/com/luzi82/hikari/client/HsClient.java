@@ -13,8 +13,9 @@ import org.apache.http.impl.nio.client.HttpAsyncClients;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.luzi82.hikari.client.endpoint.HsCmdManager;
 
-public class HsClient {
+public class HsClient implements HsCmdManager {
 
 	ObjectMapper mObjectMapper = new ObjectMapper();
 	CloseableHttpAsyncClient httpclient;

@@ -20,7 +20,6 @@ import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.HsMemStorage;
 import com.luzi82.hikari.client.HsUser;
 import com.luzi82.hikari.client.protocol.HsUserProtocol;
-import com.luzi82.hikari.client.protocol.HsUserProtocol.CreateUserResult;
 
 public class HsUserTest {
 
@@ -34,28 +33,32 @@ public class HsUserTest {
 
 		// HsWaiter<HsUserCreateUserResult> createUserWaiter = new
 		// HsWaiter<HsUser.CreateUserResult>();
-		final HsUserProtocol.CreateUserResult[] curv = new HsUserProtocol.CreateUserResult[1];
-		Future<HsUserProtocol.CreateUserResult> f = HsUser.createUser(client, "test_dev",
-				new FutureCallback<HsUserProtocol.CreateUserResult>() {
-					@Override
-					public void cancelled() {
-					}
+		final HsUserProtocol.CreateUser.Result[] curv = new HsUserProtocol.CreateUser.Result[1];
+		Future<HsUserProtocol.CreateUser.Result> f = HsUser
+				.createUser(
+						client,
+						"test_dev",
+						new FutureCallback<HsUserProtocol.CreateUser.Result>() {
+							@Override
+							public void cancelled() {
+							}
 
-					@Override
-					public void completed(HsUserProtocol.CreateUserResult arg0) {
-						curv[0] = arg0;
-					}
+							@Override
+							public void completed(
+									HsUserProtocol.CreateUser.Result arg0) {
+								curv[0] = arg0;
+							}
 
-					@Override
-					public void failed(Exception arg0) {
-						arg0.printStackTrace();
-					}
-				});
+							@Override
+							public void failed(Exception arg0) {
+								arg0.printStackTrace();
+							}
+						});
 
 		Assert.assertNotNull(f);
 
 		// System.err.println("0");
-		CreateUserResult cur = f.get(5, TimeUnit.SECONDS);
+		HsUserProtocol.CreateUser.Result cur = f.get(5, TimeUnit.SECONDS);
 		// System.err.println("1");
 		Assert.assertNotNull(cur);
 		Assert.assertEquals(cur, curv[0]);
