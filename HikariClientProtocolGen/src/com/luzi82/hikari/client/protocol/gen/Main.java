@@ -4,14 +4,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.lang.reflect.Field;
-import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -20,7 +19,7 @@ public class Main {
 
 	public static final String[] INPUT = { "../HikariProtocolDef/src" };
 
-	public static final String OUTPUT = "../HikariClientEndpoint/genSrc";
+	public static final String OUTPUT = "../HikariClientProtocol/genSrc";
 
 	public static final String JAVA_POFIX = ".java";
 	public static final String PROTOCOLDEF_POFIX = "ProtocolDef";
@@ -37,9 +36,10 @@ public class Main {
 
 		for (String inputPath : INPUT) {
 			File f = new File(inputPath);
-			Path fAbs = f.getAbsoluteFile().toPath().normalize();
-			f = fAbs.toFile();
-			System.err.println(fAbs.toString());
+			// Path fAbs = f.getAbsoluteFile().toPath().normalize();
+			// f = fAbs.toFile();
+			String fAbs = f.getPath();
+			// System.err.println(fAbs.toString());
 			Iterator<File> fileItr = FileUtils.iterateFiles(f, null, true);
 			while (fileItr.hasNext()) {
 				File ff = fileItr.next();
@@ -49,7 +49,8 @@ public class Main {
 					continue;
 				if (!ff.getName().endsWith(PROTOCOLDEF_POFIX + JAVA_POFIX))
 					continue;
-				String c = fAbs.relativize(ff.toPath()).toString();
+				String c = ff.getPath();
+				c = c.substring(fAbs.length() + 1, c.length());
 				c = c.substring(0, c.length()
 						- (PROTOCOLDEF_POFIX + JAVA_POFIX).length());
 				String cn = c.replaceAll(Pattern.quote("/"), ".");
@@ -104,74 +105,8 @@ public class Main {
 				}
 				vc.put("cmd_list", cmdList);
 
-				// StringWriter sw = new StringWriter();
 				BufferedWriter bw = new BufferedWriter(new FileWriter(out));
 				template.merge(vc, bw);
-
-				// System.err.println(sw.toString());
-
-				//
-				//
-				// bw.write("package ");
-				// bw.write(pkgName);
-				// bw.write(";");
-				// bw.newLine();
-				//
-				// bw.write("import java.util.concurrent.Future;");
-				// bw.newLine();
-				// bw.write("import org.apache.http.concurrent.FutureCallback;");
-				// bw.newLine();
-				// bw.write("import com.luzi82.hikari.client.endpoint.HsCmdManager;");
-				// bw.newLine();
-				//
-				// bw.write("public class ");
-				// bw.write(className);
-				// bw.write(" extends ");
-				// bw.write(parentClassName);
-				// bw.write(" {");
-				// bw.newLine();
-				//
-				// bw.write("public static final String APP_NAME = \"");
-				// bw.write(appName);
-				// bw.write("\";");
-				// bw.newLine();
-				//
-				// Class<?> cmdClassV[] = cls.getDeclaredClasses();
-				// for (Class<?> cmdClass : cmdClassV) {
-				// String cmdClassName = cmdClass.getSimpleName();
-				// String cmdFuncName = cmdClassName.substring(0, 1)
-				// .toLowerCase()
-				// + cmdClassName.substring(1, cmdClassName.length());
-				// Class<?> reqClass = Class.forName(cmdClass.getName()
-				// + "$Request");
-				// Class<?> resClass = Class.forName(cmdClass.getName()
-				// + "$Result");
-				// Field[] reqFieldV = reqClass.getFields();
-				// Field[] resFieldV = resClass.getFields();
-				// bw.write("public static Future<");
-				// bw.write(cmdClassName);
-				// bw.write(".Result> ");
-				// bw.write(cmdFuncName);
-				// bw.write("(final HsCmdManager cmdManager");
-				// for (Field reqField : reqFieldV) {
-				// bw.write(",");
-				// bw.write(reqField.getType().getName());
-				// bw.write(" ");
-				// bw.write(reqField.getName());
-				// }
-				// bw.write(",final FutureCallback<");
-				// bw.write(cmdClassName);
-				// bw.write(".Result> futureCallback) {");
-				// bw.newLine();
-				// bw.write("}");
-				// bw.newLine();
-				// }
-				//
-				// bw.write("}");
-				// bw.newLine();
-
-				// System.err.println(cls.getName());
-				// Field[] fieldV = cls.getFields();
 
 				bw.flush();
 				IOUtils.closeQuietly(bw);
