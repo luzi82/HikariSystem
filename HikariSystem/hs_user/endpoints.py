@@ -3,6 +3,7 @@ import hs_user
 import json
 import django.contrib.auth as auth
 import sys
+from ajax.decorators import login_required
 
 # def hello(request):
 #     print request
@@ -43,4 +44,8 @@ def login(request):
     else:
         raise AJAXError(403, 'auth fails')
         
+    return {}
+
+@login_required
+def check_login(request):
     return {}

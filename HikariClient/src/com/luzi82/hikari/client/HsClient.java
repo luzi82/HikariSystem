@@ -19,6 +19,7 @@ import org.apache.http.message.BasicNameValuePair;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.luzi82.hikari.client.endpoint.HsCmdManager;
 
 public class HsClient implements HsCmdManager {
@@ -33,6 +34,7 @@ public class HsClient implements HsCmdManager {
 		httpclient = HttpAsyncClients.createDefault();
 		httpclient.start();
 		this.storage = storage;
+		mObjectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 	}
 
 	public static class Response {

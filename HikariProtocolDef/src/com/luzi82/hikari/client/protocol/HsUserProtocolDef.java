@@ -24,4 +24,12 @@ public class HsUserProtocolDef {
 		}
 	}
 
+	public static class CheckLogin {
+		public static class Request {
+		}
+
+		public static class Result {
+		}
+	}
+
 }

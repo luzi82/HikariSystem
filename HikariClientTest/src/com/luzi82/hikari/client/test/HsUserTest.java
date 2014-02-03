@@ -117,13 +117,31 @@ public class HsUserTest {
 	}
 
 	@Test
-	public void testLogin() throws InterruptedException, ExecutionException, TimeoutException {
+	public void testLogin() throws InterruptedException, ExecutionException,
+			TimeoutException {
 		HsClient client = new HsClient(SERVER, new HsMemStorage(
 				Executors.newCachedThreadPool()));
 
-		HsUser.createUser(client, TEST_DEV, null).get();
+		HsUser.createUser(client, TEST_DEV, null).get(5, TimeUnit.SECONDS);
 
 		HsUser.login(client, null).get(5, TimeUnit.SECONDS);
+	}
+
+	@Test
+	public void testCheckLogin() throws InterruptedException,
+			ExecutionException, TimeoutException {
+		HsClient client = new HsClient(SERVER, new HsMemStorage(
+				Executors.newCachedThreadPool()));
+
+		try {
+			HsUser.checkLogin(client, null).get(5, TimeUnit.SECONDS);
+			Assert.fail();
+		} catch (ExecutionException ee) {
+		}
+
+		HsUser.createUser(client, TEST_DEV, null).get(5, TimeUnit.SECONDS);
+		HsUser.login(client, null).get(5, TimeUnit.SECONDS);
+		HsUser.checkLogin(client, null).get(5, TimeUnit.SECONDS);
 	}
 
 	@Test
