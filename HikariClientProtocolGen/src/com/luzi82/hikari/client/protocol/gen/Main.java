@@ -75,33 +75,37 @@ public class Main {
 
 				LinkedList<Cmd> cmdList = new LinkedList<Main.Cmd>();
 				for (Class<?> cmdClass : cls.getDeclaredClasses()) {
-					Cmd cmd = new Cmd();
-					cmd.cname = cmdClass.getSimpleName();
-					cmd.fname = cmd.cname.substring(0, 1).toLowerCase()
-							+ cmd.cname.substring(1, cmd.cname.length());
-					String[] ns = cmd.cname.split("(?<!^)(?=[A-Z])");
-					for (int i = 0; i < ns.length; ++i) {
-						ns[i] = ns[i].toLowerCase();
-					}
-					cmd.jname = StringUtils.join(ns, "_");
+					try {
+						Cmd cmd = new Cmd();
+						cmd.cname = cmdClass.getSimpleName();
+						cmd.fname = cmd.cname.substring(0, 1).toLowerCase()
+								+ cmd.cname.substring(1, cmd.cname.length());
+						String[] ns = cmd.cname.split("(?<!^)(?=[A-Z])");
+						for (int i = 0; i < ns.length; ++i) {
+							ns[i] = ns[i].toLowerCase();
+						}
+						cmd.jname = StringUtils.join(ns, "_");
 
-					Class<?> reqClass = Class.forName(cmdClass.getName()
-							+ "$Request");
-					for (Field field : reqClass.getFields()) {
-						Fieldd fd = new Fieldd();
-						fd.name = field.getName();
-						fd.type = field.getType().getName();
-						cmd.reqList.add(fd);
+						Class<?> reqClass = Class.forName(cmdClass.getName()
+								+ "$Request");
+						for (Field field : reqClass.getFields()) {
+							Fieldd fd = new Fieldd();
+							fd.name = field.getName();
+							fd.type = field.getType().getName();
+							cmd.reqList.add(fd);
+						}
+						Class<?> resClass = Class.forName(cmdClass.getName()
+								+ "$Result");
+						for (Field field : resClass.getFields()) {
+							Fieldd fd = new Fieldd();
+							fd.name = field.getName();
+							fd.type = field.getType().getName();
+							cmd.resList.add(fd);
+						}
+						cmdList.add(cmd);
+					} catch (ClassNotFoundException cnfe) {
+						// do nothing
 					}
-					Class<?> resClass = Class.forName(cmdClass.getName()
-							+ "$Result");
-					for (Field field : resClass.getFields()) {
-						Fieldd fd = new Fieldd();
-						fd.name = field.getName();
-						fd.type = field.getType().getName();
-						cmd.resList.add(fd);
-					}
-					cmdList.add(cmd);
 				}
 				vc.put("cmd_list", cmdList);
 

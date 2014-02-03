@@ -13,5 +13,15 @@ public class HsUserProtocolDef {
 			public String password;
 		}
 	}
+	
+	public static class Login{
+		public static class Request {
+			public String username;
+			public String password;
+		}
 
+		public static class Result {
+		}
+	}
+	
 }

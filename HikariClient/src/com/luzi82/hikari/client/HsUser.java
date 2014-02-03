@@ -7,7 +7,7 @@ import org.apache.http.concurrent.FutureCallback;
 import com.luzi82.hikari.client.protocol.HsUserProtocol;
 import com.luzi82.hikari.client.protocol.HsUserProtocolDef;
 
-public class HsUser {
+public class HsUser extends HsUserProtocol {
 
 	public static final String APP_NAME = HsUserProtocol.APP_NAME;
 
