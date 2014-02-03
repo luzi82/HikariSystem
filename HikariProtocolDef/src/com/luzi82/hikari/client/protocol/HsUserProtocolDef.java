@@ -1,6 +1,6 @@
 package com.luzi82.hikari.client.protocol;
 
-public class HsUserProtocol {
+public class HsUserProtocolDef {
 
 	public static class CreateUser {
 
