@@ -29,7 +29,7 @@ public class HsConvertFuture<O, I> implements Future<O> {
 		} catch (ExecutionException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new Error(e);
+			throw new ExecutionException(e);
 		}
 	}
 

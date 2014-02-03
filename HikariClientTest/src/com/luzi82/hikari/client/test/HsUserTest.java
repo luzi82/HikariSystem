@@ -25,35 +25,33 @@ public class HsUserTest {
 
 	public static String SERVER = "http://192.168.1.50";
 
+	public static String TEST_DEV = "test_dev";
+
 	@Test
 	public void testCreateUser() throws InterruptedException,
 			ExecutionException, TimeoutException {
 		HsClient client = new HsClient(SERVER, new HsMemStorage(
 				Executors.newCachedThreadPool()));
 
-		// HsWaiter<HsUserCreateUserResult> createUserWaiter = new
-		// HsWaiter<HsUser.CreateUserResult>();
 		final HsUserProtocolDef.CreateUser.Result[] curv = new HsUserProtocolDef.CreateUser.Result[1];
-		Future<HsUserProtocolDef.CreateUser.Result> f = HsUser
-				.createUser(
-						client,
-						"test_dev",
-						new FutureCallback<HsUserProtocolDef.CreateUser.Result>() {
-							@Override
-							public void cancelled() {
-							}
+		Future<HsUserProtocolDef.CreateUser.Result> f = HsUser.createUser(
+				client, TEST_DEV,
+				new FutureCallback<HsUserProtocolDef.CreateUser.Result>() {
+					@Override
+					public void cancelled() {
+					}
 
-							@Override
-							public void completed(
-									HsUserProtocolDef.CreateUser.Result arg0) {
-								curv[0] = arg0;
-							}
+					@Override
+					public void completed(
+							HsUserProtocolDef.CreateUser.Result arg0) {
+						curv[0] = arg0;
+					}
 
-							@Override
-							public void failed(Exception arg0) {
-								arg0.printStackTrace();
-							}
-						});
+					@Override
+					public void failed(Exception arg0) {
+						arg0.printStackTrace();
+					}
+				});
 
 		Assert.assertNotNull(f);
 
@@ -104,6 +102,28 @@ public class HsUserTest {
 		Assert.assertEquals(cur.password, HsUser
 				.getPassword(client, passwordFc).get(1, TimeUnit.SECONDS));
 		Assert.assertEquals(cur.password, passwordV[0]);
+	}
+
+	@Test
+	public void testBadLogin() throws InterruptedException {
+		HsClient client = new HsClient(SERVER, new HsMemStorage(
+				Executors.newCachedThreadPool()));
+
+		try {
+			HsUser.login(client, "XXX", "XXX", null).get();
+			Assert.fail();
+		} catch (ExecutionException ee) {
+		}
+	}
+
+	@Test
+	public void testLogin() throws InterruptedException, ExecutionException, TimeoutException {
+		HsClient client = new HsClient(SERVER, new HsMemStorage(
+				Executors.newCachedThreadPool()));
+
+		HsUser.createUser(client, TEST_DEV, null).get();
+
+		HsUser.login(client, null).get(5, TimeUnit.SECONDS);
 	}
 
 	@Test

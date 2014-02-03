@@ -1,5 +1,8 @@
 from ajax.exceptions import AJAXError
 import hs_user
+import json
+import django.contrib.auth as auth
+import sys
 
 # def hello(request):
 #     print request
@@ -19,3 +22,25 @@ def create_user(request):
         'username': user_data['username'],
         'password': user_data['password'],
     }
+
+def login(request):
+
+    argJson = request.POST['arg']
+    arg = json.loads(argJson)
+    
+    username = arg['username']
+    password = arg['password']
+    
+    user = auth.authenticate(username=username, password=password)
+    if user is not None:
+        if user.is_active:
+            try:
+                auth.login(request, user)
+            except:
+                print "Unexpected error:", sys.exc_info()[0]
+        else:
+            raise AJAXError(403, 'user not active')
+    else:
+        raise AJAXError(403, 'auth fails')
+        
+    return {}
