@@ -77,10 +77,15 @@ public class Main {
 				for (Class<?> cmdClass : cls.getDeclaredClasses()) {
 					try {
 						Cmd cmd = new Cmd();
+						if (!cmdClass.getSimpleName().endsWith("Cmd")) {
+							continue;
+						}
 						cmd.cname = cmdClass.getSimpleName();
-						cmd.fname = cmd.cname.substring(0, 1).toLowerCase()
-								+ cmd.cname.substring(1, cmd.cname.length());
-						String[] ns = cmd.cname.split("(?<!^)(?=[A-Z])");
+						String cmdName = cmd.cname.substring(0,
+								cmd.cname.length() - 3);
+						cmd.fname = cmdName.substring(0, 1).toLowerCase()
+								+ cmdName.substring(1, cmdName.length());
+						String[] ns = cmdName.split("(?<!^)(?=[A-Z])");
 						for (int i = 0; i < ns.length; ++i) {
 							ns[i] = ns[i].toLowerCase();
 						}

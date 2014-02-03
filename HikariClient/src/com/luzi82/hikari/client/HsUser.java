@@ -11,12 +11,12 @@ public class HsUser extends HsUserProtocol {
 
 	public static final String APP_NAME = HsUserProtocol.APP_NAME;
 
-	public static Future<HsUserProtocolDef.CreateUser.Result> createUser(
+	public static Future<HsUserProtocolDef.CreateUserCmd.Result> createUser(
 			final HsClient client,
 			final String device_id,
-			final FutureCallback<HsUserProtocolDef.CreateUser.Result> futureCallback) {
+			final FutureCallback<HsUserProtocolDef.CreateUserCmd.Result> futureCallback) {
 
-		final HsStepListFuture<HsUserProtocolDef.CreateUser.Result> slf = new HsStepListFuture<HsUserProtocolDef.CreateUser.Result>(
+		final HsStepListFuture<HsUserProtocolDef.CreateUserCmd.Result> slf = new HsStepListFuture<HsUserProtocolDef.CreateUserCmd.Result>(
 				futureCallback);
 		slf.addRunnable(new Runnable() {
 			@Override
@@ -25,14 +25,14 @@ public class HsUser extends HsUserProtocol {
 				slf.setCurrentFuture(HsUserProtocol.createUser(
 						client,
 						device_id,
-						slf.createFutureCallback(HsUserProtocolDef.CreateUser.Result.class)));
+						slf.createFutureCallback(HsUserProtocolDef.CreateUserCmd.Result.class)));
 			}
 		});
 		slf.addRunnable(new Runnable() {
 			@Override
 			public void run() {
 				System.err.println("kogGqQzW");
-				HsUserProtocolDef.CreateUser.Result cur = (HsUserProtocolDef.CreateUser.Result) slf.resultAry[0];
+				HsUserProtocolDef.CreateUserCmd.Result cur = (HsUserProtocolDef.CreateUserCmd.Result) slf.resultAry[0];
 				slf.setResult(cur);
 				slf.setCurrentFuture(client.put(APP_NAME, "username",
 						cur.username, slf.createFutureCallback(Void.class)));
@@ -41,7 +41,7 @@ public class HsUser extends HsUserProtocol {
 		slf.addRunnable(new Runnable() {
 			@Override
 			public void run() {
-				HsUserProtocolDef.CreateUser.Result cur = (HsUserProtocolDef.CreateUser.Result) slf.resultAry[0];
+				HsUserProtocolDef.CreateUserCmd.Result cur = (HsUserProtocolDef.CreateUserCmd.Result) slf.resultAry[0];
 				slf.setCurrentFuture(client.put(APP_NAME, "password",
 						cur.password, slf.createFutureCallback(Void.class)));
 			}
@@ -62,10 +62,10 @@ public class HsUser extends HsUserProtocol {
 		return client.get(APP_NAME, "password", callback);
 	}
 
-	public static Future<Login.Result> login(final HsClient client,
-			final FutureCallback<HsUserProtocolDef.Login.Result> futureCallback) {
+	public static Future<LoginCmd.Result> login(final HsClient client,
+			final FutureCallback<HsUserProtocolDef.LoginCmd.Result> futureCallback) {
 
-		final HsStepListFuture<Login.Result> slf = new HsStepListFuture<Login.Result>(
+		final HsStepListFuture<LoginCmd.Result> slf = new HsStepListFuture<LoginCmd.Result>(
 				futureCallback);
 
 		slf.addRunnable(new Runnable() {
@@ -91,14 +91,14 @@ public class HsUser extends HsUserProtocol {
 				String username = (String) slf.resultAry[0];
 				String password = (String) slf.resultAry[1];
 				slf.setCurrentFuture(login(client, username, password,
-						slf.createFutureCallback(Login.Result.class)));
+						slf.createFutureCallback(LoginCmd.Result.class)));
 			}
 		});
 		slf.addRunnable(new Runnable() {
 			@Override
 			public void run() {
 				System.err.println("vUtP0tj3");
-				slf.setResult((Login.Result) slf.resultAry[2]);
+				slf.setResult((LoginCmd.Result) slf.resultAry[2]);
 				slf.runNext();
 			}
 		});

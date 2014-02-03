@@ -33,17 +33,17 @@ public class HsUserTest {
 		HsClient client = new HsClient(SERVER, new HsMemStorage(
 				Executors.newCachedThreadPool()));
 
-		final HsUserProtocolDef.CreateUser.Result[] curv = new HsUserProtocolDef.CreateUser.Result[1];
-		Future<HsUserProtocolDef.CreateUser.Result> f = HsUser.createUser(
+		final HsUserProtocolDef.CreateUserCmd.Result[] curv = new HsUserProtocolDef.CreateUserCmd.Result[1];
+		Future<HsUserProtocolDef.CreateUserCmd.Result> f = HsUser.createUser(
 				client, TEST_DEV,
-				new FutureCallback<HsUserProtocolDef.CreateUser.Result>() {
+				new FutureCallback<HsUserProtocolDef.CreateUserCmd.Result>() {
 					@Override
 					public void cancelled() {
 					}
 
 					@Override
 					public void completed(
-							HsUserProtocolDef.CreateUser.Result arg0) {
+							HsUserProtocolDef.CreateUserCmd.Result arg0) {
 						curv[0] = arg0;
 					}
 
@@ -56,7 +56,7 @@ public class HsUserTest {
 		Assert.assertNotNull(f);
 
 		// System.err.println("0");
-		HsUserProtocolDef.CreateUser.Result cur = f.get(5, TimeUnit.SECONDS);
+		HsUserProtocolDef.CreateUserCmd.Result cur = f.get(5, TimeUnit.SECONDS);
 		// System.err.println("1");
 		Assert.assertNotNull(cur);
 		Assert.assertEquals(cur, curv[0]);

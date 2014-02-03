@@ -2,7 +2,7 @@ package com.luzi82.hikari.client.protocol;
 
 public class HsUserProtocolDef {
 
-	public static class CreateUser {
+	public static class CreateUserCmd {
 
 		public static class Request {
 			public String device_id;
@@ -14,7 +14,7 @@ public class HsUserProtocolDef {
 		}
 	}
 
-	public static class Login {
+	public static class LoginCmd {
 		public static class Request {
 			public String username;
 			public String password;
@@ -24,7 +24,7 @@ public class HsUserProtocolDef {
 		}
 	}
 
-	public static class CheckLogin {
+	public static class CheckLoginCmd {
 		public static class Request {
 		}
 
