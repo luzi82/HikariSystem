@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.HsMemStorage;
 import com.luzi82.hikari.client.HsUser;
-import com.luzi82.hikari.client.protocol.HsUserProtocol;
+import com.luzi82.hikari.client.protocol.HsUserProtocolDef;
 
 public class HsUserTest {
 
@@ -33,19 +33,19 @@ public class HsUserTest {
 
 		// HsWaiter<HsUserCreateUserResult> createUserWaiter = new
 		// HsWaiter<HsUser.CreateUserResult>();
-		final HsUserProtocol.CreateUser.Result[] curv = new HsUserProtocol.CreateUser.Result[1];
-		Future<HsUserProtocol.CreateUser.Result> f = HsUser
+		final HsUserProtocolDef.CreateUser.Result[] curv = new HsUserProtocolDef.CreateUser.Result[1];
+		Future<HsUserProtocolDef.CreateUser.Result> f = HsUser
 				.createUser(
 						client,
 						"test_dev",
-						new FutureCallback<HsUserProtocol.CreateUser.Result>() {
+						new FutureCallback<HsUserProtocolDef.CreateUser.Result>() {
 							@Override
 							public void cancelled() {
 							}
 
 							@Override
 							public void completed(
-									HsUserProtocol.CreateUser.Result arg0) {
+									HsUserProtocolDef.CreateUser.Result arg0) {
 								curv[0] = arg0;
 							}
 
@@ -58,7 +58,7 @@ public class HsUserTest {
 		Assert.assertNotNull(f);
 
 		// System.err.println("0");
-		HsUserProtocol.CreateUser.Result cur = f.get(5, TimeUnit.SECONDS);
+		HsUserProtocolDef.CreateUser.Result cur = f.get(5, TimeUnit.SECONDS);
 		// System.err.println("1");
 		Assert.assertNotNull(cur);
 		Assert.assertEquals(cur, curv[0]);

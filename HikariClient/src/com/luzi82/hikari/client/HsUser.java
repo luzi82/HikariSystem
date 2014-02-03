@@ -4,35 +4,35 @@ import java.util.concurrent.Future;
 
 import org.apache.http.concurrent.FutureCallback;
 
-import com.luzi82.hikari.client.endpoint.HsUserEp;
 import com.luzi82.hikari.client.protocol.HsUserProtocol;
+import com.luzi82.hikari.client.protocol.HsUserProtocolDef;
 
 public class HsUser {
 
-	public static final String APP_NAME = HsUserEp.APP_NAME;
+	public static final String APP_NAME = HsUserProtocol.APP_NAME;
 
-	public static Future<HsUserProtocol.CreateUser.Result> createUser(
+	public static Future<HsUserProtocolDef.CreateUser.Result> createUser(
 			final HsClient client,
 			final String device_id,
-			final FutureCallback<HsUserProtocol.CreateUser.Result> futureCallback) {
+			final FutureCallback<HsUserProtocolDef.CreateUser.Result> futureCallback) {
 
-		final HsStepListFuture<HsUserProtocol.CreateUser.Result> slf = new HsStepListFuture<HsUserProtocol.CreateUser.Result>(
+		final HsStepListFuture<HsUserProtocolDef.CreateUser.Result> slf = new HsStepListFuture<HsUserProtocolDef.CreateUser.Result>(
 				futureCallback);
 		slf.addRunnable(new Runnable() {
 			@Override
 			public void run() {
 				System.err.println("0Iffc95z");
-				slf.setCurrentFuture(HsUserEp.createUser(
+				slf.setCurrentFuture(HsUserProtocol.createUser(
 						client,
 						device_id,
-						slf.createFutureCallback(HsUserProtocol.CreateUser.Result.class)));
+						slf.createFutureCallback(HsUserProtocolDef.CreateUser.Result.class)));
 			}
 		});
 		slf.addRunnable(new Runnable() {
 			@Override
 			public void run() {
 				System.err.println("kogGqQzW");
-				HsUserProtocol.CreateUser.Result cur = (HsUserProtocol.CreateUser.Result) slf.resultAry[0];
+				HsUserProtocolDef.CreateUser.Result cur = (HsUserProtocolDef.CreateUser.Result) slf.resultAry[0];
 				slf.setResult(cur);
 				slf.setCurrentFuture(client.put(APP_NAME, "username",
 						cur.username, slf.createFutureCallback(Void.class)));
@@ -41,7 +41,7 @@ public class HsUser {
 		slf.addRunnable(new Runnable() {
 			@Override
 			public void run() {
-				HsUserProtocol.CreateUser.Result cur = (HsUserProtocol.CreateUser.Result) slf.resultAry[0];
+				HsUserProtocolDef.CreateUser.Result cur = (HsUserProtocolDef.CreateUser.Result) slf.resultAry[0];
 				slf.setCurrentFuture(client.put(APP_NAME, "password",
 						cur.password, slf.createFutureCallback(Void.class)));
 			}

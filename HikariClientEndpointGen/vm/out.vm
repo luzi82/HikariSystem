@@ -1,0 +1,33 @@
+package com.luzi82.hikari.client.protocol;
+
+import java.util.concurrent.Future;
+import org.apache.http.concurrent.FutureCallback;
+import com.luzi82.hikari.client.endpoint.HsCmdManager;
+
+public class ${main}Protocol extends ${main}ProtocolDef {
+
+	public static final String APP_NAME = "${app_name}";
+#foreach( $cmd in $cmd_list )
+
+	public static Future<${cmd.Cname}.Result> ${cmd.Fname}(
+		final HsCmdManager cmdManager,
+#foreach( $req in $cmd.ReqList )
+		${req.Type} ${req.Name},
+#end
+		final FutureCallback<${cmd.Cname}.Result> futureCallback
+	) {
+		final ${cmd.Cname}.Request request = new ${cmd.Cname}.Request();
+#foreach( $req in $cmd.ReqList )
+		request.${req.Name} = ${req.Name};
+#end
+		return cmdManager.sendRequest(
+			APP_NAME,
+			"${cmd.Jname}",
+			request,
+			${cmd.Cname}.Result.class,
+			futureCallback
+		);
+	}
+#end
+
+}
