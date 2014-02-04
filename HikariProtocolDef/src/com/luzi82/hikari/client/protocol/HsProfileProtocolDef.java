@@ -1,6 +1,6 @@
 package com.luzi82.hikari.client.protocol;
 
-public class HsUserProfileProtocolDef {
+public class HsProfileProtocolDef {
 
 	public static class SetNameCmd {
 

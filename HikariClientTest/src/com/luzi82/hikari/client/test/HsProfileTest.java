@@ -11,9 +11,9 @@ import org.junit.Test;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.HsMemStorage;
 import com.luzi82.hikari.client.HsUser;
-import com.luzi82.hikari.client.HsUserProfile;
+import com.luzi82.hikari.client.HsProfile;
 
-public class HsUserProfileTest {
+public class HsProfileTest {
 
 	public static String SERVER = "http://192.168.1.50";
 
@@ -28,10 +28,10 @@ public class HsUserProfileTest {
 		HsUser.createUser(client, TEST_DEV, null).get(5, TimeUnit.SECONDS);
 		HsUser.login(client, null).get(5, TimeUnit.SECONDS);
 
-		HsUserProfile.setName(client, "test_name", null).get(5,
+		HsProfile.setName(client, "test_name", null).get(5,
 				TimeUnit.SECONDS);
 
-		HsUserProfile.GetProfileCmd.Result getProfileResult = HsUserProfile.getProfile(client, null,
+		HsProfile.GetProfileCmd.Result getProfileResult = HsProfile.getProfile(client, null,
 				null).get(5, TimeUnit.SECONDS);
 		Assert.assertEquals("test_name", getProfileResult.profile.name);
 	}

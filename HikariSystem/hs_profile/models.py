@@ -7,3 +7,9 @@ class HsUserProfile(models.Model):
 
     user = models.ForeignKey(auth_models.User,db_index=True)
     name = models.CharField(max_length=PROFILE_NAME_LENGTH,db_index=True)
+
+    def to_dict(self):
+        return {
+            "username": self.user.username,
+            "name": self.name,
+        }
