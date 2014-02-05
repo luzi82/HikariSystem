@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.http import HttpResponse
-from django.utils import simplejson as json
+import json
 from django.utils.translation import ugettext as _
 from django.utils.importlib import import_module
 from django.utils.log import getLogger
