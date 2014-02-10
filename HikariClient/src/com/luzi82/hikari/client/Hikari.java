@@ -145,6 +145,7 @@ public class Hikari extends HikariProtocol {
 				String password = passwordFuture.get();
 				f2 = login(client, username, password,
 						new Callback<LoginCmd.Result>(new Step3()));
+				setFuture(f2);
 			}
 
 		}
