@@ -39,6 +39,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    'hikari',
+    
     'hs_i18n',
     'hs_profile',
     'hs_level',
