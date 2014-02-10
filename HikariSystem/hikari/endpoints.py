@@ -1,5 +1,5 @@
 from ajax.exceptions import AJAXError
-import hs_user
+import hikari
 import json
 import django.contrib.auth as auth
 import sys
@@ -9,7 +9,7 @@ def create_user(request):
     
 #     device_id = request.POST["device_id"]
 
-    user_data = hs_user.create_random_user()
+    user_data = hikari.create_random_user()
 
     return {
         'username': user_data['username'],

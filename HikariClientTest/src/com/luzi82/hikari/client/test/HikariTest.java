@@ -1,6 +1,7 @@
 package com.luzi82.hikari.client.test;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -16,12 +17,12 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.luzi82.hikari.client.Hikari;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.HsMemStorage;
-import com.luzi82.hikari.client.HsUser;
-import com.luzi82.hikari.client.protocol.HsUserProtocolDef;
+import com.luzi82.hikari.client.protocol.HikariProtocolDef;
 
-public class HsUserTest {
+public class HikariTest {
 
 	public static String SERVER = "http://192.168.1.50";
 
@@ -30,20 +31,21 @@ public class HsUserTest {
 	@Test
 	public void testCreateUser() throws InterruptedException,
 			ExecutionException, TimeoutException {
-		HsClient client = new HsClient(SERVER, new HsMemStorage(
-				Executors.newCachedThreadPool()));
+		ExecutorService executor = Executors.newCachedThreadPool();
+		HsClient client = new HsClient(SERVER, new HsMemStorage(executor),
+				executor);
 
-		final HsUserProtocolDef.CreateUserCmd.Result[] curv = new HsUserProtocolDef.CreateUserCmd.Result[1];
-		Future<HsUserProtocolDef.CreateUserCmd.Result> f = HsUser.createUser(
+		final HikariProtocolDef.CreateUserCmd.Result[] curv = new HikariProtocolDef.CreateUserCmd.Result[1];
+		Future<HikariProtocolDef.CreateUserCmd.Result> f = Hikari.createUser(
 				client, TEST_DEV,
-				new FutureCallback<HsUserProtocolDef.CreateUserCmd.Result>() {
+				new FutureCallback<HikariProtocolDef.CreateUserCmd.Result>() {
 					@Override
 					public void cancelled() {
 					}
 
 					@Override
 					public void completed(
-							HsUserProtocolDef.CreateUserCmd.Result arg0) {
+							HikariProtocolDef.CreateUserCmd.Result arg0) {
 						curv[0] = arg0;
 					}
 
@@ -56,7 +58,7 @@ public class HsUserTest {
 		Assert.assertNotNull(f);
 
 		// System.err.println("0");
-		HsUserProtocolDef.CreateUserCmd.Result cur = f.get(5, TimeUnit.SECONDS);
+		HikariProtocolDef.CreateUserCmd.Result cur = f.get(5, TimeUnit.SECONDS);
 		// System.err.println("1");
 		Assert.assertNotNull(cur);
 		Assert.assertEquals(cur, curv[0]);
@@ -96,21 +98,22 @@ public class HsUserTest {
 			public void cancelled() {
 			}
 		};
-		Assert.assertEquals(cur.username, HsUser
+		Assert.assertEquals(cur.username, Hikari
 				.getUsername(client, usernameFc).get(1, TimeUnit.SECONDS));
 		Assert.assertEquals(cur.username, usernameV[0]);
-		Assert.assertEquals(cur.password, HsUser
+		Assert.assertEquals(cur.password, Hikari
 				.getPassword(client, passwordFc).get(1, TimeUnit.SECONDS));
 		Assert.assertEquals(cur.password, passwordV[0]);
 	}
 
 	@Test
 	public void testBadLogin() throws InterruptedException {
-		HsClient client = new HsClient(SERVER, new HsMemStorage(
-				Executors.newCachedThreadPool()));
+		ExecutorService executor = Executors.newCachedThreadPool();
+		HsClient client = new HsClient(SERVER, new HsMemStorage(executor),
+				executor);
 
 		try {
-			HsUser.login(client, "XXX", "XXX", null).get();
+			Hikari.login(client, "XXX", "XXX", null).get();
 			Assert.fail();
 		} catch (ExecutionException ee) {
 		}
@@ -119,29 +122,31 @@ public class HsUserTest {
 	@Test
 	public void testLogin() throws InterruptedException, ExecutionException,
 			TimeoutException {
-		HsClient client = new HsClient(SERVER, new HsMemStorage(
-				Executors.newCachedThreadPool()));
+		ExecutorService executor = Executors.newCachedThreadPool();
+		HsClient client = new HsClient(SERVER, new HsMemStorage(executor),
+				executor);
 
-		HsUser.createUser(client, TEST_DEV, null).get(5, TimeUnit.SECONDS);
+		Hikari.createUser(client, TEST_DEV, null).get(5, TimeUnit.SECONDS);
 
-		HsUser.login(client, null).get(5, TimeUnit.SECONDS);
+		Hikari.login(client, null).get(5, TimeUnit.SECONDS);
 	}
 
 	@Test
 	public void testCheckLogin() throws InterruptedException,
 			ExecutionException, TimeoutException {
-		HsClient client = new HsClient(SERVER, new HsMemStorage(
-				Executors.newCachedThreadPool()));
+		ExecutorService executor = Executors.newCachedThreadPool();
+		HsClient client = new HsClient(SERVER, new HsMemStorage(executor),
+				executor);
 
 		try {
-			HsUser.checkLogin(client, null).get(5, TimeUnit.SECONDS);
+			Hikari.checkLogin(client, null).get(5, TimeUnit.SECONDS);
 			Assert.fail();
 		} catch (ExecutionException ee) {
 		}
 
-		HsUser.createUser(client, TEST_DEV, null).get(5, TimeUnit.SECONDS);
-		HsUser.login(client, null).get(5, TimeUnit.SECONDS);
-		HsUser.checkLogin(client, null).get(5, TimeUnit.SECONDS);
+		Hikari.createUser(client, TEST_DEV, null).get(5, TimeUnit.SECONDS);
+		Hikari.login(client, null).get(5, TimeUnit.SECONDS);
+		Hikari.checkLogin(client, null).get(5, TimeUnit.SECONDS);
 	}
 
 	@Test
