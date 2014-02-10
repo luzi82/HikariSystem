@@ -84,14 +84,7 @@ public class HsClient implements HsCmdManager {
 
 				f0 = httpclient.execute(post, new Callback<HttpResponse>(
 						new Step1()));
-			}
-
-			@Override
-			public synchronized boolean cancel(boolean mayInterruptIfRunning) {
-				if (f0 != null) {
-					return f0.cancel(mayInterruptIfRunning);
-				}
-				return true;
+				setFuture(f0);
 			}
 
 		}
