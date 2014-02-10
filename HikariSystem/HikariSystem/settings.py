@@ -41,13 +41,6 @@ INSTALLED_APPS = (
     
     'hikari',
     
-    'hs_i18n',
-    'hs_profile',
-    'hs_level',
-    'hs_resource',
-    'hs_item',
-    'hs_user',
-    
     'south',
     'ajax',
 )
