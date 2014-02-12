@@ -17,9 +17,9 @@ import org.apache.http.message.BasicNameValuePair;
 
 import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.concurrent.GuriFuture;
-import com.luzi82.hikari.client.HsJsonClient;
+import com.luzi82.hikari.client.HsHttpClient;
 
-public class HsClientApache implements HsJsonClient {
+public class HsClientApache implements HsHttpClient {
 
 	Executor executor;
 	CloseableHttpAsyncClient httpclient;

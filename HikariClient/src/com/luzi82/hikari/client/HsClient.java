@@ -16,13 +16,13 @@ public class HsClient implements HsCmdManager {
 	String server;
 	final HsStorage storage;
 	final public Executor executor;
-	HsJsonClient jsonClient;
+	HsHttpClient jsonClient;
 	ObjectMapper mObjectMapper = new ObjectMapper();
 
 	// final HsCmdManager cmdManager;
 
 	public HsClient(String aServer, HsStorage storage, Executor executor,
-			HsJsonClient jsonClient) {
+			HsHttpClient jsonClient) {
 		this.server = aServer;
 		this.storage = storage;
 		this.executor = executor;
