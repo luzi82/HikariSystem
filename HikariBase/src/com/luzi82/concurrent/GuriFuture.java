@@ -3,12 +3,9 @@ package com.luzi82.concurrent;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
-import org.apache.http.concurrent.BasicFuture;
-import org.apache.http.concurrent.FutureCallback;
-
 public class GuriFuture<T> extends BasicFuture<T> {
 
-	Executor executor;
+	public Executor executor;
 
 	public GuriFuture(FutureCallback<T> callback, Executor executor) {
 		super(callback);
@@ -32,7 +29,7 @@ public class GuriFuture<T> extends BasicFuture<T> {
 
 	Step currentStep = null;
 
-	protected abstract class Step implements Runnable {
+	public abstract class Step implements Runnable {
 
 		Future<?> future;
 
@@ -74,7 +71,7 @@ public class GuriFuture<T> extends BasicFuture<T> {
 
 	}
 
-	protected class Callback<U> implements FutureCallback<U> {
+	public class Callback<U> implements FutureCallback<U> {
 
 		Step s;
 

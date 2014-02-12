@@ -5,7 +5,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-import org.apache.http.concurrent.FutureCallback;
+import com.luzi82.concurrent.FutureCallback;
 
 public class HsMemStorage implements HsStorage {
 

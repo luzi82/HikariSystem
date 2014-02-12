@@ -2,7 +2,7 @@ package com.luzi82.hikari.client;
 
 import java.util.concurrent.Future;
 
-import org.apache.http.concurrent.FutureCallback;
+import com.luzi82.concurrent.FutureCallback;
 
 public interface HsStorage {
 

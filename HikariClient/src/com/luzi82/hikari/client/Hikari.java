@@ -2,8 +2,7 @@ package com.luzi82.hikari.client;
 
 import java.util.concurrent.Future;
 
-import org.apache.http.concurrent.FutureCallback;
-
+import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.concurrent.GuriFuture;
 import com.luzi82.hikari.client.protocol.HikariProtocol;
 import com.luzi82.hikari.client.protocol.HikariProtocolDef;
@@ -11,7 +10,7 @@ import com.luzi82.hikari.client.protocol.HikariProtocolDef;
 public class Hikari extends HikariProtocol {
 
 	public static final String APP_NAME = HikariProtocol.APP_NAME;
-	
+
 	public static class CreateUserFuture extends
 			GuriFuture<CreateUserCmd.Result> {
 

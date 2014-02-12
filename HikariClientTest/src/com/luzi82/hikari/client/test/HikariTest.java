@@ -9,7 +9,6 @@ import java.util.concurrent.TimeoutException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.junit.Assert;
@@ -17,9 +16,11 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.hikari.client.Hikari;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.HsMemStorage;
+import com.luzi82.hikari.client.apache.HsClientApache;
 import com.luzi82.hikari.client.protocol.HikariProtocolDef;
 
 public class HikariTest {
@@ -31,9 +32,7 @@ public class HikariTest {
 	@Test
 	public void testCreateUser() throws InterruptedException,
 			ExecutionException, TimeoutException {
-		ExecutorService executor = Executors.newCachedThreadPool();
-		HsClient client = new HsClient(SERVER, new HsMemStorage(executor),
-				executor);
+		HsClient client = createClient();
 
 		final HikariProtocolDef.CreateUserCmd.Result[] curv = new HikariProtocolDef.CreateUserCmd.Result[1];
 		Future<HikariProtocolDef.CreateUserCmd.Result> f = Hikari.createUser(
@@ -108,9 +107,7 @@ public class HikariTest {
 
 	@Test
 	public void testBadLogin() throws InterruptedException {
-		ExecutorService executor = Executors.newCachedThreadPool();
-		HsClient client = new HsClient(SERVER, new HsMemStorage(executor),
-				executor);
+		HsClient client = createClient();
 
 		try {
 			Hikari.login(client, "XXX", "XXX", null).get();
@@ -122,9 +119,7 @@ public class HikariTest {
 	@Test
 	public void testLogin() throws InterruptedException, ExecutionException,
 			TimeoutException {
-		ExecutorService executor = Executors.newCachedThreadPool();
-		HsClient client = new HsClient(SERVER, new HsMemStorage(executor),
-				executor);
+		HsClient client = createClient();
 
 		Hikari.createUser(client, TEST_DEV, null).get(5, TimeUnit.SECONDS);
 
@@ -134,9 +129,7 @@ public class HikariTest {
 	@Test
 	public void testCheckLogin() throws InterruptedException,
 			ExecutionException, TimeoutException {
-		ExecutorService executor = Executors.newCachedThreadPool();
-		HsClient client = new HsClient(SERVER, new HsMemStorage(executor),
-				executor);
+		HsClient client = createClient();
 
 		try {
 			Hikari.checkLogin(client, null).get(5, TimeUnit.SECONDS);
@@ -173,7 +166,7 @@ public class HikariTest {
 		HttpGet req = new HttpGet("http://www.google.com");
 		final HttpResponse[] hr = new HttpResponse[1];
 		Future<HttpResponse> future = httpclient.execute(req,
-				new FutureCallback<HttpResponse>() {
+				new org.apache.http.concurrent.FutureCallback<HttpResponse>() {
 					@Override
 					public void failed(Exception arg0) {
 						arg0.printStackTrace();
@@ -192,6 +185,12 @@ public class HikariTest {
 
 		Assert.assertNotNull(hrr);
 		Assert.assertEquals(hrr, hr[0]);
+	}
+
+	public static HsClient createClient() {
+		ExecutorService executor = Executors.newCachedThreadPool();
+		return new HsClient(SERVER, new HsMemStorage(executor), executor,
+				new HsClientApache(executor));
 	}
 
 }
