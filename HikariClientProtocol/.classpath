@@ -4,13 +4,13 @@
 	<classpathentry kind="src" path="genSrc"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/HikariProtocolDef"/>
-	<classpathentry exported="true" kind="lib" path="/HikariClient/lib/commons-codec-1.6.jar"/>
-	<classpathentry exported="true" kind="lib" path="/HikariClient/lib/commons-logging-1.1.3.jar"/>
-	<classpathentry exported="true" kind="lib" path="/HikariClient/lib/httpasyncclient-4.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="/HikariClient/lib/httpasyncclient-cache-4.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="/HikariClient/lib/httpclient-4.3.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="/HikariClient/lib/httpclient-cache-4.3.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="/HikariClient/lib/httpcore-4.3.jar"/>
-	<classpathentry exported="true" kind="lib" path="/HikariClient/lib/httpcore-nio-4.3.jar"/>
+	<classpathentry kind="lib" path="/import/lib/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="/import/lib/commons-logging-1.1.3.jar"/>
+	<classpathentry kind="lib" path="/import/lib/httpasyncclient-4.0.jar"/>
+	<classpathentry kind="lib" path="/import/lib/httpasyncclient-cache-4.0.jar"/>
+	<classpathentry kind="lib" path="/import/lib/httpclient-4.3.1.jar"/>
+	<classpathentry kind="lib" path="/import/lib/httpclient-cache-4.3.1.jar"/>
+	<classpathentry kind="lib" path="/import/lib/httpcore-4.3.jar"/>
+	<classpathentry kind="lib" path="/import/lib/httpcore-nio-4.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
