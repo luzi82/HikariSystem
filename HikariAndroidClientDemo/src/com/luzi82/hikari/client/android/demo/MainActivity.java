@@ -1,21 +1,22 @@
 package com.luzi82.hikari.client.android.demo;
 
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
+import com.luzi82.hikari.client.HsClient;
+import com.luzi82.hikari.client.HsMemStorage;
 
 public class MainActivity extends FragmentActivity {
 
@@ -34,10 +35,19 @@ public class MainActivity extends FragmentActivity {
 	 */
 	ViewPager mViewPager;
 
+	public HsClient hsClient;
+
+	ExecutorService executorService;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		executorService = Executors.newCachedThreadPool();
+
+		hsClient = new HsClient("http://192.168.1.50", new HsMemStorage(
+				executorService), executorService);
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
@@ -74,7 +84,7 @@ public class MainActivity extends FragmentActivity {
 			// below) with the page number as its lone argument.
 			Fragment fragment = new DummySectionFragment();
 			Bundle args = new Bundle();
-			args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
+			args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position);
 			fragment.setArguments(args);
 			return fragment;
 		}
@@ -117,13 +127,7 @@ public class MainActivity extends FragmentActivity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main_dummy,
-					container, false);
-			TextView dummyTextView = (TextView) rootView
-					.findViewById(R.id.section_label);
-			dummyTextView.setText(Integer.toString(getArguments().getInt(
-					ARG_SECTION_NUMBER)));
-			return rootView;
+			return new LoginView(container.getContext());
 		}
 	}
 

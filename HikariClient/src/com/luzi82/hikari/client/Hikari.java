@@ -11,7 +11,7 @@ import com.luzi82.hikari.client.protocol.HikariProtocolDef;
 public class Hikari extends HikariProtocol {
 
 	public static final String APP_NAME = HikariProtocol.APP_NAME;
-
+	
 	public static class CreateUserFuture extends
 			GuriFuture<CreateUserCmd.Result> {
 
