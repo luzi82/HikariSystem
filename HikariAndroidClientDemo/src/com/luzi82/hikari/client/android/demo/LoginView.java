@@ -2,8 +2,6 @@ package com.luzi82.hikari.client.android.demo;
 
 import java.util.concurrent.Future;
 
-import org.apache.http.concurrent.FutureCallback;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -16,6 +14,7 @@ import android.widget.ListView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.hikari.client.Hikari;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.protocol.HikariProtocolDef;
@@ -41,7 +40,7 @@ public class LoginView extends ListView {
 	}
 
 	public final Cmd[] cmdV = { //
-	new Cmd("create") {
+	new Cmd("createUser") {
 		@Override
 		public void run1() {
 			setFuture(Hikari
@@ -70,27 +69,41 @@ public class LoginView extends ListView {
 		public void completed(T arg0) {
 			try {
 				cmd.dialog.dismiss();
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						getContext());
-				builder.setTitle("completed");
-				builder.setMessage(objectMapper.writeValueAsString(arg0));
-				builder.setPositiveButton("ok", null);
-				AlertDialog dialog = builder.create();
-				dialog.show();
+				final String v = objectMapper.writeValueAsString(arg0);
+				System.err.println(v);
+				getMain().runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						AlertDialog.Builder builder = new AlertDialog.Builder(
+								getContext());
+						builder.setTitle("completed");
+						builder.setMessage(v);
+						builder.setPositiveButton("ok", null);
+						AlertDialog dialog = builder.create();
+						dialog.show();
+					}
+				});
 			} catch (JsonProcessingException e) {
 				e.printStackTrace();
 			}
 		}
 
 		@Override
-		public void failed(Exception arg0) {
+		public void failed(final Exception arg0) {
+			arg0.printStackTrace();
 			cmd.dialog.dismiss();
-			AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-			builder.setTitle("failed");
-			builder.setMessage(arg0.getMessage());
-			builder.setPositiveButton("ok", null);
-			AlertDialog dialog = builder.create();
-			dialog.show();
+			getMain().runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							getContext());
+					builder.setTitle("failed");
+					builder.setMessage(arg0.getMessage());
+					builder.setPositiveButton("ok", null);
+					AlertDialog dialog = builder.create();
+					dialog.show();
+				}
+			});
 		}
 
 	}
@@ -111,7 +124,7 @@ public class LoginView extends ListView {
 
 		public void run() {
 			run1();
-			dialog = ProgressDialog.show(getContext(), title, title, false,
+			dialog = ProgressDialog.show(getContext(), title, "Wait...", false,
 					future != null, this);
 		}
 

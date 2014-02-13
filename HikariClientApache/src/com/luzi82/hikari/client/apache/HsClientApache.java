@@ -31,7 +31,7 @@ public class HsClientApache implements HsHttpClient {
 	}
 
 	public static class StatusCodeException extends Exception {
-		private static final long serialVersionUID = 9200724531954807040L;
+		private static final long serialVersionUID = -8124311270798055897L;
 		public int code;
 
 		public StatusCodeException(int code) {

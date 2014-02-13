@@ -8,6 +8,7 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/HikariClient"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/HikariClientProtocol"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/HikariProtocolDef"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/HikariBase"/>
 	<classpathentry exported="true" kind="lib" path="/import/lib/jackson-annotations-2.3.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="/import/lib/jackson-core-2.3.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="/import/lib/jackson-databind-2.3.1.jar"/>

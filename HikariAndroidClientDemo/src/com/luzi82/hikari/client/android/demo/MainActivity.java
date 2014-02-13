@@ -43,11 +43,12 @@ public class MainActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		executorService = Executors.newCachedThreadPool();
 
 		hsClient = new HsClient("http://192.168.1.50", new HsMemStorage(
-				executorService), executorService);
+				executorService), executorService, new HttpClient(
+				executorService));
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
