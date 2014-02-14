@@ -17,6 +17,7 @@ import android.widget.ListView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.hikari.client.Hikari;
 import com.luzi82.hikari.client.HsClient;
@@ -32,6 +33,7 @@ public class LoginView extends ListView {
 		setAdapter(new Adapter());
 
 		objectMapper = new ObjectMapper();
+		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 
 		this.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -67,6 +69,13 @@ public class LoginView extends ListView {
 							new MyFutureCallback<HikariProtocolDef.CreateUserCmd.Result>(
 									this)));
 		}
+	}, new Cmd("login") {
+		@Override
+		public void run1() {
+			setFuture(Hikari.login(getClient(),
+					new MyFutureCallback<HikariProtocolDef.LoginCmd.Result>(
+							this)));
+		}
 	} };
 
 	public class MyFutureCallback<T> implements FutureCallback<T> {
@@ -93,9 +102,9 @@ public class LoginView extends ListView {
 					public void run() {
 						AlertDialog.Builder builder = new AlertDialog.Builder(
 								getContext());
-						builder.setTitle("completed");
+						builder.setTitle("Completed");
 						builder.setMessage(v);
-						builder.setPositiveButton("ok", null);
+						builder.setPositiveButton("Ok", null);
 						AlertDialog dialog = builder.create();
 						dialog.show();
 					}
@@ -114,9 +123,9 @@ public class LoginView extends ListView {
 				public void run() {
 					AlertDialog.Builder builder = new AlertDialog.Builder(
 							getContext());
-					builder.setTitle("failed");
+					builder.setTitle("Failed");
 					builder.setMessage(arg0.getMessage());
-					builder.setPositiveButton("ok", null);
+					builder.setPositiveButton("Ok", null);
 					AlertDialog dialog = builder.create();
 					dialog.show();
 				}

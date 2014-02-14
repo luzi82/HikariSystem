@@ -74,7 +74,10 @@ public class HttpClient implements HsHttpClient {
 									if (arg0 != 200) {
 										throw new StatusCodeException(arg0);
 									}
-									completed(new String(arg2, "utf-8"));
+									String result = new String(arg2, "utf-8");
+									System.err.println("mR2q0zqN result: "
+											+ result);
+									completed(result);
 								} catch (Exception e) {
 									SendRequestFuture.this.failed(e);
 								}
