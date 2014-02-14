@@ -75,7 +75,7 @@ public class HsClient implements HsCmdManager {
 			public void _run() throws Exception {
 				String url = server + "/ajax/" + appName + "/" + string
 						+ ".json";
-				System.err.println(url);
+//				System.err.println(url);
 
 				String json = null;
 				json = mObjectMapper.writeValueAsString(request);
