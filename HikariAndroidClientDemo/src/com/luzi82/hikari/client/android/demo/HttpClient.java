@@ -1,6 +1,5 @@
 package com.luzi82.hikari.client.android.demo;
 
-import java.io.UnsupportedEncodingException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
@@ -34,6 +33,8 @@ public class HttpClient implements HsHttpClient {
 			super(callback, HttpClient.this.executor);
 			this.url = url;
 			this.request = request;
+			System.err.println("AUEFR1Zp url: " + url);
+			System.err.println("fdXtwJSl request: " + request);
 		}
 
 		public void start() {
@@ -53,7 +54,7 @@ public class HttpClient implements HsHttpClient {
 							@Override
 							public void onFailure(int arg0, Header[] arg1,
 									byte[] arg2, Throwable arg3) {
-//								System.err.println("T34u0hBG onFailure");
+								// System.err.println("T34u0hBG onFailure");
 								if (arg3 instanceof Exception) {
 									Exception exception = (Exception) arg3;
 									SendRequestFuture.this.failed(exception);
@@ -67,7 +68,7 @@ public class HttpClient implements HsHttpClient {
 							@Override
 							public void onSuccess(int arg0, Header[] arg1,
 									byte[] arg2) {
-//								System.err.println("c9VXiR9u onSuccess");
+								// System.err.println("c9VXiR9u onSuccess");
 								String ret = null;
 								try {
 									if (arg0 != 200) {

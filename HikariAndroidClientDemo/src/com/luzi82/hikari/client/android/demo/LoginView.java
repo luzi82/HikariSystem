@@ -1,5 +1,7 @@
 package com.luzi82.hikari.client.android.demo;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Future;
 
 import android.app.AlertDialog;
@@ -7,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.os.Build;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -43,10 +46,24 @@ public class LoginView extends ListView {
 	new Cmd("createUser") {
 		@Override
 		public void run1() {
+			Map<String, Object> modelData = new HashMap<String, Object>();
+			modelData.put("H_MANUFACTURER", Build.MANUFACTURER);
+			modelData.put("H_MODEL", Build.MODEL);
+			modelData.put("H_PRODUCT", Build.PRODUCT);
+			modelData.put("S_CODENAME", Build.VERSION.CODENAME);
+			modelData.put("S_INCREMENTAL", Build.VERSION.INCREMENTAL);
+			modelData.put("S_RELEASE", Build.VERSION.RELEASE);
+			modelData.put("S_SDK_INT", Build.VERSION.SDK_INT);
+			String modelString = "unknown";
+			try {
+				modelString = objectMapper.writeValueAsString(modelData);
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
 			setFuture(Hikari
 					.createUser(
 							getClient(),
-							"asdf",
+							modelString,
 							new MyFutureCallback<HikariProtocolDef.CreateUserCmd.Result>(
 									this)));
 		}

@@ -5,7 +5,7 @@ public class HikariProtocolDef {
 	public static class CreateUserCmd {
 
 		public static class Request {
-			public String device_id;
+			public String device_model;
 		}
 
 		public static class Result {

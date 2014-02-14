@@ -15,13 +15,13 @@ public class Hikari extends HikariProtocol {
 			GuriFuture<CreateUserCmd.Result> {
 
 		final HsClient client;
-		final String device_id;
+		final String device_model;
 
-		public CreateUserFuture(final HsClient client, final String device_id,
+		public CreateUserFuture(final HsClient client, final String device_model,
 				final FutureCallback<CreateUserCmd.Result> futureCallback) {
 			super(futureCallback, client.executor);
 			this.client = client;
-			this.device_id = device_id;
+			this.device_model = device_model;
 		}
 
 		public void start() {
@@ -34,7 +34,7 @@ public class Hikari extends HikariProtocol {
 
 			@Override
 			public void _run() throws Exception {
-				f0 = HikariProtocol.createUser(client, device_id,
+				f0 = HikariProtocol.createUser(client, device_model,
 						new Callback<CreateUserCmd.Result>(new Step1()));
 				setFuture(f0);
 			}
@@ -76,10 +76,10 @@ public class Hikari extends HikariProtocol {
 
 	public static Future<HikariProtocolDef.CreateUserCmd.Result> createUser(
 			final HsClient client,
-			final String device_id,
+			final String device_model,
 			final FutureCallback<HikariProtocolDef.CreateUserCmd.Result> futureCallback) {
 
-		CreateUserFuture cuf = new CreateUserFuture(client, device_id,
+		CreateUserFuture cuf = new CreateUserFuture(client, device_model,
 				futureCallback);
 		cuf.start();
 		return cuf;
