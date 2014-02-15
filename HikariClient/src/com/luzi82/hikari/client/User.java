@@ -11,13 +11,17 @@ public class User extends UserProtocol {
 
 	public static final String APP_NAME = UserProtocol.APP_NAME;
 
+	public static final String DB_USERNAME = "username";
+	public static final String DB_PASSWORD = "password";
+
 	public static class CreateUserFuture extends
 			GuriFuture<CreateUserCmd.Result> {
 
 		final HsClient client;
 		final String device_model;
 
-		public CreateUserFuture(final HsClient client, final String device_model,
+		public CreateUserFuture(final HsClient client,
+				final String device_model,
 				final FutureCallback<CreateUserCmd.Result> futureCallback) {
 			super(futureCallback, client.executor);
 			this.client = client;
@@ -46,7 +50,7 @@ public class User extends UserProtocol {
 			@Override
 			public void _run() throws Exception {
 				CreateUserCmd.Result cur = f0.get();
-				setFuture(client.put(APP_NAME, "username", cur.username,
+				setFuture(client.put(APP_NAME, DB_USERNAME, cur.username,
 						new Callback<Void>(new Step2())));
 			}
 
@@ -57,7 +61,7 @@ public class User extends UserProtocol {
 			@Override
 			public void _run() throws Exception {
 				CreateUserCmd.Result cur = f0.get();
-				setFuture(client.put(APP_NAME, "password", cur.password,
+				setFuture(client.put(APP_NAME, DB_PASSWORD, cur.password,
 						new Callback<Void>(new Step3())));
 			}
 
@@ -86,16 +90,6 @@ public class User extends UserProtocol {
 
 	}
 
-	public static Future<String> getUsername(HsClient client,
-			FutureCallback<String> callback) {
-		return client.get(APP_NAME, "username", callback);
-	}
-
-	public static Future<String> getPassword(HsClient client,
-			FutureCallback<String> callback) {
-		return client.get(APP_NAME, "password", callback);
-	}
-
 	public static class LoginFuture extends GuriFuture<LoginCmd.Result> {
 
 		final HsClient client;
@@ -118,8 +112,8 @@ public class User extends UserProtocol {
 
 			@Override
 			public void _run() throws Exception {
-				usernameFuture = getUsername(client, new Callback<String>(
-						new Step1()));
+				usernameFuture = client.get(APP_NAME, DB_USERNAME,
+						new Callback<String>(new Step1()));
 				setFuture(usernameFuture);
 			}
 
@@ -129,8 +123,8 @@ public class User extends UserProtocol {
 
 			@Override
 			public void _run() throws Exception {
-				passwordFuture = getPassword(client, new Callback<String>(
-						new Step2()));
+				passwordFuture = client.get(APP_NAME, DB_PASSWORD,
+						new Callback<String>(new Step2()));
 				setFuture(passwordFuture);
 			}
 
@@ -160,8 +154,7 @@ public class User extends UserProtocol {
 
 	}
 
-	public static Future<LoginCmd.Result> login(
-			final HsClient client,
+	public static Future<LoginCmd.Result> login(final HsClient client,
 			final FutureCallback<UserProtocolDef.LoginCmd.Result> futureCallback) {
 
 		LoginFuture ret = new LoginFuture(client, futureCallback);

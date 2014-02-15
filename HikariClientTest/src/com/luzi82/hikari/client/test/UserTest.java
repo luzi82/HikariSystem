@@ -97,11 +97,15 @@ public class UserTest {
 			public void cancelled() {
 			}
 		};
-		Assert.assertEquals(cur.username, User
-				.getUsername(client, usernameFc).get(1, TimeUnit.SECONDS));
+		Assert.assertEquals(
+				cur.username,
+				client.get(User.APP_NAME, User.DB_USERNAME, usernameFc).get(1,
+						TimeUnit.SECONDS));
 		Assert.assertEquals(cur.username, usernameV[0]);
-		Assert.assertEquals(cur.password, User
-				.getPassword(client, passwordFc).get(1, TimeUnit.SECONDS));
+		Assert.assertEquals(
+				cur.password,
+				client.get(User.APP_NAME, User.DB_PASSWORD, passwordFc).get(1,
+						TimeUnit.SECONDS));
 		Assert.assertEquals(cur.password, passwordV[0]);
 	}
 

@@ -14,8 +14,8 @@ public class AdminTest extends AbstractTest {
 	@Test
 	public void testCheckAdmin() throws Exception {
 		HsClient client = createClient();
-		client.put(User.APP_NAME, "username", "admin", null).get();
-		client.put(User.APP_NAME, "password", "password", null).get();
+		client.put(User.APP_NAME, User.DB_USERNAME, "admin", null).get();
+		client.put(User.APP_NAME, User.DB_PASSWORD, "password", null).get();
 
 		User.login(client, null).get();
 		Admin.checkAdmin(client, null).get();
