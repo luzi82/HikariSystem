@@ -8,37 +8,17 @@ import org.junit.Test;
 import com.luzi82.hikari.client.Admin;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.User;
-import com.luzi82.hikari.client.protocol.AdminProtocol;
 
 public class AdminTest extends AbstractTest {
 
 	@Test
-	public void testCreateAdminUser() throws Exception {
+	public void testCheckAdmin() throws Exception {
 		HsClient client = createClient();
-		createAdminUser(client);
+		client.put(User.APP_NAME, "username", "admin", null).get();
+		client.put(User.APP_NAME, "password", "password", null).get();
+
 		User.login(client, null).get();
 		Admin.checkAdmin(client, null).get();
-	}
-
-	@Test
-	public void testCreateAdminUserWithoutBackdoor() throws Exception {
-		HsClient client = createClient();
-
-		try {
-			AdminProtocol.createAdminUser(client, "asdf", null).get();
-			Assert.fail();
-		} catch (ExecutionException e) {
-		}
-		try {
-			AdminProtocol.createAdminUser(client, null, null).get();
-			Assert.fail();
-		} catch (ExecutionException e) {
-		}
-		try {
-			AdminProtocol.createAdminUser(client, null, null).get();
-			Assert.fail();
-		} catch (ExecutionException e) {
-		}
 	}
 
 	@Test
