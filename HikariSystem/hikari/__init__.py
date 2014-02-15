@@ -32,5 +32,4 @@ def now64():
     ret = int(ret)
     return ret
 
-print "iumodlGB"
 __import__("hikari.cmd")
