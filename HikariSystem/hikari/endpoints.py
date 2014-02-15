@@ -1,4 +1,4 @@
-import hikari.endpoint.user as user
+import hikari.cmd.user as user
 
 user__create_user = user.create_user
 user__login = user.login
