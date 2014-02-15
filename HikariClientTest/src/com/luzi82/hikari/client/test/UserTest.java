@@ -23,7 +23,7 @@ import com.luzi82.hikari.client.HsMemStorage;
 import com.luzi82.hikari.client.apache.HsClientApache;
 import com.luzi82.hikari.client.protocol.UserProtocolDef;
 
-public class HikariTest {
+public class UserTest {
 
 	public static String SERVER = "http://192.168.1.50";
 
