@@ -3,6 +3,7 @@ from django.test.client import Client
 import simplejson
 from hikari.models import HsUser
 from django.contrib.auth.models import User
+from hikari import now64
 
 # Create your tests here.
 
@@ -15,43 +16,45 @@ class SimpleTest(TestCase):
         client = Client()
         
 #        response = client.post(reverse('ajax')+"/hikari/hello.json",{
-        response = client.post("/ajax/hikari/create_user.json",{"arg":simplejson.dumps({
+        response = client.post("/ajax/hikari/create_user.json", {"arg":simplejson.dumps({
             "device_model":SimpleTest.TEST_DEVICE_MODEL
         })})
-        content=response.content
+        content = response.content
         result = simplejson.loads(content)
         
-        self.assertEqual(result['success'],True)
-        self.assertIn("username",result['data'])
-        self.assertIn("password",result['data'])
+        self.assertEqual(result['success'], True)
+        self.assertIn("username", result['data'])
+        self.assertIn("password", result['data'])
         
-        user = User.objects.get(username = result['data']['username'])
-        hsuser = HsUser.objects.get(user = user)
-        self.assertEqual(hsuser.device_model,SimpleTest.TEST_DEVICE_MODEL)
+        user = User.objects.get(username=result['data']['username'])
+        hsuser = HsUser.objects.get(user=user)
+        self.assertEqual(hsuser.device_model, SimpleTest.TEST_DEVICE_MODEL)
+        self.assertTrue(hsuser.create_at <= now64())
+        self.assertTrue(hsuser.create_at >= now64() - 1000)
 
     def test_login(self):
         
         client = Client()
         
 #        response = client.post(reverse('ajax')+"/hikari/hello.json",{
-        response = client.post("/ajax/hikari/create_user.json",{"arg":simplejson.dumps({
+        response = client.post("/ajax/hikari/create_user.json", {"arg":simplejson.dumps({
             "device_model":SimpleTest.TEST_DEVICE_MODEL
         })})
-        content=response.content
+        content = response.content
         result = simplejson.loads(content)
         
-        self.assertEqual(result['success'],True)
+        self.assertEqual(result['success'], True)
         username = result['data']['username']
         password = result['data']['password']
 
-        response = client.post("/ajax/hikari/login.json",{"arg":simplejson.dumps({
+        response = client.post("/ajax/hikari/login.json", {"arg":simplejson.dumps({
             "username":username,
             "password":password,
         })})
-        content=response.content
+        content = response.content
         result = simplejson.loads(content)
         
 #         print result
         
-        self.assertEqual(result['success'],True)
+        self.assertEqual(result['success'], True)
         self.assertIn('_auth_user_id', client.session)

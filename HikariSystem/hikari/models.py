@@ -7,3 +7,4 @@ class HsUser(models.Model):
     
     user = models.ForeignKey(User,db_index=True)
     device_model = models.TextField(max_length=DEVICE_MODEL_LENGTH)
+    create_at = models.BigIntegerField()

@@ -5,19 +5,22 @@ import django.contrib.auth as auth
 import sys
 from ajax.decorators import login_required
 from hikari.models import HsUser
+from hikari import now64
 
 def create_user(request):
     
     argJson = request.POST['arg']
     arg = json.loads(argJson)
-
+    now = now64()
+    
     device_model = arg["device_model"]
     
     user_data = hikari.create_random_user()
     
     HsUser.objects.create(
         user = user_data['user'],
-        device_model = device_model
+        device_model = device_model,
+        create_at = now
     )
 
     return {

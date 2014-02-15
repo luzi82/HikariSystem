@@ -13,6 +13,7 @@ class Migration(SchemaMigration):
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
             ('device_model', self.gf('django.db.models.fields.TextField')(max_length=1024)),
+            ('create_at', self.gf('django.db.models.fields.BigIntegerField')()),
         ))
         db.send_create_signal(u'hikari', ['HsUser'])
 
@@ -61,6 +62,7 @@ class Migration(SchemaMigration):
         },
         u'hikari.hsuser': {
             'Meta': {'object_name': 'HsUser'},
+            'create_at': ('django.db.models.fields.BigIntegerField', [], {}),
             'device_model': ('django.db.models.fields.TextField', [], {'max_length': '1024'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
