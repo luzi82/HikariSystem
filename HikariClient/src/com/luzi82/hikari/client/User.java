@@ -4,12 +4,12 @@ import java.util.concurrent.Future;
 
 import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.concurrent.GuriFuture;
-import com.luzi82.hikari.client.protocol.HikariProtocol;
-import com.luzi82.hikari.client.protocol.HikariProtocolDef;
+import com.luzi82.hikari.client.protocol.UserProtocol;
+import com.luzi82.hikari.client.protocol.UserProtocolDef;
 
-public class Hikari extends HikariProtocol {
+public class User extends UserProtocol {
 
-	public static final String APP_NAME = HikariProtocol.APP_NAME;
+	public static final String APP_NAME = UserProtocol.APP_NAME;
 
 	public static class CreateUserFuture extends
 			GuriFuture<CreateUserCmd.Result> {
@@ -34,7 +34,7 @@ public class Hikari extends HikariProtocol {
 
 			@Override
 			public void _run() throws Exception {
-				f0 = HikariProtocol.createUser(client, device_model,
+				f0 = UserProtocol.createUser(client, device_model,
 						new Callback<CreateUserCmd.Result>(new Step1()));
 				setFuture(f0);
 			}
@@ -74,10 +74,10 @@ public class Hikari extends HikariProtocol {
 
 	}
 
-	public static Future<HikariProtocolDef.CreateUserCmd.Result> createUser(
+	public static Future<UserProtocolDef.CreateUserCmd.Result> createUser(
 			final HsClient client,
 			final String device_model,
-			final FutureCallback<HikariProtocolDef.CreateUserCmd.Result> futureCallback) {
+			final FutureCallback<UserProtocolDef.CreateUserCmd.Result> futureCallback) {
 
 		CreateUserFuture cuf = new CreateUserFuture(client, device_model,
 				futureCallback);
@@ -162,7 +162,7 @@ public class Hikari extends HikariProtocol {
 
 	public static Future<LoginCmd.Result> login(
 			final HsClient client,
-			final FutureCallback<HikariProtocolDef.LoginCmd.Result> futureCallback) {
+			final FutureCallback<UserProtocolDef.LoginCmd.Result> futureCallback) {
 
 		LoginFuture ret = new LoginFuture(client, futureCallback);
 		ret.start();

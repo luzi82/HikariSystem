@@ -19,9 +19,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.luzi82.concurrent.FutureCallback;
-import com.luzi82.hikari.client.Hikari;
+import com.luzi82.hikari.client.User;
 import com.luzi82.hikari.client.HsClient;
-import com.luzi82.hikari.client.protocol.HikariProtocolDef;
+import com.luzi82.hikari.client.protocol.UserProtocolDef;
 
 public class LoginView extends ListView {
 
@@ -62,18 +62,18 @@ public class LoginView extends ListView {
 			} catch (JsonProcessingException e) {
 				e.printStackTrace();
 			}
-			setFuture(Hikari
+			setFuture(User
 					.createUser(
 							getClient(),
 							modelString,
-							new MyFutureCallback<HikariProtocolDef.CreateUserCmd.Result>(
+							new MyFutureCallback<UserProtocolDef.CreateUserCmd.Result>(
 									this)));
 		}
 	}, new Cmd("login") {
 		@Override
 		public void run1() {
-			setFuture(Hikari.login(getClient(),
-					new MyFutureCallback<HikariProtocolDef.LoginCmd.Result>(
+			setFuture(User.login(getClient(),
+					new MyFutureCallback<UserProtocolDef.LoginCmd.Result>(
 							this)));
 		}
 	} };

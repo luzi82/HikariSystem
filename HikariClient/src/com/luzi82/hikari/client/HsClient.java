@@ -73,7 +73,7 @@ public class HsClient implements HsCmdManager {
 		class Step0 extends Step {
 			@Override
 			public void _run() throws Exception {
-				String url = server + "/ajax/" + appName + "/" + string
+				String url = server + "/ajax/hikari/" + appName + "__" + string
 						+ ".json";
 //				System.err.println(url);
 

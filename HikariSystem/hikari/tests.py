@@ -16,7 +16,7 @@ class SimpleTest(TestCase):
         client = Client()
         
 #        response = client.post(reverse('ajax')+"/hikari/hello.json",{
-        response = client.post("/ajax/hikari/create_user.json", {"arg":simplejson.dumps({
+        response = client.post("/ajax/hikari/user__create_user.json", {"arg":simplejson.dumps({
             "device_model":SimpleTest.TEST_DEVICE_MODEL
         })})
         content = response.content
@@ -37,7 +37,7 @@ class SimpleTest(TestCase):
         client = Client()
         
 #        response = client.post(reverse('ajax')+"/hikari/hello.json",{
-        response = client.post("/ajax/hikari/create_user.json", {"arg":simplejson.dumps({
+        response = client.post("/ajax/hikari/user__create_user.json", {"arg":simplejson.dumps({
             "device_model":SimpleTest.TEST_DEVICE_MODEL
         })})
         content = response.content
@@ -47,7 +47,7 @@ class SimpleTest(TestCase):
         username = result['data']['username']
         password = result['data']['password']
 
-        response = client.post("/ajax/hikari/login.json", {"arg":simplejson.dumps({
+        response = client.post("/ajax/hikari/user__login.json", {"arg":simplejson.dumps({
             "username":username,
             "password":password,
         })})

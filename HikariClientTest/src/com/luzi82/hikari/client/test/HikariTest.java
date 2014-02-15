@@ -17,11 +17,11 @@ import org.junit.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.luzi82.concurrent.FutureCallback;
-import com.luzi82.hikari.client.Hikari;
+import com.luzi82.hikari.client.User;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.HsMemStorage;
 import com.luzi82.hikari.client.apache.HsClientApache;
-import com.luzi82.hikari.client.protocol.HikariProtocolDef;
+import com.luzi82.hikari.client.protocol.UserProtocolDef;
 
 public class HikariTest {
 
@@ -34,17 +34,17 @@ public class HikariTest {
 			ExecutionException, TimeoutException {
 		HsClient client = createClient();
 
-		final HikariProtocolDef.CreateUserCmd.Result[] curv = new HikariProtocolDef.CreateUserCmd.Result[1];
-		Future<HikariProtocolDef.CreateUserCmd.Result> f = Hikari.createUser(
+		final UserProtocolDef.CreateUserCmd.Result[] curv = new UserProtocolDef.CreateUserCmd.Result[1];
+		Future<UserProtocolDef.CreateUserCmd.Result> f = User.createUser(
 				client, TEST_DEV,
-				new FutureCallback<HikariProtocolDef.CreateUserCmd.Result>() {
+				new FutureCallback<UserProtocolDef.CreateUserCmd.Result>() {
 					@Override
 					public void cancelled() {
 					}
 
 					@Override
 					public void completed(
-							HikariProtocolDef.CreateUserCmd.Result arg0) {
+							UserProtocolDef.CreateUserCmd.Result arg0) {
 						curv[0] = arg0;
 					}
 
@@ -57,7 +57,7 @@ public class HikariTest {
 		Assert.assertNotNull(f);
 
 		// System.err.println("0");
-		HikariProtocolDef.CreateUserCmd.Result cur = f.get(5, TimeUnit.SECONDS);
+		UserProtocolDef.CreateUserCmd.Result cur = f.get(5, TimeUnit.SECONDS);
 		// System.err.println("1");
 		Assert.assertNotNull(cur);
 		Assert.assertEquals(cur, curv[0]);
@@ -97,10 +97,10 @@ public class HikariTest {
 			public void cancelled() {
 			}
 		};
-		Assert.assertEquals(cur.username, Hikari
+		Assert.assertEquals(cur.username, User
 				.getUsername(client, usernameFc).get(1, TimeUnit.SECONDS));
 		Assert.assertEquals(cur.username, usernameV[0]);
-		Assert.assertEquals(cur.password, Hikari
+		Assert.assertEquals(cur.password, User
 				.getPassword(client, passwordFc).get(1, TimeUnit.SECONDS));
 		Assert.assertEquals(cur.password, passwordV[0]);
 	}
@@ -110,7 +110,7 @@ public class HikariTest {
 		HsClient client = createClient();
 
 		try {
-			Hikari.login(client, "XXX", "XXX", null).get();
+			User.login(client, "XXX", "XXX", null).get();
 			Assert.fail();
 		} catch (ExecutionException ee) {
 		}
@@ -121,9 +121,9 @@ public class HikariTest {
 			TimeoutException {
 		HsClient client = createClient();
 
-		Hikari.createUser(client, TEST_DEV, null).get(5, TimeUnit.SECONDS);
+		User.createUser(client, TEST_DEV, null).get(5, TimeUnit.SECONDS);
 
-		Hikari.login(client, null).get(5, TimeUnit.SECONDS);
+		User.login(client, null).get(5, TimeUnit.SECONDS);
 	}
 
 	@Test
@@ -132,14 +132,14 @@ public class HikariTest {
 		HsClient client = createClient();
 
 		try {
-			Hikari.checkLogin(client, null).get(5, TimeUnit.SECONDS);
+			User.checkLogin(client, null).get(5, TimeUnit.SECONDS);
 			Assert.fail();
 		} catch (ExecutionException ee) {
 		}
 
-		Hikari.createUser(client, TEST_DEV, null).get(5, TimeUnit.SECONDS);
-		Hikari.login(client, null).get(5, TimeUnit.SECONDS);
-		Hikari.checkLogin(client, null).get(5, TimeUnit.SECONDS);
+		User.createUser(client, TEST_DEV, null).get(5, TimeUnit.SECONDS);
+		User.login(client, null).get(5, TimeUnit.SECONDS);
+		User.checkLogin(client, null).get(5, TimeUnit.SECONDS);
 	}
 
 	@Test
