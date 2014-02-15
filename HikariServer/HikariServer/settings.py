@@ -1,5 +1,5 @@
 """
-Django settings for HikariSystem project.
+Django settings for HikariServer project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.6/topics/settings/
@@ -54,9 +54,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'HikariSystem.urls'
+ROOT_URLCONF = 'HikariServer.urls'
 
-WSGI_APPLICATION = 'HikariSystem.wsgi.application'
+WSGI_APPLICATION = 'HikariServer.wsgi.application'
 
 
 # Database

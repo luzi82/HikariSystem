@@ -14,19 +14,19 @@
 #
 
 #### SERVER SPECIFIC CONFIGURATION
-PROJECT_ROOT=/opt/HikariSystem
+PROJECT_ROOT=/opt/HikariServer
 RUNFILES_PATH=$PROJECT_ROOT
 HOST=127.0.0.1
 PORT=8080
-RUN_AS=hikarisystem
+RUN_AS=hikariserver
 FCGI_METHOD=threaded
-APP_NAME=HikariSystem
+APP_NAME=HikariServer
 #### DO NOT CHANGE ANYTHING AFTER THIS LINE!
 
 set -e
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-DESC="HikariSystem Django"
+DESC="HikariServer Django"
 NAME=$0
 SCRIPTNAME=/etc/init.d/$NAME
 
