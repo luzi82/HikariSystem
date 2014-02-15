@@ -20,6 +20,16 @@ def login_required(f, *args, **kwargs):
 
 
 @decorator
+def stuff_required(f, *args, **kwargs):
+    if not args[0].user.is_authenticated():
+        raise AJAXError(403, _('User must be authenticated.'))
+    if not args[0].user.is_staff:
+        raise AJAXError(403, _('User must be staff.'))
+
+    return f(*args, **kwargs)
+
+
+@decorator
 def require_pk(func, *args, **kwargs):
     if not hasattr(args[0], 'pk') or args[0].pk is None:
         raise PrimaryKeyMissing()

@@ -3,14 +3,14 @@ import string
 from django.contrib.auth.models import User, UserManager
 import time
 
-def create_random_user():
+def create_random_user(username_length=8,password_length=8):
 
     while(True):
-        username = create_random_string(8)
+        username = create_random_string(username_length)
         if not User.objects.filter(username=username).exists() :
             break
     
-    password = create_random_string(8)
+    password = create_random_string(password_length)
     
     user = User.objects.create_user(username=username,password=password)
     user.save()
