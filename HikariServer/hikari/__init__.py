@@ -23,7 +23,7 @@ def create_random_user(username_length=8,password_length=8):
 
 
 def create_random_string(length):
-    return ''.join(random.choice(string.ascii_uppercase) for _ in range(length))
+    return ''.join(random.choice('abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789') for _ in range(length))
 
 # I hate time zone handling
 def now64():
