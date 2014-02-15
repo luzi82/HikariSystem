@@ -80,7 +80,7 @@ public class HsClientApache implements HsHttpClient {
 			public void _run() throws Exception {
 				HttpResponse hr = f0.get();
 				int code = hr.getStatusLine().getStatusCode();
-				System.err.println(code);
+				System.err.println("P9wc1jhk code: " + code);
 				if (code != 200) {
 					throw new StatusCodeException(code);
 				}
@@ -88,6 +88,7 @@ public class HsClientApache implements HsHttpClient {
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				he.writeTo(baos);
 				String v = new String(baos.toByteArray(), "utf-8");
+				System.err.println("u0HN2JGy result: " + v);
 				completed(v);
 			}
 
@@ -98,6 +99,8 @@ public class HsClientApache implements HsHttpClient {
 	@Override
 	public Future<String> sendRequest(String url, String json,
 			FutureCallback<String> callback) {
+		System.err.println("gZcbMSW4 url: " + url);
+		System.err.println("v6soQcnb json: " + json);
 		SendJsonRequestFuture ret = new SendJsonRequestFuture(url, json,
 				callback);
 		ret.start();
