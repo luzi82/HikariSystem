@@ -121,6 +121,7 @@ public class HsClientApache implements HsHttpClient {
 		public GetFuture(final String url, FutureCallback<String> callback) {
 			super(callback, HsClientApache.this.executor);
 			this.url = url;
+			System.err.println("z7U004fe url: " + url);
 		}
 
 		public void start() {
