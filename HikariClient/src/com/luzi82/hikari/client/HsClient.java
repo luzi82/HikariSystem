@@ -1,7 +1,16 @@
 package com.luzi82.hikari.client;
 
+import java.io.StringReader;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,6 +18,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.concurrent.GuriFuture;
 import com.luzi82.hikari.client.endpoint.HsCmdManager;
+import com.luzi82.hikari.client.protocol.gen.out.ClientInit;
 
 public class HsClient implements HsCmdManager {
 
@@ -18,6 +28,7 @@ public class HsClient implements HsCmdManager {
 	final public Executor executor;
 	HsHttpClient jsonClient;
 	ObjectMapper mObjectMapper = new ObjectMapper();
+	List<DataLoad> dataLoadList = new LinkedList<HsClient.DataLoad>();
 
 	// final HsCmdManager cmdManager;
 
@@ -28,6 +39,8 @@ public class HsClient implements HsCmdManager {
 		this.executor = executor;
 		this.jsonClient = jsonClient;
 		mObjectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+
+		ClientInit.initClient(this);
 	}
 
 	public Future<Void> put(String appName, String key, String value,
@@ -75,7 +88,7 @@ public class HsClient implements HsCmdManager {
 			public void _run() throws Exception {
 				String url = server + "/ajax/hikari/" + appName + "__" + string
 						+ ".json";
-//				System.err.println(url);
+				// System.err.println(url);
 
 				String json = null;
 				json = mObjectMapper.writeValueAsString(request);
@@ -111,6 +124,161 @@ public class HsClient implements HsCmdManager {
 				string, request, class1, callback);
 		ret.start();
 		return ret;
+	}
+
+	@Override
+	public <Data> Future<List<Data>> getDataList(String appName,
+			String dataName, Class<Data> dataClass,
+			FutureCallback<List<Data>> futureCallback) {
+		GetDataListFuture<Data> ret = new GetDataListFuture<Data>(appName,
+				dataName, dataClass, futureCallback);
+		ret.start();
+		return ret;
+	}
+
+	private class GetDataListFuture<Data> extends GuriFuture<List<Data>> {
+
+		final String appName;
+		final String dataName;
+		final Class<Data> dataClass;
+
+		public GetDataListFuture(String appName, String dataName,
+				Class<Data> dataClass, FutureCallback<List<Data>> callback) {
+			super(callback, HsClient.this.executor);
+			this.appName = appName;
+			this.dataName = dataName;
+			this.dataClass = dataClass;
+		}
+
+		public void start() {
+			new Step0().start();
+		}
+
+		class Step0 extends Step {
+			@Override
+			public void _run() throws Exception {
+				String key = "hsclient__data__" + appName + "__" + dataName;
+				f0 = storage.get(key, new Callback<String>(new Step1()));
+				setFuture(f0);
+			}
+		}
+
+		Future<String> f0;
+
+		class Step1 extends Step {
+			@Override
+			public void _run() throws Exception {
+				String dataString = f0.get();
+				StringReader sr = new StringReader(dataString);
+
+				CSVReader cr = new CSVReader(sr);
+				List<String[]> csvDataList = cr.readAll();
+				cr.close();
+				Iterator<String[]> csvDataItr = csvDataList.iterator();
+
+				Map<String, Integer> colNameToIdx = new HashMap<String, Integer>();
+				String[] keyRow = csvDataItr.next();
+				for (int i = 0; i < keyRow.length; ++i) {
+					String cellValue = keyRow[i];
+					if (cellValue == null)
+						continue;
+					if (cellValue.length() <= 0)
+						continue;
+					colNameToIdx.put(cellValue, i);
+				}
+
+				Field[] dataClassFieldAry = dataClass.getFields();
+
+				LinkedList<Data> ret = new LinkedList<Data>();
+				while (csvDataItr.hasNext()) {
+					String[] dataRow = csvDataItr.next();
+					Data data = dataClass.newInstance();
+					for (Field dataClassField : dataClassFieldAry) {
+						String fieldname = dataClassField.getName();
+						int colIdx = colNameToIdx.get(fieldname);
+						dataClassField.set(data, dataRow[colIdx]);
+					}
+					ret.add(data);
+				}
+
+				completed(ret);
+			}
+
+		}
+
+	}
+
+	@Override
+	public void addDataLoad(String appName, String dataName) {
+		DataLoad dataLoad = new DataLoad();
+		dataLoad.appName = appName;
+		dataLoad.dataName = dataName;
+		dataLoadList.add(dataLoad);
+	}
+
+	public class DataLoad {
+		public String appName;
+		public String dataName;
+	}
+
+	public Future<Void> syncData(final FutureCallback<Void> callback) {
+		SyncDataFuture ret = new SyncDataFuture(callback);
+		ret.start();
+		return ret;
+	}
+
+	private class SyncDataFuture extends GuriFuture<Void> {
+
+		public SyncDataFuture(FutureCallback<Void> callback) {
+			super(callback, HsClient.this.executor);
+		}
+
+		public void start() {
+			new Step0().start();
+		}
+
+		class Step0 extends Step {
+			@Override
+			public void _run() throws Exception {
+				dataLoadItr = dataLoadList.iterator();
+				new Step1().start();
+			}
+		}
+
+		Iterator<DataLoad> dataLoadItr;
+
+		class Step1 extends Step {
+			@Override
+			public void _run() throws Exception {
+				if (!dataLoadItr.hasNext()) {
+					completed(null);
+					return;
+				}
+				currentDataLoad = dataLoadItr.next();
+
+				String url = server + "/static/" + currentDataLoad.appName
+						+ "__" + currentDataLoad.dataName + ".csv";
+				f1 = jsonClient.get(url, new Callback<String>(new Step2()));
+				setFuture(f1);
+			}
+		}
+
+		DataLoad currentDataLoad;
+		Future<String> f1;
+
+		class Step2 extends Step {
+			@Override
+			public void _run() throws Exception {
+				String csv = f1.get();
+				String key = "hsclient__data__" + currentDataLoad.appName
+						+ "__" + currentDataLoad.dataName;
+				currentDataLoad = null;
+				f1 = null;
+				setFuture(storage
+						.put(key, csv, new Callback<Void>(new Step1())));
+			}
+		}
+
 	}
 
 }

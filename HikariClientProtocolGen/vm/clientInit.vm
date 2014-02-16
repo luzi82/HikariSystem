@@ -1,0 +1,15 @@
+package com.luzi82.hikari.client.protocol.gen.out;
+
+import com.luzi82.hikari.client.endpoint.HsCmdManager;
+
+public class ClientInit {
+
+	public static void initClient(
+		final HsCmdManager cmdManager
+	) {
+#foreach( $dataload in $dataload_list )
+		cmdManager.addDataLoad("${dataload.appName}","${dataload.jname}");
+#end
+	}
+
+}

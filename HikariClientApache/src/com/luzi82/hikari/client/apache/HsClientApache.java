@@ -10,6 +10,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
@@ -105,6 +106,61 @@ public class HsClientApache implements HsHttpClient {
 				callback);
 		ret.start();
 		return ret;
+	}
+
+	@Override
+	public Future<String> get(String url, FutureCallback<String> callback) {
+		GetFuture ret = new GetFuture(url, callback);
+		ret.start();
+		return ret;
+	}
+
+	private class GetFuture extends GuriFuture<String> {
+		final String url;
+
+		public GetFuture(final String url, FutureCallback<String> callback) {
+			super(callback, HsClientApache.this.executor);
+			this.url = url;
+		}
+
+		public void start() {
+			new Step0().start();
+		}
+
+		Future<HttpResponse> f0;
+
+		class Step0 extends Step {
+			@Override
+			public void _run() throws Exception {
+				HttpGet get = new HttpGet(url);
+
+				f0 = httpclient.execute(get,
+						new FutureCallbackWrapper<HttpResponse>(
+								new Callback<HttpResponse>(new Step1())));
+				setFuture(f0);
+			}
+
+		}
+
+		class Step1 extends Step {
+
+			@Override
+			public void _run() throws Exception {
+				HttpResponse hr = f0.get();
+				int code = hr.getStatusLine().getStatusCode();
+				System.err.println("jqPm4LTA code: " + code);
+				if (code != 200) {
+					throw new StatusCodeException(code);
+				}
+				HttpEntity he = hr.getEntity();
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				he.writeTo(baos);
+				String v = new String(baos.toByteArray(), "utf-8");
+				System.err.println("Yi1QNFun result: " + v);
+				completed(v);
+			}
+
+		}
 	}
 
 }

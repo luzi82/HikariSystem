@@ -9,4 +9,7 @@ public interface HsHttpClient {
 	public Future<String> sendRequest(final String url, final String request,
 			final FutureCallback<String> callback);
 
+	public Future<String> get(final String url,
+			final FutureCallback<String> callback);
+
 }

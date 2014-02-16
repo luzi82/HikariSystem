@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
@@ -17,7 +18,7 @@ import org.apache.velocity.app.Velocity;
 
 public class Main {
 
-	public static final String[] INPUT = { "../HikariProtocolDef/src" };
+	public static final String[] INPUT_PATH_LIST = { "../HikariProtocolDef/src" };
 
 	public static final String OUTPUT = "../HikariClientProtocol/genSrc";
 
@@ -28,18 +29,18 @@ public class Main {
 	public void m(String[] argv) throws Exception {
 		Velocity.init();
 
+		List<Data> dataLoadList = new LinkedList<Data>();
+
 		Template template = Velocity.getTemplate("vm/out.vm");
 
 		File outputFile = new File(OUTPUT);
 		FileUtils.deleteDirectory(outputFile);
 		outputFile.mkdirs();
 
-		for (String inputPath : INPUT) {
+		for (String inputPath : INPUT_PATH_LIST) {
 			File f = new File(inputPath);
-			// Path fAbs = f.getAbsoluteFile().toPath().normalize();
-			// f = fAbs.toFile();
 			String fAbs = f.getPath();
-			// System.err.println(fAbs.toString());
+
 			Iterator<File> fileItr = FileUtils.iterateFiles(f, null, true);
 			while (fileItr.hasNext()) {
 				File ff = fileItr.next();
@@ -114,6 +115,27 @@ public class Main {
 				}
 				vc.put("cmd_list", cmdList);
 
+				LinkedList<Data> dataList = new LinkedList<Main.Data>();
+				for (Class<?> dataClass : cls.getDeclaredClasses()) {
+					Data data = new Data();
+					if (!dataClass.getSimpleName().endsWith("Data")) {
+						continue;
+					}
+					data.appName = appName;
+					data.cname = dataClass.getSimpleName();
+					String dataName = data.cname.substring(0,
+							data.cname.length() - 4);
+					String[] ns = dataName.split("(?<!^)(?=[A-Z])");
+					for (int i = 0; i < ns.length; ++i) {
+						ns[i] = ns[i].toLowerCase();
+					}
+					data.jname = StringUtils.join(ns, "_");
+
+					dataList.add(data);
+					dataLoadList.add(data);
+				}
+				vc.put("data_list", dataList);
+
 				BufferedWriter bw = new BufferedWriter(new FileWriter(out));
 				template.merge(vc, bw);
 
@@ -121,6 +143,19 @@ public class Main {
 				IOUtils.closeQuietly(bw);
 			}
 		}
+		
+		Template clientInitTemplate = Velocity.getTemplate("vm/clientInit.vm");
+		
+		File clientInitFile = new File(outputFile,"com/luzi82/hikari/client/protocol/gen/out/ClientInit.java");
+		clientInitFile.getParentFile().mkdirs();
+		
+		VelocityContext clientInitVc = new VelocityContext();
+		clientInitVc.put("dataload_list", dataLoadList);
+
+		BufferedWriter clientInitBw = new BufferedWriter(new FileWriter(clientInitFile));
+		clientInitTemplate.merge(clientInitVc, clientInitBw);
+		clientInitBw.flush();
+		IOUtils.closeQuietly(clientInitBw);
 	}
 
 	public static class Cmd {
@@ -161,6 +196,24 @@ public class Main {
 
 		public String getType() {
 			return type;
+		}
+	}
+
+	public static class Data {
+		public String appName;
+		public String cname;
+		public String jname;
+
+		public String getAppName() {
+			return appName;
+		}
+
+		public String getCname() {
+			return cname;
+		}
+
+		public String getJname() {
+			return jname;
 		}
 	}
 

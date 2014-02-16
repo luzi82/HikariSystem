@@ -1,12 +1,27 @@
 package com.luzi82.hikari.client.protocol;
 
 import java.util.concurrent.Future;
+import java.util.List;
 import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.hikari.client.endpoint.HsCmdManager;
 
 public class ${main}Protocol extends ${main}ProtocolDef {
 
 	public static final String APP_NAME = "${app_name}";
+#foreach( $data in $data_list )
+
+	public static Future<List<${data.Cname}>> get${data.Cname}List(
+		final HsCmdManager cmdManager,
+		final FutureCallback<List<${data.Cname}>> futureCallback
+	) {
+		return cmdManager.getDataList(
+			APP_NAME,
+			"${data.Jname}",
+			${data.Cname}.class,
+			futureCallback
+		);
+	}
+#end
 #foreach( $cmd in $cmd_list )
 
 	public static Future<${cmd.Cname}.Result> ${cmd.Fname}(
