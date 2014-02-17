@@ -12,7 +12,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         
-        output_path = settings.BASE_DIR + "/static/csv_out"
+        output_path = settings.BASE_DIR + "/static/csv"
         if(os.path.exists(output_path)):
             shutil.rmtree(output_path)
         os.makedirs(output_path)
