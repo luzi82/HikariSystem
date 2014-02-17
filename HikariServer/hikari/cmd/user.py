@@ -17,11 +17,12 @@ def create_user(request):
     
     user_data = hikari.create_random_user()
     
-    HsUser.objects.create(
+    hs_user = HsUser.objects.create(
         user = user_data['user'],
         device_model = device_model,
         create_at = now
     )
+    hs_user.save()
 
     return {
         'username': user_data['username'],
