@@ -30,9 +30,9 @@ public class QuestTest {
 		User.createUser(client, TEST_DEV, null).get(5, TimeUnit.SECONDS);
 		User.login(client, null).get(5, TimeUnit.SECONDS);
 
-		List<Quest.QuestEntryData> questEntryList = Quest
-				.getQuestEntryDataList(client, null).get();
-		Quest.QuestEntryData questEntry = questEntryList.get(0);
+		List<Quest.HsQuestEntryData> questEntryList = Quest
+				.getHsQuestEntryDataList(client, null).get();
+		Quest.HsQuestEntryData questEntry = questEntryList.get(0);
 
 		int questInstanceId;
 
@@ -55,9 +55,9 @@ public class QuestTest {
 		User.createUser(client, TEST_DEV, null).get(5, TimeUnit.SECONDS);
 		User.login(client, null).get(5, TimeUnit.SECONDS);
 
-		List<Quest.QuestEntryData> questEntryList = Quest
-				.getQuestEntryDataList(client, null).get();
-		Quest.QuestEntryData questEntry = questEntryList.get(0);
+		List<Quest.HsQuestEntryData> questEntryList = Quest
+				.getHsQuestEntryDataList(client, null).get();
+		Quest.HsQuestEntryData questEntry = questEntryList.get(0);
 
 		int questInstanceId0;
 		int questInstanceId1;
@@ -83,9 +83,9 @@ public class QuestTest {
 		User.createUser(client, TEST_DEV, null).get(5, TimeUnit.SECONDS);
 		User.login(client, null).get(5, TimeUnit.SECONDS);
 
-		List<Quest.QuestEntryData> questEntryList = Quest
-				.getQuestEntryDataList(client, null).get();
-		Quest.QuestEntryData questEntry = questEntryList.get(0);
+		List<Quest.HsQuestEntryData> questEntryList = Quest
+				.getHsQuestEntryDataList(client, null).get();
+		Quest.HsQuestEntryData questEntry = questEntryList.get(0);
 
 		int questInstanceId;
 

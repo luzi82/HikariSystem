@@ -3,7 +3,7 @@ package com.luzi82.hikari.client.protocol;
 
 public class QuestProtocolDef {
 
-	public static class QuestEntryData {
+	public static class HsQuestEntryData {
 		public String key;
 	}
 

@@ -256,8 +256,8 @@ public class HsClient implements HsCmdManager {
 				}
 				currentDataLoad = dataLoadItr.next();
 
-				String url = server + "/static/" + currentDataLoad.appName
-						+ "__" + currentDataLoad.dataName + ".csv";
+				String url = server + "/static/csv/" + currentDataLoad.dataName
+						+ ".csv";
 				f1 = jsonClient.get(url, new Callback<String>(new Step2()));
 				setFuture(f1);
 			}
