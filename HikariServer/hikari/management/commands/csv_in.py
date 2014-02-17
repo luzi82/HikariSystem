@@ -17,12 +17,11 @@ class Command(BaseCommand):
             if not csv_filename.endswith(".csv"):
                 continue
             csv_full_filename = csv_in_path + "/" + csv_filename
-            self.stderr.write(csv_full_filename)
+#             self.stderr.write(csv_full_filename)
             csv_name = csv_filename[:-4]
-            csv_name_cc = ''.join((n[:1].upper()+n[1:]) for n in string.split(csv_name,'_'))
-            model_name = "Hs"+csv_name_cc
+            model_name = ''.join((n[:1].upper()+n[1:]) for n in string.split(csv_name,'_'))
 
-            self.stderr.write("Import {csv_filename} to {model_name}".format(csv_filename=csv_filename,model_name=model_name))
+            self.stderr.write("Import {csv_filename} to {model_name}...".format(csv_filename=csv_filename,model_name=model_name))
             
             col_name_to_idx = {}
             csv_reader = csv.reader(open(csv_full_filename))
@@ -51,4 +50,4 @@ class Command(BaseCommand):
                 model_data = model_class.objects.create(**db_row_map)
                 model_data.save()
                 
-            self.stderr.write("Done".format(csv_name=csv_name,model_name=model_name))
+            self.stderr.write(" ...Done".format(csv_name=csv_name,model_name=model_name))
