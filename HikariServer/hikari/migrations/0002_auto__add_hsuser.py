@@ -8,6 +8,13 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding model 'HsQuestEntry'
+        db.create_table(u'hikari_hsquestentry', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+        ))
+        db.send_create_signal('hikari', ['HsQuestEntry'])
+
         # Adding model 'HsUser'
         db.create_table(u'hikari_hsuser', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -15,10 +22,13 @@ class Migration(SchemaMigration):
             ('device_model', self.gf('django.db.models.fields.TextField')(max_length=1024)),
             ('create_at', self.gf('django.db.models.fields.BigIntegerField')()),
         ))
-        db.send_create_signal(u'hikari', ['HsUser'])
+        db.send_create_signal('hikari', ['HsUser'])
 
 
     def backwards(self, orm):
+        # Deleting model 'HsQuestEntry'
+        db.delete_table(u'hikari_hsquestentry')
+
         # Deleting model 'HsUser'
         db.delete_table(u'hikari_hsuser')
 
@@ -60,7 +70,12 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        u'hikari.hsuser': {
+        'hikari.hsquestentry': {
+            'Meta': {'object_name': 'HsQuestEntry'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
+        },
+        'hikari.hsuser': {
             'Meta': {'object_name': 'HsUser'},
             'create_at': ('django.db.models.fields.BigIntegerField', [], {}),
             'device_model': ('django.db.models.fields.TextField', [], {'max_length': '1024'}),
