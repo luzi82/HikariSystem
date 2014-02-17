@@ -8,6 +8,17 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding model 'HsQuestInstance'
+        db.create_table(u'hikari_hsquestinstance', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('entry_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
+            ('state', self.gf('django.db.models.fields.IntegerField')()),
+            ('create_at', self.gf('django.db.models.fields.BigIntegerField')()),
+            ('complete_at', self.gf('django.db.models.fields.BigIntegerField')(default=None, null=True)),
+        ))
+        db.send_create_signal('hikari', ['HsQuestInstance'])
+
         # Adding model 'HsQuestEntry'
         db.create_table(u'hikari_hsquestentry', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -26,6 +37,9 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
+        # Deleting model 'HsQuestInstance'
+        db.delete_table(u'hikari_hsquestinstance')
+
         # Deleting model 'HsQuestEntry'
         db.delete_table(u'hikari_hsquestentry')
 
@@ -74,6 +88,15 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'HsQuestEntry'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
+        },
+        'hikari.hsquestinstance': {
+            'Meta': {'object_name': 'HsQuestInstance'},
+            'complete_at': ('django.db.models.fields.BigIntegerField', [], {'default': 'None', 'null': 'True'}),
+            'create_at': ('django.db.models.fields.BigIntegerField', [], {}),
+            'entry_key': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'state': ('django.db.models.fields.IntegerField', [], {}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
         },
         'hikari.hsuser': {
             'Meta': {'object_name': 'HsUser'},
