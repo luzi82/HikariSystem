@@ -64,6 +64,8 @@ public class QuestTest {
 
 		questInstanceId0 = Quest.questStart(client, questEntry.key, null).get().quest_instance_id;
 		questInstanceId1 = Quest.questStart(client, questEntry.key, null).get().quest_instance_id;
+		
+		Assert.assertNotEquals(questInstanceId0, questInstanceId1);
 
 		try {
 			Quest.questEnd(client, questInstanceId0, true, null).get();
