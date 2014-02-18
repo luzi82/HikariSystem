@@ -1,6 +1,7 @@
 package com.luzi82.hikari.client.android.demo;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 
@@ -19,8 +20,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.luzi82.concurrent.FutureCallback;
-import com.luzi82.hikari.client.User;
+import com.luzi82.concurrent.GuriFuture;
 import com.luzi82.hikari.client.HsClient;
+import com.luzi82.hikari.client.Quest;
+import com.luzi82.hikari.client.User;
+import com.luzi82.hikari.client.protocol.QuestProtocolDef.HsQuestEntryData;
 import com.luzi82.hikari.client.protocol.UserProtocolDef;
 
 public class LoginView extends ListView {
@@ -45,7 +49,14 @@ public class LoginView extends ListView {
 	}
 
 	public final Cmd[] cmdV = { //
-	new Cmd("createUser") {
+	new Cmd("sync") {
+		@Override
+		public void run1() {
+			SyncFuture sf = new SyncFuture(new MyFutureCallback<Void>(this));
+			sf.start();
+			setFuture(sf);
+		}
+	}, new Cmd("createUser") {
 		@Override
 		public void run1() {
 			Map<String, Object> modelData = new HashMap<String, Object>();
@@ -62,19 +73,17 @@ public class LoginView extends ListView {
 			} catch (JsonProcessingException e) {
 				e.printStackTrace();
 			}
-			setFuture(User
-					.createUser(
-							getClient(),
-							modelString,
-							new MyFutureCallback<UserProtocolDef.CreateUserCmd.Result>(
-									this)));
+			setFuture(User.createUser(getClient(), modelString,
+					new MyFutureCallback<UserProtocolDef.CreateUserCmd.Result>(
+							this)));
 		}
 	}, new Cmd("login") {
 		@Override
 		public void run1() {
-			setFuture(User.login(getClient(),
-					new MyFutureCallback<UserProtocolDef.LoginCmd.Result>(
-							this)));
+			setFuture(User
+					.login(getClient(),
+							new MyFutureCallback<UserProtocolDef.LoginCmd.Result>(
+									this)));
 		}
 	} };
 
@@ -94,21 +103,24 @@ public class LoginView extends ListView {
 		@Override
 		public void completed(T arg0) {
 			try {
+				System.err.println("AolNieKc completed");
 				cmd.dialog.dismiss();
-				final String v = objectMapper.writeValueAsString(arg0);
-				System.err.println(v);
-				getMain().runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						AlertDialog.Builder builder = new AlertDialog.Builder(
-								getContext());
-						builder.setTitle("Completed");
-						builder.setMessage(v);
-						builder.setPositiveButton("Ok", null);
-						AlertDialog dialog = builder.create();
-						dialog.show();
-					}
-				});
+				if (arg0 != null) {
+					final String v = objectMapper.writeValueAsString(arg0);
+					System.err.println(v);
+					getMain().runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							AlertDialog.Builder builder = new AlertDialog.Builder(
+									getContext());
+							builder.setTitle("Completed");
+							builder.setMessage(v);
+							builder.setPositiveButton("Ok", null);
+							AlertDialog dialog = builder.create();
+							dialog.show();
+						}
+					});
+				}
 			} catch (JsonProcessingException e) {
 				e.printStackTrace();
 			}
@@ -149,9 +161,9 @@ public class LoginView extends ListView {
 		}
 
 		public void run() {
-			run1();
 			dialog = ProgressDialog.show(getContext(), title, "Wait...", false,
 					future != null, this);
+			run1();
 		}
 
 		@Override
@@ -184,6 +196,46 @@ public class LoginView extends ListView {
 
 	private HsClient getClient() {
 		return getMain().hsClient;
+	}
+
+	public class SyncFuture extends GuriFuture<Void> {
+
+		public SyncFuture(FutureCallback<Void> callback) {
+			super(callback, getMain().executorService);
+		}
+
+		public void start() {
+			new Step0().start();
+		}
+
+		public class Step0 extends Step {
+			@Override
+			public void _run() throws Exception {
+				setFuture(getClient().syncData(new Callback<Void>(new Step1())));
+			}
+		}
+
+		public class Step1 extends Step {
+			@Override
+			public void _run() throws Exception {
+				System.err.println("8lpgs4Rw");
+				setFuture(Quest.getHsQuestEntryDataList(getClient(),
+						new Callback<List<HsQuestEntryData>>(new Step2())));
+			}
+		}
+
+		public class Step2 extends Step {
+			@Override
+			public void _run() throws Exception {
+				System.err.println("BkdAm5yx");
+				// questEntryAry = (List<HsQuestEntryData>) lastFutureResult;
+				getMain().questEntryListVar
+						.set((List<HsQuestEntryData>) lastFutureResult);
+				System.err.println("1LQrH8Wj");
+				completed(null);
+			}
+		}
+
 	}
 
 }

@@ -14,16 +14,16 @@ public class GuriFuture<T> extends BasicFuture<T> {
 
 	public synchronized boolean cancel(boolean mayInterruptIfRunning) {
 		if (isCancelled()) {
-			return super.cancel();
+			return super.cancel(mayInterruptIfRunning);
 		} else if (currentStep != null) {
 			boolean ret = currentStep.cancel(mayInterruptIfRunning);
 			if (ret) {
 				currentStep = null;
-				super.cancel();
+				super.cancel(mayInterruptIfRunning);
 			}
 			return ret;
 		} else {
-			return super.cancel();
+			return super.cancel(mayInterruptIfRunning);
 		}
 	}
 

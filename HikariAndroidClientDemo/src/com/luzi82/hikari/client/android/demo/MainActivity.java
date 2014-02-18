@@ -69,8 +69,6 @@ public class MainActivity extends FragmentActivity {
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-
-		startLoad();
 	}
 
 	@Override
@@ -155,78 +153,38 @@ public class MainActivity extends FragmentActivity {
 
 	ProgressDialog startLoadDialog;
 
-	private void startLoad() {
-		// mSectionsPagerAdapter.startUpdate(mViewPager);
-		startLoadDialog = ProgressDialog.show(MainActivity.this, "Sync",
-				"Wait...", false, false, null);
-		new StartLoadFuture(new FutureCallback<Void>() {
-			@Override
-			public void failed(Exception ex) {
-				System.err.println("gvpMHtXv failed");
-				startLoadDialog.dismiss();
-				startLoadDialog = null;
-			}
-
-			@Override
-			public void completed(Void result) {
-				System.err.println("gvpMHtXv completed");
-				startLoadDialog.dismiss();
-				startLoadDialog = null;
-//				runOnUiThread(new Runnable() {
-//					@Override
-//					public void run() {
-//						mSectionsPagerAdapter = new SectionsPagerAdapter(
-//								getSupportFragmentManager());
-//						mViewPager.setAdapter(mSectionsPagerAdapter);
-//					}
-//				});
-			}
-
-			@Override
-			public void cancelled() {
-				System.err.println("rMcN7Rkw cancelled");
-			}
-		}).start();
-	}
-
-	public class StartLoadFuture extends GuriFuture<Void> {
-
-		public StartLoadFuture(FutureCallback<Void> callback) {
-			super(callback, MainActivity.this.executorService);
-		}
-
-		public void start() {
-			new Step0().start();
-		}
-
-		public class Step0 extends Step {
-			@Override
-			public void _run() throws Exception {
-				setFuture(hsClient.syncData(new Callback<Void>(new Step1())));
-			}
-		}
-
-		public class Step1 extends Step {
-			@Override
-			public void _run() throws Exception {
-				System.err.println("8lpgs4Rw");
-				setFuture(Quest.getHsQuestEntryDataList(hsClient,
-						new Callback<List<HsQuestEntryData>>(new Step2())));
-			}
-		}
-
-		public class Step2 extends Step {
-			@Override
-			public void _run() throws Exception {
-				System.err.println("BkdAm5yx");
-				// questEntryAry = (List<HsQuestEntryData>) lastFutureResult;
-				questEntryListVar
-						.set((List<HsQuestEntryData>) lastFutureResult);
-				System.err.println("1LQrH8Wj");
-				completed(null);
-			}
-		}
-
-	}
+//	private void startLoad() {
+//		// mSectionsPagerAdapter.startUpdate(mViewPager);
+//		startLoadDialog = ProgressDialog.show(MainActivity.this, "Sync",
+//				"Wait...", false, false, null);
+//		new StartLoadFuture(new FutureCallback<Void>() {
+//			@Override
+//			public void failed(Exception ex) {
+//				System.err.println("gvpMHtXv failed");
+//				startLoadDialog.dismiss();
+//				startLoadDialog = null;
+//			}
+//
+//			@Override
+//			public void completed(Void result) {
+//				System.err.println("gvpMHtXv completed");
+//				startLoadDialog.dismiss();
+//				startLoadDialog = null;
+////				runOnUiThread(new Runnable() {
+////					@Override
+////					public void run() {
+////						mSectionsPagerAdapter = new SectionsPagerAdapter(
+////								getSupportFragmentManager());
+////						mViewPager.setAdapter(mSectionsPagerAdapter);
+////					}
+////				});
+//			}
+//
+//			@Override
+//			public void cancelled() {
+//				System.err.println("rMcN7Rkw cancelled");
+//			}
+//		}).start();
+//	}
 
 }
