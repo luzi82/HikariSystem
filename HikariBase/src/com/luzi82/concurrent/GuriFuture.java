@@ -28,6 +28,7 @@ public class GuriFuture<T> extends BasicFuture<T> {
 	}
 
 	Step currentStep = null;
+	protected Object lastFutureResult = null;
 
 	public abstract class Step implements Runnable {
 
@@ -98,6 +99,7 @@ public class GuriFuture<T> extends BasicFuture<T> {
 					if (GuriFuture.this.isCancelled()) {
 						return;
 					}
+					lastFutureResult = arg0;
 					s.start();
 				} catch (Exception e) {
 					GuriFuture.this.failed(e);

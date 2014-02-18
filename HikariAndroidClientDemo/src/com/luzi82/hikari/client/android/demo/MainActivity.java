@@ -1,9 +1,11 @@
 package com.luzi82.hikari.client.android.demo;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -15,8 +17,13 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.luzi82.concurrent.FutureCallback;
+import com.luzi82.concurrent.GuriFuture;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.HsMemStorage;
+import com.luzi82.hikari.client.Quest;
+import com.luzi82.hikari.client.protocol.QuestProtocolDef.HsQuestEntryData;
+import com.luzi82.homuvalue.Value.Variable;
 
 public class MainActivity extends FragmentActivity {
 
@@ -39,6 +46,10 @@ public class MainActivity extends FragmentActivity {
 
 	ExecutorService executorService;
 
+	// public List<HsQuestEntryData> questEntryAry;
+
+	public final Variable<List<HsQuestEntryData>> questEntryListVar = new Variable<List<HsQuestEntryData>>();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,8 +61,8 @@ public class MainActivity extends FragmentActivity {
 				executorService), executorService, new HttpClient(
 				executorService));
 
-		// Create the adapter that will return a fragment for each of the three
-		// primary sections of the app.
+		// Create the adapter that will return a fragment for each of the
+		// three primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
 				getSupportFragmentManager());
 
@@ -59,6 +70,7 @@ public class MainActivity extends FragmentActivity {
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
+		startLoad();
 	}
 
 	@Override
@@ -80,6 +92,7 @@ public class MainActivity extends FragmentActivity {
 
 		@Override
 		public Fragment getItem(int position) {
+			System.err.println("KXrISxgP getItem position " + position);
 			// getItem is called to instantiate the fragment for the given page.
 			// Return a DummySectionFragment (defined as a static inner class
 			// below) with the page number as its lone argument.
@@ -128,8 +141,92 @@ public class MainActivity extends FragmentActivity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			return new LoginView(container.getContext());
+			// Integer section_number =
+			// savedInstanceState.getInt(ARG_SECTION_NUMBER);
+			int section_number = getArguments().getInt(ARG_SECTION_NUMBER);
+			// System.err.println("znl2P9it section_number " + section_number);
+			if (section_number == 0) {
+				return new LoginView(container.getContext());
+			} else {
+				return new QuestView(container.getContext());
+			}
 		}
+	}
+
+	ProgressDialog startLoadDialog;
+
+	private void startLoad() {
+		// mSectionsPagerAdapter.startUpdate(mViewPager);
+		startLoadDialog = ProgressDialog.show(MainActivity.this, "Sync",
+				"Wait...", false, false, null);
+		new StartLoadFuture(new FutureCallback<Void>() {
+			@Override
+			public void failed(Exception ex) {
+				System.err.println("gvpMHtXv failed");
+				startLoadDialog.dismiss();
+				startLoadDialog = null;
+			}
+
+			@Override
+			public void completed(Void result) {
+				System.err.println("gvpMHtXv completed");
+				startLoadDialog.dismiss();
+				startLoadDialog = null;
+//				runOnUiThread(new Runnable() {
+//					@Override
+//					public void run() {
+//						mSectionsPagerAdapter = new SectionsPagerAdapter(
+//								getSupportFragmentManager());
+//						mViewPager.setAdapter(mSectionsPagerAdapter);
+//					}
+//				});
+			}
+
+			@Override
+			public void cancelled() {
+				System.err.println("rMcN7Rkw cancelled");
+			}
+		}).start();
+	}
+
+	public class StartLoadFuture extends GuriFuture<Void> {
+
+		public StartLoadFuture(FutureCallback<Void> callback) {
+			super(callback, MainActivity.this.executorService);
+		}
+
+		public void start() {
+			new Step0().start();
+		}
+
+		public class Step0 extends Step {
+			@Override
+			public void _run() throws Exception {
+				setFuture(hsClient.syncData(new Callback<Void>(new Step1())));
+			}
+		}
+
+		public class Step1 extends Step {
+			@Override
+			public void _run() throws Exception {
+				System.err.println("8lpgs4Rw");
+				setFuture(Quest.getHsQuestEntryDataList(hsClient,
+						new Callback<List<HsQuestEntryData>>(new Step2())));
+			}
+		}
+
+		public class Step2 extends Step {
+			@Override
+			public void _run() throws Exception {
+				System.err.println("BkdAm5yx");
+				// questEntryAry = (List<HsQuestEntryData>) lastFutureResult;
+				questEntryListVar
+						.set((List<HsQuestEntryData>) lastFutureResult);
+				System.err.println("1LQrH8Wj");
+				completed(null);
+			}
+		}
+
 	}
 
 }

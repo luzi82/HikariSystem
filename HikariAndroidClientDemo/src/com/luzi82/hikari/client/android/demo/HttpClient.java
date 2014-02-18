@@ -118,4 +118,81 @@ public class HttpClient implements HsHttpClient {
 		return ret;
 	}
 
+	@Override
+	public Future<String> get(String url, FutureCallback<String> callback) {
+		GetFuture ret = new GetFuture(url, callback);
+		ret.start();
+		return ret;
+	}
+
+	class GetFuture extends GuriFuture<String> {
+
+		final String url;
+
+		public GetFuture(String url, FutureCallback<String> callback) {
+			super(callback, HttpClient.this.executor);
+			this.url = url;
+			System.err.println("lLzTDyYv url: " + url);
+		}
+
+		public void start() {
+			new Step0().start();
+		}
+
+		RequestHandle requestHandle;
+
+		public class Step0 extends Step {
+
+			@Override
+			public void _run() throws Exception {
+				requestHandle = asyncHttpClient.get(url,
+						new AsyncHttpResponseHandler() {
+							@Override
+							public void onFailure(int arg0, Header[] arg1,
+									byte[] arg2, Throwable arg3) {
+								// System.err.println("T34u0hBG onFailure");
+								if (arg3 instanceof Exception) {
+									Exception exception = (Exception) arg3;
+									GetFuture.this.failed(exception);
+								} else {
+									arg3.printStackTrace();
+									GetFuture.this.failed(new Exception(arg3));
+								}
+							}
+
+							@Override
+							public void onSuccess(int arg0, Header[] arg1,
+									byte[] arg2) {
+								// System.err.println("c9VXiR9u onSuccess");
+								String ret = null;
+								try {
+									if (arg0 != 200) {
+										throw new StatusCodeException(arg0);
+									}
+									String result = new String(arg2, "utf-8");
+									System.err.println("Cm9P7lMI result: "
+											+ result);
+									completed(result);
+								} catch (Exception e) {
+									GetFuture.this.failed(e);
+								}
+								completed(ret);
+							}
+						});
+			}
+
+			@Override
+			public boolean cancel(boolean mayInterruptIfRunning) {
+				synchronized (GetFuture.this) {
+					if (requestHandle != null) {
+						return requestHandle.cancel(mayInterruptIfRunning);
+					}
+				}
+				return super.cancel(mayInterruptIfRunning);
+			}
+
+		}
+
+	}
+
 }
