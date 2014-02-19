@@ -12,8 +12,11 @@ import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.hikari.client.HsClient;
+import com.luzi82.hikari.client.Quest;
 import com.luzi82.hikari.client.protocol.QuestProtocolDef.HsQuestEntryData;
+import com.luzi82.hikari.client.protocol.QuestProtocolDef.QuestStartCmd.Result;
 import com.luzi82.homuvalue.Value;
 import com.luzi82.homuvalue.Value.Listener;
 
@@ -38,6 +41,8 @@ public class QuestListView extends ListView {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				// cmdV[arg2].run();
+//				HsQuestEntryData questEntry = (HsQuestEntryData) arg0.getItemAtPosition(arg2);
+//				Quest.questStart(getClient(), questEntry.key, new FutureCallback<QuestProtocolDef.QuestStartCmd.Result>)
 			}
 		});
 

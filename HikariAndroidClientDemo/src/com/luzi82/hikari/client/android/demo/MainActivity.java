@@ -17,12 +17,10 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.luzi82.concurrent.FutureCallback;
-import com.luzi82.concurrent.GuriFuture;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.HsMemStorage;
-import com.luzi82.hikari.client.Quest;
 import com.luzi82.hikari.client.protocol.QuestProtocolDef.HsQuestEntryData;
+import com.luzi82.hikari.client.protocol.QuestProtocolDef.QuestInstance;
 import com.luzi82.homuvalue.Value.Variable;
 
 public class MainActivity extends FragmentActivity {
@@ -49,6 +47,8 @@ public class MainActivity extends FragmentActivity {
 	// public List<HsQuestEntryData> questEntryAry;
 
 	public final Variable<List<HsQuestEntryData>> questEntryListVar = new Variable<List<HsQuestEntryData>>();
+	
+	public final Variable<QuestInstance> questInstanceVar = new Variable<QuestInstance>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -143,48 +143,53 @@ public class MainActivity extends FragmentActivity {
 			// savedInstanceState.getInt(ARG_SECTION_NUMBER);
 			int section_number = getArguments().getInt(ARG_SECTION_NUMBER);
 			// System.err.println("znl2P9it section_number " + section_number);
-			if (section_number == 0) {
+			switch (section_number) {
+			case 0:
 				return new LoginView(container.getContext());
-			} else {
+			case 1:
 				return new QuestListView(container.getContext());
+			case 2:
+				return new QuestView(container.getContext());
+			default:
+				return null;
 			}
 		}
 	}
 
 	ProgressDialog startLoadDialog;
 
-//	private void startLoad() {
-//		// mSectionsPagerAdapter.startUpdate(mViewPager);
-//		startLoadDialog = ProgressDialog.show(MainActivity.this, "Sync",
-//				"Wait...", false, false, null);
-//		new StartLoadFuture(new FutureCallback<Void>() {
-//			@Override
-//			public void failed(Exception ex) {
-//				System.err.println("gvpMHtXv failed");
-//				startLoadDialog.dismiss();
-//				startLoadDialog = null;
-//			}
-//
-//			@Override
-//			public void completed(Void result) {
-//				System.err.println("gvpMHtXv completed");
-//				startLoadDialog.dismiss();
-//				startLoadDialog = null;
-////				runOnUiThread(new Runnable() {
-////					@Override
-////					public void run() {
-////						mSectionsPagerAdapter = new SectionsPagerAdapter(
-////								getSupportFragmentManager());
-////						mViewPager.setAdapter(mSectionsPagerAdapter);
-////					}
-////				});
-//			}
-//
-//			@Override
-//			public void cancelled() {
-//				System.err.println("rMcN7Rkw cancelled");
-//			}
-//		}).start();
-//	}
+	// private void startLoad() {
+	// // mSectionsPagerAdapter.startUpdate(mViewPager);
+	// startLoadDialog = ProgressDialog.show(MainActivity.this, "Sync",
+	// "Wait...", false, false, null);
+	// new StartLoadFuture(new FutureCallback<Void>() {
+	// @Override
+	// public void failed(Exception ex) {
+	// System.err.println("gvpMHtXv failed");
+	// startLoadDialog.dismiss();
+	// startLoadDialog = null;
+	// }
+	//
+	// @Override
+	// public void completed(Void result) {
+	// System.err.println("gvpMHtXv completed");
+	// startLoadDialog.dismiss();
+	// startLoadDialog = null;
+	// // runOnUiThread(new Runnable() {
+	// // @Override
+	// // public void run() {
+	// // mSectionsPagerAdapter = new SectionsPagerAdapter(
+	// // getSupportFragmentManager());
+	// // mViewPager.setAdapter(mSectionsPagerAdapter);
+	// // }
+	// // });
+	// }
+	//
+	// @Override
+	// public void cancelled() {
+	// System.err.println("rMcN7Rkw cancelled");
+	// }
+	// }).start();
+	// }
 
 }
