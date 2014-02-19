@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.Quest;
+import com.luzi82.hikari.client.protocol.QuestProtocolDef;
 import com.luzi82.hikari.client.protocol.QuestProtocolDef.HsQuestEntryData;
 import com.luzi82.hikari.client.protocol.QuestProtocolDef.QuestStartCmd.Result;
 import com.luzi82.homuvalue.Value;
@@ -40,9 +41,23 @@ public class QuestListView extends ListView {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				// cmdV[arg2].run();
-//				HsQuestEntryData questEntry = (HsQuestEntryData) arg0.getItemAtPosition(arg2);
-//				Quest.questStart(getClient(), questEntry.key, new FutureCallback<QuestProtocolDef.QuestStartCmd.Result>)
+				HsQuestEntryData questEntry = (HsQuestEntryData) arg0
+						.getItemAtPosition(arg2);
+
+				FutureDialog<QuestProtocolDef.QuestStartCmd.Result> fd = new FutureDialog<QuestProtocolDef.QuestStartCmd.Result>(
+						new ResultDialogFutureCallback<QuestProtocolDef.QuestStartCmd.Result>(
+								getMain(),
+								new DummyFutureCallback<QuestProtocolDef.QuestStartCmd.Result>(
+										null) {
+									@Override
+									public void completed(Result result) {
+										getMain().questInstanceVar
+												.set(result.quest_instance);
+										super.completed(result);
+									}
+								}, getMain().executorService));
+
+				fd.setFuture(Quest.questStart(getClient(), questEntry.key, fd));
 			}
 		});
 
