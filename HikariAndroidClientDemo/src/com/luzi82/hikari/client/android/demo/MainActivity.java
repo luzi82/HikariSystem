@@ -146,7 +146,7 @@ public class MainActivity extends FragmentActivity {
 			if (section_number == 0) {
 				return new LoginView(container.getContext());
 			} else {
-				return new QuestView(container.getContext());
+				return new QuestListView(container.getContext());
 			}
 		}
 	}

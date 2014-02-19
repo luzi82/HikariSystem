@@ -17,13 +17,13 @@ import com.luzi82.hikari.client.protocol.QuestProtocolDef.HsQuestEntryData;
 import com.luzi82.homuvalue.Value;
 import com.luzi82.homuvalue.Value.Listener;
 
-public class QuestView extends ListView {
+public class QuestListView extends ListView {
 
 	ObjectMapper objectMapper;
 
 	Listener<List<HsQuestEntryData>> questEntryListListener;
 
-	public QuestView(Context context) {
+	public QuestListView(Context context) {
 		super(context);
 
 		// if (getMain().questEntryAry != null) {
@@ -120,7 +120,7 @@ public class QuestView extends ListView {
 	private class Adapter extends ArrayAdapter<HsQuestEntryData> {
 
 		public Adapter() {
-			super(QuestView.this.getContext(),
+			super(QuestListView.this.getContext(),
 					android.R.layout.simple_list_item_1,
 					getMain().questEntryListVar.get());
 		}
