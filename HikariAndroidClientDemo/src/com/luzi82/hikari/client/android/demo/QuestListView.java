@@ -81,62 +81,6 @@ public class QuestListView extends ListView {
 
 	}
 
-	// public class MyFutureCallback<T> implements FutureCallback<T> {
-	//
-	// public Cmd cmd;
-	//
-	// public MyFutureCallback(Cmd cmd) {
-	// this.cmd = cmd;
-	// }
-	//
-	// @Override
-	// public void cancelled() {
-	// cmd.dialog.dismiss();
-	// }
-	//
-	// @Override
-	// public void completed(T arg0) {
-	// try {
-	// cmd.dialog.dismiss();
-	// final String v = objectMapper.writeValueAsString(arg0);
-	// System.err.println(v);
-	// getMain().runOnUiThread(new Runnable() {
-	// @Override
-	// public void run() {
-	// AlertDialog.Builder builder = new AlertDialog.Builder(
-	// getContext());
-	// builder.setTitle("Completed");
-	// builder.setMessage(v);
-	// builder.setPositiveButton("Ok", null);
-	// AlertDialog dialog = builder.create();
-	// dialog.show();
-	// }
-	// });
-	// } catch (JsonProcessingException e) {
-	// e.printStackTrace();
-	// }
-	// }
-	//
-	// @Override
-	// public void failed(final Exception arg0) {
-	// arg0.printStackTrace();
-	// cmd.dialog.dismiss();
-	// getMain().runOnUiThread(new Runnable() {
-	// @Override
-	// public void run() {
-	// AlertDialog.Builder builder = new AlertDialog.Builder(
-	// getContext());
-	// builder.setTitle("Failed");
-	// builder.setMessage(arg0.getMessage());
-	// builder.setPositiveButton("Ok", null);
-	// AlertDialog dialog = builder.create();
-	// dialog.show();
-	// }
-	// });
-	// }
-	//
-	// }
-
 	private class Adapter extends ArrayAdapter<HsQuestEntryData> {
 
 		public Adapter() {
