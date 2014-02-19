@@ -37,11 +37,11 @@ public class QuestTest {
 		int questInstanceId;
 
 		// win game
-		questInstanceId = Quest.questStart(client, questEntry.key, null).get().quest_instance_id;
+		questInstanceId = Quest.questStart(client, questEntry.key, null).get().quest_instance.id;
 		Quest.questEnd(client, questInstanceId, true, null).get();
 
 		// lose game
-		questInstanceId = Quest.questStart(client, questEntry.key, null).get().quest_instance_id;
+		questInstanceId = Quest.questStart(client, questEntry.key, null).get().quest_instance.id;
 		Quest.questEnd(client, questInstanceId, false, null).get();
 
 	}
@@ -62,8 +62,8 @@ public class QuestTest {
 		int questInstanceId0;
 		int questInstanceId1;
 
-		questInstanceId0 = Quest.questStart(client, questEntry.key, null).get().quest_instance_id;
-		questInstanceId1 = Quest.questStart(client, questEntry.key, null).get().quest_instance_id;
+		questInstanceId0 = Quest.questStart(client, questEntry.key, null).get().quest_instance.id;
+		questInstanceId1 = Quest.questStart(client, questEntry.key, null).get().quest_instance.id;
 		
 		Assert.assertNotEquals(questInstanceId0, questInstanceId1);
 
@@ -91,7 +91,7 @@ public class QuestTest {
 
 		int questInstanceId;
 
-		questInstanceId = Quest.questStart(client, questEntry.key, null).get().quest_instance_id;
+		questInstanceId = Quest.questStart(client, questEntry.key, null).get().quest_instance.id;
 
 		Quest.questEnd(client, questInstanceId, true, null).get();
 		try {

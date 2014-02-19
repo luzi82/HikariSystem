@@ -30,7 +30,9 @@ def quest_start(request):
     quest_instance.save()
 
     return {
-        'quest_instance_id': quest_instance.id
+        'quest_instance': {
+            'id': quest_instance.id
+        }
     }
 
 @login_required

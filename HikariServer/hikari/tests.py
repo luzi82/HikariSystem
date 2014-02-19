@@ -92,7 +92,7 @@ class SimpleTest(TestCase):
         result = simplejson.loads(content)
         
         self.assertEqual(result['success'], True)
-        quest_instance_id = result['data']['quest_instance_id']
+        quest_instance_id = result['data']['quest_instance']['id']
 
         response = client.post("/ajax/hikari/quest__quest_end.json", {"arg":simplejson.dumps({
             "quest_instance_id":quest_instance_id,

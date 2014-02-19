@@ -1,10 +1,13 @@
 package com.luzi82.hikari.client.protocol;
 
-
 public class QuestProtocolDef {
 
 	public static class HsQuestEntryData {
 		public String key;
+	}
+
+	public static class QuestInstance {
+		public int id;
 	}
 
 	public static class QuestStartCmd {
@@ -14,7 +17,7 @@ public class QuestProtocolDef {
 		}
 
 		public static class Result {
-			public int quest_instance_id;
+			public QuestInstance quest_instance;
 		}
 
 	}
