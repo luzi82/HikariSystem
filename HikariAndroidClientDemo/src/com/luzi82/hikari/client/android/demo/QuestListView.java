@@ -33,15 +33,10 @@ public class QuestListView extends HikariListView {
 				List<Item> itemList = new LinkedList<Item>();
 				if (questEntryList != null) {
 					for (final HsQuestEntryData questEntry : questEntryList) {
-						itemList.add(new CmdItem() {
+						itemList.add(new Item(questEntry.key) {
 							@Override
 							public void onClick() {
 								startQuest(questEntry);
-							}
-
-							@Override
-							public String toString() {
-								return questEntry.key;
 							}
 						});
 					}

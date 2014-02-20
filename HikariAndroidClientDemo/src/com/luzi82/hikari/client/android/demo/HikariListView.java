@@ -26,19 +26,21 @@ public class HikariListView extends ListView {
 		});
 	}
 
-	public interface Item {
-		public void onClick();
-	}
+	public class Item {
+		public String name;
 
-	public class InfoItem implements Item {
+		public Item(String name) {
+			this.name = name;
+		}
+
+		public void onClick(){
+		}
 
 		@Override
-		public void onClick() {
-			// nothing
+		public String toString() {
+			return this.name;
 		}
-	}
-
-	public abstract class CmdItem implements Item {
+		
 	}
 
 	public void setItemList(final List<Item> itemList) {
@@ -60,5 +62,4 @@ public class HikariListView extends ListView {
 		return getMain().hsClient;
 	}
 
-	
 }
