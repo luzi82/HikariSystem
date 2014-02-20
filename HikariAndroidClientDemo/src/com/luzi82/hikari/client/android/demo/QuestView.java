@@ -5,8 +5,6 @@ import java.util.List;
 
 import android.content.Context;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.luzi82.hikari.client.Quest;
 import com.luzi82.hikari.client.protocol.QuestProtocolDef.QuestEndCmd;
 import com.luzi82.hikari.client.protocol.QuestProtocolDef.QuestInstance;
@@ -15,15 +13,10 @@ import com.luzi82.homuvalue.Value.Listener;
 
 public class QuestView extends HikariListView {
 
-	ObjectMapper objectMapper;
-
 	Listener<QuestInstance> questInstanceListener;
 
 	public QuestView(Context context) {
 		super(context);
-
-		objectMapper = new ObjectMapper();
-		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 
 		questInstanceListener = new Listener<QuestInstance>() {
 			@Override
