@@ -16,15 +16,10 @@ import com.luzi82.homuvalue.Value.Listener;
 
 public class QuestListView extends HikariListView {
 
-	ObjectMapper objectMapper;
-
 	Listener<List<HsQuestEntryData>> questEntryListListener;
 
 	public QuestListView(Context context) {
 		super(context);
-
-		objectMapper = new ObjectMapper();
-		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 
 		questEntryListListener = new Listener<List<HsQuestEntryData>>() {
 			@Override
