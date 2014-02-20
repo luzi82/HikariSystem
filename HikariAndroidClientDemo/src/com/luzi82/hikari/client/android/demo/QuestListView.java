@@ -5,8 +5,6 @@ import java.util.List;
 
 import android.content.Context;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.luzi82.hikari.client.Quest;
 import com.luzi82.hikari.client.protocol.QuestProtocolDef.HsQuestEntryData;
 import com.luzi82.hikari.client.protocol.QuestProtocolDef.QuestStartCmd;
