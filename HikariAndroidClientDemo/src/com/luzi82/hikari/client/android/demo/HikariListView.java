@@ -1,7 +1,9 @@
 package com.luzi82.hikari.client.android.demo;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
+import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.hikari.client.HsClient;
 
 import android.content.Context;
@@ -33,14 +35,51 @@ public class HikariListView extends ListView {
 			this.name = name;
 		}
 
-		public void onClick(){
+		public void onClick() {
 		}
 
 		@Override
 		public String toString() {
 			return this.name;
 		}
-		
+
+	}
+
+	public abstract class FutureDialogItem<T> extends Item implements
+			FutureCallback<T> {
+		FutureDialog<T> futureDialog;
+		FutureCallback<T> callback;
+
+		public FutureDialogItem(String name, FutureCallback<T> callback) {
+			super(name);
+			this.callback = callback;
+		}
+
+		@Override
+		public void completed(T result) {
+			futureDialog.completed(result);
+		}
+
+		@Override
+		public void failed(Exception ex) {
+			futureDialog.failed(ex);
+		}
+
+		@Override
+		public void cancelled() {
+			futureDialog.cancelled();
+		}
+
+		@Override
+		public void onClick() {
+			futureDialog = new FutureDialog<T>(
+					new ResultDialogFutureCallback<T>(getMain(), callback,
+							getMain().executorService));
+			futureDialog.setFuture(getFuture());
+			futureDialog.show(getContext(), name, "Wait...", false);
+		}
+
+		public abstract Future<T> getFuture();
 	}
 
 	public void setItemList(final List<Item> itemList) {
