@@ -2,6 +2,7 @@ package com.luzi82.hikari.client.android.demo;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Future;
 
 import android.content.Context;
 
@@ -26,10 +27,21 @@ public class QuestListView extends HikariListView {
 				List<Item> itemList = new LinkedList<Item>();
 				if (questEntryList != null) {
 					for (final HsQuestEntryData questEntry : questEntryList) {
-						itemList.add(new Item(questEntry.key) {
+						itemList.add(new FutureDialogItem<QuestStartCmd.Result>(
+								questEntry.key,
+								new DummyFutureCallback<QuestStartCmd.Result>(
+										null) {
+									@Override
+									public void completed(Result result) {
+										getMain().questInstanceVar
+												.set(result.quest_instance);
+										super.completed(result);
+									}
+								}) {
 							@Override
-							public void onClick() {
-								startQuest(questEntry);
+							public Future<QuestStartCmd.Result> getFuture() {
+								return Quest.questStart(getClient(),
+										questEntry.key, this);
 							}
 						});
 					}
@@ -42,21 +54,6 @@ public class QuestListView extends HikariListView {
 		getMain().questEntryListVar.addListener(questEntryListListener);
 		questEntryListListener.onValueDirty(getMain().questEntryListVar);
 
-	}
-
-	public void startQuest(final HsQuestEntryData questEntry) {
-		FutureDialog<QuestStartCmd.Result> fd = new FutureDialog<QuestStartCmd.Result>(
-				new ResultDialogFutureCallback<QuestStartCmd.Result>(getMain(),
-						new DummyFutureCallback<QuestStartCmd.Result>(null) {
-							@Override
-							public void completed(Result result) {
-								getMain().questInstanceVar
-										.set(result.quest_instance);
-								super.completed(result);
-							}
-						}, getMain().executorService));
-
-		fd.setFuture(Quest.questStart(getClient(), questEntry.key, fd));
 	}
 
 }
