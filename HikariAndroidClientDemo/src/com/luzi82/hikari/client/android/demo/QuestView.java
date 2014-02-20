@@ -2,11 +2,13 @@ package com.luzi82.hikari.client.android.demo;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Future;
 
 import android.content.Context;
 
 import com.luzi82.hikari.client.Quest;
 import com.luzi82.hikari.client.protocol.QuestProtocolDef.QuestEndCmd;
+import com.luzi82.hikari.client.protocol.QuestProtocolDef.QuestEndCmd.Result;
 import com.luzi82.hikari.client.protocol.QuestProtocolDef.QuestInstance;
 import com.luzi82.homuvalue.Value;
 import com.luzi82.homuvalue.Value.Listener;
@@ -34,35 +36,27 @@ public class QuestView extends HikariListView {
 		final List<Item> itemList = new LinkedList<Item>();
 		QuestInstance questInstance = getMain().questInstanceVar.get();
 		if (questInstance != null) {
-			itemList.add(new Item("Success") {
-				@Override
-				public void onClick() {
-					report(true);
-				}
-			});
-			itemList.add(new Item("Fail") {
-				@Override
-				public void onClick() {
-					report(false);
-				}
-			});
+			itemList.add(resultItem("Success", true));
+			itemList.add(resultItem("Fail", false));
 		}
 		setItemList(itemList);
 	}
 
-	public void report(boolean success) {
-		FutureDialog<QuestEndCmd.Result> fd = new FutureDialog<QuestEndCmd.Result>(
-				new ResultDialogFutureCallback<QuestEndCmd.Result>(getMain(),
-						new DummyFutureCallback<QuestEndCmd.Result>(null) {
-							@Override
-							public void completed(QuestEndCmd.Result result) {
-								getMain().questInstanceVar.set(null);
-								super.completed(result);
-							}
-						}, getMain().executorService));
-
-		fd.setFuture(Quest.questEnd(getClient(),
-				getMain().questInstanceVar.get().id, success, fd));
+	public Item resultItem(String name, final boolean success) {
+		return new FutureDialogItem<QuestEndCmd.Result>(name,
+				new DummyFutureCallback<QuestEndCmd.Result>(null) {
+					@Override
+					public void completed(Result result) {
+						getMain().questInstanceVar.set(null);
+						super.completed(result);
+					}
+				}) {
+			@Override
+			public Future<Result> getFuture() {
+				return Quest.questEnd(getClient(),
+						getMain().questInstanceVar.get().id, success, this);
+			}
+		};
 	}
 
 }
