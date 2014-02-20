@@ -1,27 +1,20 @@
 package com.luzi82.hikari.client.android.demo;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.luzi82.concurrent.FutureCallback;
-import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.Quest;
-import com.luzi82.hikari.client.protocol.QuestProtocolDef;
 import com.luzi82.hikari.client.protocol.QuestProtocolDef.HsQuestEntryData;
+import com.luzi82.hikari.client.protocol.QuestProtocolDef.QuestStartCmd;
 import com.luzi82.hikari.client.protocol.QuestProtocolDef.QuestStartCmd.Result;
 import com.luzi82.homuvalue.Value;
 import com.luzi82.homuvalue.Value.Listener;
 
-public class QuestListView extends ListView {
+public class QuestListView extends HikariListView {
 
 	ObjectMapper objectMapper;
 
@@ -30,50 +23,32 @@ public class QuestListView extends ListView {
 	public QuestListView(Context context) {
 		super(context);
 
-		// if (getMain().questEntryAry != null) {
-		// setAdapter(new Adapter());
-		// }
-
 		objectMapper = new ObjectMapper();
 		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-
-		this.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				HsQuestEntryData questEntry = (HsQuestEntryData) arg0
-						.getItemAtPosition(arg2);
-
-				FutureDialog<QuestProtocolDef.QuestStartCmd.Result> fd = new FutureDialog<QuestProtocolDef.QuestStartCmd.Result>(
-						new ResultDialogFutureCallback<QuestProtocolDef.QuestStartCmd.Result>(
-								getMain(),
-								new DummyFutureCallback<QuestProtocolDef.QuestStartCmd.Result>(
-										null) {
-									@Override
-									public void completed(Result result) {
-										getMain().questInstanceVar
-												.set(result.quest_instance);
-										super.completed(result);
-									}
-								}, getMain().executorService));
-
-				fd.setFuture(Quest.questStart(getClient(), questEntry.key, fd));
-			}
-		});
 
 		questEntryListListener = new Listener<List<HsQuestEntryData>>() {
 			@Override
 			public void onValueDirty(Value<List<HsQuestEntryData>> v) {
 				List<HsQuestEntryData> questEntryList = v.get();
+				List<Item> itemList = new LinkedList<Item>();
 				if (questEntryList != null) {
-					getMain().runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							setAdapter(new Adapter());
-						}
-					});
+					for (final HsQuestEntryData questEntry : questEntryList) {
+						itemList.add(new CmdItem() {
+							@Override
+							public void onClick() {
+								startQuest(questEntry);
+							}
+
+							@Override
+							public String toString() {
+								return questEntry.key;
+							}
+						});
+					}
 				}
+				setItemList(itemList);
 			}
+
 		};
 
 		getMain().questEntryListVar.addListener(questEntryListListener);
@@ -81,31 +56,19 @@ public class QuestListView extends ListView {
 
 	}
 
-	private class Adapter extends ArrayAdapter<HsQuestEntryData> {
+	public void startQuest(final HsQuestEntryData questEntry) {
+		FutureDialog<QuestStartCmd.Result> fd = new FutureDialog<QuestStartCmd.Result>(
+				new ResultDialogFutureCallback<QuestStartCmd.Result>(getMain(),
+						new DummyFutureCallback<QuestStartCmd.Result>(null) {
+							@Override
+							public void completed(Result result) {
+								getMain().questInstanceVar
+										.set(result.quest_instance);
+								super.completed(result);
+							}
+						}, getMain().executorService));
 
-		public Adapter() {
-			super(QuestListView.this.getContext(),
-					android.R.layout.simple_list_item_1,
-					getMain().questEntryListVar.get());
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			HsQuestEntryData questEntry = getItem(position);
-			TextView ret = (TextView) super.getView(position, convertView,
-					parent);
-			ret.setText(questEntry.key);
-			return ret;
-		}
-
-	}
-
-	private MainActivity getMain() {
-		return (MainActivity) getContext();
-	}
-
-	private HsClient getClient() {
-		return getMain().hsClient;
+		fd.setFuture(Quest.questStart(getClient(), questEntry.key, fd));
 	}
 
 }
