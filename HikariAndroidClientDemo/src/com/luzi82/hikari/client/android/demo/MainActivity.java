@@ -1,7 +1,6 @@
 package com.luzi82.hikari.client.android.demo;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -47,7 +46,7 @@ public class MainActivity extends FragmentActivity {
 	// public List<HsQuestEntryData> questEntryAry;
 
 	public final Variable<List<HsQuestEntryData>> questEntryListVar = new Variable<List<HsQuestEntryData>>();
-	
+
 	public final Variable<QuestInstance> questInstanceVar = new Variable<QuestInstance>();
 
 	@Override
@@ -109,14 +108,13 @@ public class MainActivity extends FragmentActivity {
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			Locale l = Locale.getDefault();
 			switch (position) {
 			case 0:
-				return getString(R.string.title_section1).toUpperCase(l);
+				return "Main";
 			case 1:
-				return getString(R.string.title_section2).toUpperCase(l);
+				return "Quest list";
 			case 2:
-				return getString(R.string.title_section3).toUpperCase(l);
+				return "Quest";
 			}
 			return null;
 		}
