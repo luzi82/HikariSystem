@@ -102,3 +102,93 @@ class SimpleTest(TestCase):
         result = simplejson.loads(content)
 
         self.assertEqual(result['success'], True)
+
+    def test_quest_Yi7XmDfH(self):
+
+        call_command('csv_in')
+        
+        client = Client()
+        
+        response = client.post("/ajax/hikari/user__create_user.json", {"arg":simplejson.dumps({
+            "device_model":SimpleTest.TEST_DEVICE_MODEL
+        })})
+        content = response.content
+        result = simplejson.loads(content)
+        
+        self.assertEqual(result['success'], True)
+        username = result['data']['username']
+        password = result['data']['password']
+        
+        response = client.post("/ajax/hikari/user__login.json", {"arg":simplejson.dumps({
+            "username":username,
+            "password":password,
+        })})
+        content = response.content
+        result = simplejson.loads(content)
+
+        self.assertEqual(result['success'], True)
+
+        response = client.post("/ajax/hikari/quest__quest_start.json", {"arg":simplejson.dumps({
+            "quest_entry_key":'1',
+        })})
+        content = response.content
+        result = simplejson.loads(content)
+        
+        self.assertEqual(result['success'], True)
+        quest_instance_id0 = result['data']['quest_instance']['id']
+
+        response = client.post("/ajax/hikari/quest__quest_start.json", {"arg":simplejson.dumps({
+            "quest_entry_key":'1',
+        })})
+        content = response.content
+        result = simplejson.loads(content)
+        
+        self.assertEqual(result['success'], True)
+        quest_instance_id1 = result['data']['quest_instance']['id']
+
+        response = client.post("/ajax/hikari/quest__quest_end.json", {"arg":simplejson.dumps({
+            "quest_instance_id":quest_instance_id0,
+            'success': True
+        })})
+        content = response.content
+        result = simplejson.loads(content)
+        
+#         self.assertEqual(result['success'], True)
+
+        response = client.post("/ajax/hikari/quest__quest_end.json", {"arg":simplejson.dumps({
+            "quest_instance_id":quest_instance_id1,
+            'success': True
+        })})
+        content = response.content
+        result = simplejson.loads(content)
+
+        self.assertEqual(result['success'], True)
+
+    def test_seqid(self):
+        
+        client = Client()
+
+        response = client.post("/ajax/hikari/system__get_time.json", {"arg":"{}"})
+        content = response.content
+        simplejson.loads(content)
+
+        seqid = client.cookies['seqid'].value
+#         print "client seqid = "+seqid
+        
+        response = client.post("/ajax/hikari/system__get_time.json", {"arg":"{}"})
+        content = response.content
+        result = simplejson.loads(content)
+        
+        self.assertEqual(result['success'], True)
+        t0 = result['data']['time']
+        
+        client.cookies['seqid'] = seqid
+        
+        response = client.post("/ajax/hikari/system__get_time.json", {"arg":"{}"})
+        content = response.content
+        result = simplejson.loads(content)
+        
+        self.assertEqual(result['success'], True)
+        t1 = result['data']['time']
+
+        self.assertEqual(t0, t1)

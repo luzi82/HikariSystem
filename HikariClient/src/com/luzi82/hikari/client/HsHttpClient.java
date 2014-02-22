@@ -12,4 +12,8 @@ public interface HsHttpClient {
 	public Future<String> get(final String url,
 			final FutureCallback<String> callback);
 
+	public String getCookie(String domain, String path, String name);
+
+	public void setCookie(String domain, String path, String name, String value);
+
 }

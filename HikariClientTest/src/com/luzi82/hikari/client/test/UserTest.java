@@ -1,11 +1,8 @@
 package com.luzi82.hikari.client.test;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -17,21 +14,14 @@ import org.junit.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.luzi82.concurrent.FutureCallback;
-import com.luzi82.hikari.client.User;
 import com.luzi82.hikari.client.HsClient;
-import com.luzi82.hikari.client.HsMemStorage;
-import com.luzi82.hikari.client.apache.HsClientApache;
+import com.luzi82.hikari.client.User;
 import com.luzi82.hikari.client.protocol.UserProtocolDef;
 
-public class UserTest {
-
-	public static String SERVER = "http://192.168.1.50";
-
-	public static String TEST_DEV = "test_dev";
+public class UserTest extends AbstractTest {
 
 	@Test
-	public void testCreateUser() throws InterruptedException,
-			ExecutionException, TimeoutException {
+	public void testCreateUser() throws Exception {
 		HsClient client = createClient();
 
 		final UserProtocolDef.CreateUserCmd.Result[] curv = new UserProtocolDef.CreateUserCmd.Result[1];
@@ -110,7 +100,7 @@ public class UserTest {
 	}
 
 	@Test
-	public void testBadLogin() throws InterruptedException {
+	public void testBadLogin() throws Exception {
 		HsClient client = createClient();
 
 		try {
@@ -121,8 +111,7 @@ public class UserTest {
 	}
 
 	@Test
-	public void testLogin() throws InterruptedException, ExecutionException,
-			TimeoutException {
+	public void testLogin() throws Exception {
 		HsClient client = createClient();
 
 		User.createUser(client, TEST_DEV, null).get(5, TimeUnit.SECONDS);
@@ -131,8 +120,7 @@ public class UserTest {
 	}
 
 	@Test
-	public void testCheckLogin() throws InterruptedException,
-			ExecutionException, TimeoutException {
+	public void testCheckLogin() throws Exception {
 		HsClient client = createClient();
 
 		try {
@@ -167,7 +155,7 @@ public class UserTest {
 	public void testWeb() throws InterruptedException, ExecutionException {
 		CloseableHttpAsyncClient httpclient = HttpAsyncClients.createDefault();
 		httpclient.start();
-		HttpGet req = new HttpGet("http://www.google.com");
+		HttpGet req = new HttpGet("http://www.luzi82.com");
 		final HttpResponse[] hr = new HttpResponse[1];
 		Future<HttpResponse> future = httpclient.execute(req,
 				new org.apache.http.concurrent.FutureCallback<HttpResponse>() {
@@ -189,12 +177,6 @@ public class UserTest {
 
 		Assert.assertNotNull(hrr);
 		Assert.assertEquals(hrr, hr[0]);
-	}
-
-	public static HsClient createClient() {
-		ExecutorService executor = Executors.newCachedThreadPool();
-		return new HsClient(SERVER, new HsMemStorage(executor), executor,
-				new HsClientApache(executor));
 	}
 
 }

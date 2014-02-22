@@ -9,11 +9,12 @@ from ajax.exceptions import AJAXError, NotRegistered
 from ajax.decorators import json_response
 import ajax
 import sys
+from hikari.seqid import seqid
 
 
 logger = getLogger('django.request')
 
-
+@seqid
 @json_response
 def endpoint_loader(request, application, model, **kwargs):
     """Load an AJAX endpoint.

@@ -2,24 +2,16 @@ package com.luzi82.hikari.client.test;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.luzi82.hikari.client.HsClient;
-import com.luzi82.hikari.client.HsMemStorage;
 import com.luzi82.hikari.client.Quest;
 import com.luzi82.hikari.client.User;
-import com.luzi82.hikari.client.apache.HsClientApache;
 
-public class QuestTest {
-
-	public static String SERVER = "http://192.168.1.50";
-
-	public static String TEST_DEV = "test_dev";
+public class QuestTest extends AbstractTest {
 
 	@Test
 	public void testQuestPlay() throws Exception {
@@ -65,6 +57,8 @@ public class QuestTest {
 		questInstanceId0 = Quest.questStart(client, questEntry.key, null).get().quest_instance.id;
 		questInstanceId1 = Quest.questStart(client, questEntry.key, null).get().quest_instance.id;
 		
+		System.err.println(client.getCookie("seqid"));
+		
 		Assert.assertNotEquals(questInstanceId0, questInstanceId1);
 
 		try {
@@ -72,6 +66,8 @@ public class QuestTest {
 			Assert.fail();
 		} catch (ExecutionException e) {
 		}
+		
+		System.err.println(client.getCookie("seqid"));
 
 		Quest.questEnd(client, questInstanceId1, true, null).get();
 	}
@@ -99,12 +95,6 @@ public class QuestTest {
 			Assert.fail();
 		} catch (ExecutionException e) {
 		}
-	}
-
-	public static HsClient createClient() {
-		ExecutorService executor = Executors.newCachedThreadPool();
-		return new HsClient(SERVER, new HsMemStorage(executor), executor,
-				new HsClientApache(executor));
 	}
 
 }

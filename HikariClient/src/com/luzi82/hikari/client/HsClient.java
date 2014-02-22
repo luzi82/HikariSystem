@@ -2,6 +2,8 @@ package com.luzi82.hikari.client;
 
 import java.io.StringReader;
 import java.lang.reflect.Field;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -24,6 +26,7 @@ public class HsClient implements HsCmdManager {
 
 	// final public String server;
 	String server;
+	String serverHost;
 	final HsStorage storage;
 	final public Executor executor;
 	HsHttpClient jsonClient;
@@ -33,12 +36,14 @@ public class HsClient implements HsCmdManager {
 	// final HsCmdManager cmdManager;
 
 	public HsClient(String aServer, HsStorage storage, Executor executor,
-			HsHttpClient jsonClient) {
+			HsHttpClient jsonClient) throws URISyntaxException {
 		this.server = aServer;
 		this.storage = storage;
 		this.executor = executor;
 		this.jsonClient = jsonClient;
 		mObjectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+
+		serverHost = new URI(server).getHost();
 
 		ClientInit.initClient(this);
 	}
@@ -279,6 +284,14 @@ public class HsClient implements HsCmdManager {
 			}
 		}
 
+	}
+
+	public String getCookie(String string) {
+		return jsonClient.getCookie(serverHost, "/", string);
+	}
+
+	public void setCookie(String string, String seqId) {
+		jsonClient.setCookie(serverHost, "/", string, seqId);
 	}
 
 }

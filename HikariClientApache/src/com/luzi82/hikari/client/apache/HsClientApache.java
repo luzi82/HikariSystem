@@ -9,10 +9,15 @@ import java.util.concurrent.Future;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
+import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -24,10 +29,15 @@ public class HsClientApache implements HsHttpClient {
 
 	Executor executor;
 	CloseableHttpAsyncClient httpclient;
+	CookieStore cookieStore;
 
 	public HsClientApache(Executor executor) {
 		this.executor = executor;
-		httpclient = HttpAsyncClients.createDefault();
+		// httpclient = HttpAsyncClients.createDefault();
+		cookieStore = new BasicCookieStore();
+		HttpAsyncClientBuilder hacb = HttpAsyncClients.custom();
+		hacb.setDefaultCookieStore(cookieStore);
+		httpclient = hacb.build();
 		httpclient.start();
 	}
 
@@ -162,6 +172,35 @@ public class HsClientApache implements HsHttpClient {
 			}
 
 		}
+	}
+
+	@Override
+	public String getCookie(String domain, String path, String name) {
+		List<Cookie> cookieList = cookieStore.getCookies();
+		for (Cookie cookie : cookieList) {
+//			System.err.println(cookie.getDomain());
+//			System.err.println(cookie.getPath());
+//			System.err.println(cookie.getName());
+			if (!cookie.getName().equals(name)) {
+				continue;
+			}
+			if (!cookie.getDomain().equals(domain)) {
+				continue;
+			}
+			if (!cookie.getPath().equals(path)) {
+				continue;
+			}
+			return cookie.getValue();
+		}
+		return null;
+	}
+
+	@Override
+	public void setCookie(String domain, String path, String name, String value) {
+		BasicClientCookie cookie = new BasicClientCookie(name, value);
+		cookie.setDomain(domain);
+		cookie.setPath(path);
+		cookieStore.addCookie(cookie);
 	}
 
 }

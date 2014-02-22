@@ -1,5 +1,6 @@
 package com.luzi82.hikari.client.android.demo;
 
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -56,9 +57,14 @@ public class MainActivity extends FragmentActivity {
 
 		executorService = Executors.newCachedThreadPool();
 
-		hsClient = new HsClient("http://192.168.1.50", new HsMemStorage(
-				executorService), executorService, new HttpClient(
-				executorService));
+		try {
+			hsClient = new HsClient("http://192.168.1.50", new HsMemStorage(
+					executorService), executorService, new HttpClient(
+					executorService));
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+			throw new Error(e);
+		}
 
 		// Create the adapter that will return a fragment for each of the
 		// three primary sections of the app.
