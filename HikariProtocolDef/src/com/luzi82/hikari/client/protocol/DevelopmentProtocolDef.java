@@ -9,6 +9,7 @@ public class DevelopmentProtocolDef {
 		}
 
 		public static class Result {
+			public long time;
 		}
 	}
 
