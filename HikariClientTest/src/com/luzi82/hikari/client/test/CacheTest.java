@@ -85,4 +85,44 @@ public class CacheTest extends AbstractTest {
 		Assert.assertSame(result, rfc.result);
 		Assert.assertNull(rfc.ex);
 	}
+
+	@Test
+	public void testBadRetry() throws Exception {
+		HsClient client = createClient();
+
+		createLogin(client);
+
+		long serverTime = SystemProtocol.getTime(client, null).get().time;
+		long clientTime = System.currentTimeMillis();
+
+		RecordFutureCallback<PassTimeCmd.Result> rfc = new RecordFutureCallback<PassTimeCmd.Result>(
+				null);
+		RetryableFuture<PassTimeCmd.Result> retryableFuture = DevelopmentProtocol
+				.passTime(client, serverTime + 1000, -1, rfc);
+
+		try {
+			retryableFuture.get();
+			Assert.fail();
+		} catch (ExecutionException ee) {
+		}
+
+		Assert.assertFalse(rfc.completed);
+		Assert.assertTrue(rfc.failed);
+		Assert.assertFalse(rfc.cancelled);
+		Assert.assertNull(rfc.result);
+		Assert.assertNotNull(rfc.ex);
+
+		// call appear in between
+		SystemProtocol.getTime(client, null).get();
+
+		rfc.clear();
+		try {
+			retryableFuture.retry();
+			retryableFuture.get();
+			Assert.fail();
+		} catch (IllegalStateException ise) {
+		}
+
+	}
+
 }
