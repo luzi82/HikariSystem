@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
+import org.apache.commons.lang.ObjectUtils;
+
 import au.com.bytecode.opencsv.CSVReader;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -73,6 +75,7 @@ public class HsClient implements HsCmdManager {
 		final String string;
 		final Object request;
 		final Class<Result> class1;
+		final String seqId;
 
 		public SendRequestFuture(final String appName, final String string,
 				final Object request, final Class<Result> class1,
@@ -82,6 +85,7 @@ public class HsClient implements HsCmdManager {
 			this.string = string;
 			this.request = request;
 			this.class1 = class1;
+			this.seqId = getCookie("seqid");
 		}
 
 		@Override
@@ -120,6 +124,14 @@ public class HsClient implements HsCmdManager {
 				completed(result);
 			}
 
+		}
+
+		@Override
+		public boolean isRetryable() {
+			if(!ObjectUtils.equals(seqId, getCookie("seqid"))){
+				return false;
+			}
+			return super.isRetryable();
 		}
 
 	}
