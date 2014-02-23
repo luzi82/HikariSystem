@@ -72,6 +72,7 @@ public class CacheTest extends AbstractTest {
 		while (System.currentTimeMillis() < clientTime + 2000) {
 			rfc.clear();
 			try {
+				retryableFuture.retry();
 				result = retryableFuture.get();
 				break;
 			} catch (ExecutionException ee) {
