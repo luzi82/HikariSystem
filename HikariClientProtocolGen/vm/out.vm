@@ -3,6 +3,7 @@ package com.luzi82.hikari.client.protocol;
 import java.util.concurrent.Future;
 import java.util.List;
 import com.luzi82.concurrent.FutureCallback;
+import com.luzi82.concurrent.RetryableFuture;
 import com.luzi82.hikari.client.endpoint.HsCmdManager;
 
 public class ${main}Protocol extends ${main}ProtocolDef {
@@ -24,7 +25,7 @@ public class ${main}Protocol extends ${main}ProtocolDef {
 #end
 #foreach( $cmd in $cmd_list )
 
-	public static Future<${cmd.Cname}.Result> ${cmd.Fname}(
+	public static RetryableFuture<${cmd.Cname}.Result> ${cmd.Fname}(
 		final HsCmdManager cmdManager,
 #foreach( $req in $cmd.ReqList )
 		${req.Type} ${req.Name},

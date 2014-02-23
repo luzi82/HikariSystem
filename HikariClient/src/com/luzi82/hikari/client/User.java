@@ -23,12 +23,12 @@ public class User extends UserProtocol {
 		public CreateUserFuture(final HsClient client,
 				final String device_model,
 				final FutureCallback<CreateUserCmd.Result> futureCallback) {
-			super(futureCallback, client.executor);
+			super(false, futureCallback, client.executor);
 			this.client = client;
 			this.device_model = device_model;
 		}
 
-		public void start() {
+		public void fire() {
 			new Step0().start();
 		}
 
@@ -96,11 +96,11 @@ public class User extends UserProtocol {
 
 		public LoginFuture(final HsClient client,
 				final FutureCallback<LoginCmd.Result> futureCallback) {
-			super(futureCallback, client.executor);
+			super(false, futureCallback, client.executor);
 			this.client = client;
 		}
 
-		public void start() {
+		public void fire() {
 			new Step0().start();
 		}
 

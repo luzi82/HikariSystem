@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.concurrent.GuriFuture;
+import com.luzi82.concurrent.RetryableFuture;
 import com.luzi82.hikari.client.endpoint.HsCmdManager;
 import com.luzi82.hikari.client.protocol.gen.out.ClientInit;
 
@@ -65,7 +66,8 @@ public class HsClient implements HsCmdManager {
 		public JsonNode data;
 	}
 
-	private class SendRequestFuture<Result> extends GuriFuture<Result> {
+	private class SendRequestFuture<Result> extends GuriFuture<Result>
+			implements RetryableFuture<Result> {
 
 		final String appName;
 		final String string;
@@ -75,14 +77,15 @@ public class HsClient implements HsCmdManager {
 		public SendRequestFuture(final String appName, final String string,
 				final Object request, final Class<Result> class1,
 				FutureCallback<Result> callback) {
-			super(callback, HsClient.this.executor);
+			super(true, callback, HsClient.this.executor);
 			this.appName = appName;
 			this.string = string;
 			this.request = request;
 			this.class1 = class1;
 		}
 
-		public void start() {
+		@Override
+		public void fire() {
 			new Step0().start();
 		}
 
@@ -121,7 +124,7 @@ public class HsClient implements HsCmdManager {
 
 	}
 
-	public <Result> Future<Result> sendRequest(final String appName,
+	public <Result> RetryableFuture<Result> sendRequest(final String appName,
 			final String string, final Object request,
 			final Class<Result> class1, final FutureCallback<Result> callback) {
 
@@ -149,13 +152,13 @@ public class HsClient implements HsCmdManager {
 
 		public GetDataListFuture(String appName, String dataName,
 				Class<Data> dataClass, FutureCallback<List<Data>> callback) {
-			super(callback, HsClient.this.executor);
+			super(false, callback, HsClient.this.executor);
 			this.appName = appName;
 			this.dataName = dataName;
 			this.dataClass = dataClass;
 		}
 
-		public void start() {
+		public void fire() {
 			new Step0().start();
 		}
 
@@ -235,10 +238,10 @@ public class HsClient implements HsCmdManager {
 	private class SyncDataFuture extends GuriFuture<Void> {
 
 		public SyncDataFuture(FutureCallback<Void> callback) {
-			super(callback, HsClient.this.executor);
+			super(false, callback, HsClient.this.executor);
 		}
 
-		public void start() {
+		public void fire() {
 			new Step0().start();
 		}
 

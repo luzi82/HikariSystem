@@ -3,13 +3,18 @@ package com.luzi82.concurrent;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
-public class GuriFuture<T> extends BasicFuture<T> {
+public abstract class GuriFuture<T> extends BasicRetryableFuture<T> {
 
 	public Executor executor;
 
-	public GuriFuture(FutureCallback<T> callback, Executor executor) {
+	public final boolean reallyRetryable;
+	public boolean firstFireDone = false;
+
+	public GuriFuture(boolean reallyRetryable, FutureCallback<T> callback,
+			Executor executor) {
 		super(callback);
 		this.executor = executor;
+		this.reallyRetryable = reallyRetryable;
 	}
 
 	public synchronized boolean cancel(boolean mayInterruptIfRunning) {
@@ -83,6 +88,9 @@ public class GuriFuture<T> extends BasicFuture<T> {
 		@Override
 		public void cancelled() {
 			System.err.println("MPDBbKHF - GuriFuture.Callback.cancelled");
+			synchronized (GuriFuture.this) {
+				GuriFuture.this.cancelled();
+			}
 		}
 
 		@Override
@@ -107,6 +115,52 @@ public class GuriFuture<T> extends BasicFuture<T> {
 			}
 		}
 
+	}
+
+	protected boolean busy;
+
+	@Override
+	public boolean completed(T result) {
+		synchronized (this) {
+			busy = false;
+		}
+		return super.completed(result);
+	}
+
+	@Override
+	public synchronized boolean failed(Exception exception) {
+		synchronized (this) {
+			busy = false;
+		}
+		return super.failed(exception);
+	}
+
+	protected synchronized void cancelled() {
+		synchronized (this) {
+			busy = false;
+		}
+	}
+
+	public final void start() {
+		retry();
+	}
+
+	@Override
+	public final synchronized void retry() {
+		if (busy)
+			return;
+		super.retry();
+		firstFireDone = true;
+		fire();
+	}
+
+	protected abstract void fire();
+
+	@Override
+	public boolean isRetryable() {
+		if ((firstFireDone) && (!reallyRetryable))
+			return false;
+		return super.isRetryable();
 	}
 
 }

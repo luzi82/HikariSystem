@@ -58,12 +58,12 @@ public class HsClientApache implements HsHttpClient {
 
 		public SendJsonRequestFuture(final String url, final String json,
 				FutureCallback<String> callback) {
-			super(callback, HsClientApache.this.executor);
+			super(false, callback, HsClientApache.this.executor);
 			this.url = url;
 			this.json = json;
 		}
 
-		public void start() {
+		protected void fire() {
 			new Step0().start();
 		}
 
@@ -129,12 +129,12 @@ public class HsClientApache implements HsHttpClient {
 		final String url;
 
 		public GetFuture(final String url, FutureCallback<String> callback) {
-			super(callback, HsClientApache.this.executor);
+			super(false, callback, HsClientApache.this.executor);
 			this.url = url;
 			System.err.println("z7U004fe url: " + url);
 		}
 
-		public void start() {
+		public void fire() {
 			new Step0().start();
 		}
 
@@ -178,9 +178,9 @@ public class HsClientApache implements HsHttpClient {
 	public String getCookie(String domain, String path, String name) {
 		List<Cookie> cookieList = cookieStore.getCookies();
 		for (Cookie cookie : cookieList) {
-//			System.err.println(cookie.getDomain());
-//			System.err.println(cookie.getPath());
-//			System.err.println(cookie.getName());
+			// System.err.println(cookie.getDomain());
+			// System.err.println(cookie.getPath());
+			// System.err.println(cookie.getName());
 			if (!cookie.getName().equals(name)) {
 				continue;
 			}
