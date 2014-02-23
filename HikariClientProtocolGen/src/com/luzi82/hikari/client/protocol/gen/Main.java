@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -30,6 +31,7 @@ public class Main {
 		Velocity.init();
 
 		List<Data> dataLoadList = new LinkedList<Data>();
+		List<Status> statusList = new LinkedList<Status>();
 
 		Template template = Velocity.getTemplate("vm/out.vm");
 
@@ -136,6 +138,18 @@ public class Main {
 				}
 				vc.put("data_list", dataList);
 
+				boolean statusExist = false;
+				for (Class<?> dataClass : cls.getDeclaredClasses()) {
+					if (ObjectUtils.equals("Status", dataClass.getSimpleName())) {
+						statusExist = true;
+						Status status = new Status();
+						status.appName = appName;
+						status.cnamefull = dataClass.getCanonicalName();
+						statusList.add(status);
+					}
+				}
+				vc.put("status_exist", statusExist);
+
 				BufferedWriter bw = new BufferedWriter(new FileWriter(out));
 				template.merge(vc, bw);
 
@@ -143,16 +157,19 @@ public class Main {
 				IOUtils.closeQuietly(bw);
 			}
 		}
-		
+
 		Template clientInitTemplate = Velocity.getTemplate("vm/clientInit.vm");
-		
-		File clientInitFile = new File(outputFile,"com/luzi82/hikari/client/protocol/gen/out/ClientInit.java");
+
+		File clientInitFile = new File(outputFile,
+				"com/luzi82/hikari/client/protocol/gen/out/ClientInit.java");
 		clientInitFile.getParentFile().mkdirs();
-		
+
 		VelocityContext clientInitVc = new VelocityContext();
+		clientInitVc.put("status_list", statusList);
 		clientInitVc.put("dataload_list", dataLoadList);
 
-		BufferedWriter clientInitBw = new BufferedWriter(new FileWriter(clientInitFile));
+		BufferedWriter clientInitBw = new BufferedWriter(new FileWriter(
+				clientInitFile));
 		clientInitTemplate.merge(clientInitVc, clientInitBw);
 		clientInitBw.flush();
 		IOUtils.closeQuietly(clientInitBw);
@@ -214,6 +231,18 @@ public class Main {
 
 		public String getJname() {
 			return jname;
+		}
+	}
+	
+	public static class Status {
+		public String appName;
+		public String cnamefull;
+		public String getAppName() {
+			return appName;
+		}
+
+		public String getCnamefull() {
+			return cnamefull;
 		}
 	}
 

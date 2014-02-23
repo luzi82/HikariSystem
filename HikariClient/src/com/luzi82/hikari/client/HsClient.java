@@ -23,7 +23,10 @@ import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.concurrent.GuriFuture;
 import com.luzi82.concurrent.RetryableFuture;
 import com.luzi82.hikari.client.endpoint.HsCmdManager;
+import com.luzi82.hikari.client.protocol.AbstractResult;
 import com.luzi82.hikari.client.protocol.gen.out.ClientInit;
+import com.luzi82.homuvalue.Value;
+import com.luzi82.homuvalue.Value.Variable;
 
 public class HsClient implements HsCmdManager {
 
@@ -35,6 +38,9 @@ public class HsClient implements HsCmdManager {
 	HsHttpClient jsonClient;
 	ObjectMapper mObjectMapper = new ObjectMapper();
 	List<DataLoad> dataLoadList = new LinkedList<HsClient.DataLoad>();
+	final Map<String, Object> tmpMap;
+	final Map<String, Variable> statusVariableMap;
+	final Map<String, Class> statusClassMap;
 
 	// final HsCmdManager cmdManager;
 
@@ -45,6 +51,9 @@ public class HsClient implements HsCmdManager {
 		this.executor = executor;
 		this.jsonClient = jsonClient;
 		mObjectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+		this.tmpMap = new HashMap<String, Object>();
+		this.statusVariableMap = new HashMap<String, Variable>();
+		this.statusClassMap = new HashMap<String, Class>();
 
 		serverHost = new URI(server).getHost();
 
@@ -117,10 +126,18 @@ public class HsClient implements HsCmdManager {
 			@Override
 			public void _run() throws Exception {
 				String v = f0.get();
-				// System.err.println(v + " start");
 				Response res = mObjectMapper.readValue(v, Response.class);
-				// System.err.println(v + " end");
+				// StatusUpdate statusUpdate =
+				// mObjectMapper.convertValue(res.data, StatusUpdate.class);
 				Result result = mObjectMapper.convertValue(res.data, class1);
+				AbstractResult result0 = (AbstractResult) result;
+				if (result0.status_update_list != null) {
+					for (AbstractResult.StatusUpdate status_update : result0.status_update_list) {
+						String appName = status_update.app_name;
+						Object status = mObjectMapper.convertValue(status_update.status, statusClassMap.get(appName));
+						statusVariableMap.get(appName).set(status);
+					}
+				}
 				completed(result);
 			}
 
@@ -128,7 +145,7 @@ public class HsClient implements HsCmdManager {
 
 		@Override
 		public boolean isRetryable() {
-			if(!ObjectUtils.equals(seqId, getCookie("seqid"))){
+			if (!ObjectUtils.equals(seqId, getCookie("seqid"))) {
 				return false;
 			}
 			return super.isRetryable();
@@ -307,6 +324,29 @@ public class HsClient implements HsCmdManager {
 
 	public void setCookie(String string, String seqId) {
 		jsonClient.setCookie(serverHost, "/", string, seqId);
+	}
+
+	public void putTmp(String appName, String key, Object value) {
+		String k = appName + "__" + key;
+		tmpMap.put(k, value);
+	}
+
+	public Object getTmp(String appName, String key) {
+		String k = appName + "__" + key;
+		return tmpMap.get(k);
+	}
+
+	@Override
+	public <Status> Value<Status> getStatusValue(String appName,
+			Class<Status> class1) {
+		return (Value<Status>) statusVariableMap.get(appName);
+	}
+
+	@Override
+	public <Status> void addStatus(String appName, Class<Status> statusClass) {
+		Variable<Status> var = new Variable<Status>();
+		statusVariableMap.put(appName, var);
+		statusClassMap.put(appName, statusClass);
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.concurrent.RetryableFuture;
 import com.luzi82.hikari.client.endpoint.HsCmdManager;
+import com.luzi82.homuvalue.Value;
 
 public class ${main}Protocol extends ${main}ProtocolDef {
 
@@ -20,6 +21,17 @@ public class ${main}Protocol extends ${main}ProtocolDef {
 			"${data.Jname}",
 			${data.Cname}.class,
 			futureCallback
+		);
+	}
+#end
+#if( $status_exist )
+
+	public static Value<Status> getStatusValue(
+		final HsCmdManager cmdManager
+	) {
+		return cmdManager.getStatusValue(
+			APP_NAME,
+			Status.class
 		);
 	}
 #end

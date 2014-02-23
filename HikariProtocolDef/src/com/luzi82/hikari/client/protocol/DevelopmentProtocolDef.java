@@ -8,7 +8,7 @@ public class DevelopmentProtocolDef {
 			public long end;
 		}
 
-		public static class Result {
+		public static class Result extends AbstractResult {
 			public long time;
 		}
 	}

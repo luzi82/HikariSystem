@@ -19,5 +19,6 @@
 	<classpathentry kind="lib" path="/import/lib/apache/httpclient-cache-4.3.1.jar"/>
 	<classpathentry kind="lib" path="/import/lib/apache/httpcore-4.3.jar"/>
 	<classpathentry kind="lib" path="/import/lib/apache/httpcore-nio-4.3.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/HomuValue"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

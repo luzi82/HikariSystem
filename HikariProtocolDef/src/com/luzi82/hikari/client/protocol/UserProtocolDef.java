@@ -8,7 +8,7 @@ public class UserProtocolDef {
 			public String device_model;
 		}
 
-		public static class Result {
+		public static class Result extends AbstractResult {
 			public String username;
 			public String password;
 		}
@@ -20,7 +20,7 @@ public class UserProtocolDef {
 			public String password;
 		}
 
-		public static class Result {
+		public static class Result extends AbstractResult {
 		}
 	}
 
@@ -28,7 +28,7 @@ public class UserProtocolDef {
 		public static class Request {
 		}
 
-		public static class Result {
+		public static class Result extends AbstractResult {
 		}
 	}
 

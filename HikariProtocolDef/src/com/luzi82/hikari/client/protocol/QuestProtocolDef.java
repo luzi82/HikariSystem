@@ -5,6 +5,12 @@ public class QuestProtocolDef {
 	public static class HsQuestEntryData {
 		public String key;
 	}
+	
+	public static class HsQuestCostData {
+		public String quest_entry_key;
+		public String resource_key;
+		public int count;
+	}
 
 	public static class QuestInstance {
 		public int id;
@@ -16,7 +22,7 @@ public class QuestProtocolDef {
 			public String quest_entry_key;
 		}
 
-		public static class Result {
+		public static class Result extends AbstractResult {
 			public QuestInstance quest_instance;
 		}
 
