@@ -124,6 +124,7 @@ public class Main {
 						continue;
 					}
 					data.appName = appName;
+					data.cnamefull = dataClass.getCanonicalName();
 					data.cname = dataClass.getSimpleName();
 					String dataName = data.cname.substring(0,
 							data.cname.length() - 4);
@@ -219,6 +220,7 @@ public class Main {
 	public static class Data {
 		public String appName;
 		public String cname;
+		public String cnamefull;
 		public String jname;
 
 		public String getAppName() {
@@ -231,6 +233,10 @@ public class Main {
 
 		public String getJname() {
 			return jname;
+		}
+
+		public String getCnamefull() {
+			return cnamefull;
 		}
 	}
 	

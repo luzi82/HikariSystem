@@ -22,7 +22,7 @@ public class QuestProtocolDef {
 			public String quest_entry_key;
 		}
 
-		public static class Result extends AbstractResult {
+		public static class Result {
 			public QuestInstance quest_instance;
 		}
 

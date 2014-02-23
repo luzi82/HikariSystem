@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.ObjectUtils;
 
 import au.com.bytecode.opencsv.CSVReader;
@@ -23,7 +24,7 @@ import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.concurrent.GuriFuture;
 import com.luzi82.concurrent.RetryableFuture;
 import com.luzi82.hikari.client.endpoint.HsCmdManager;
-import com.luzi82.hikari.client.protocol.AbstractResult;
+import com.luzi82.hikari.client.protocol.StatusUpdate;
 import com.luzi82.hikari.client.protocol.gen.out.ClientInit;
 import com.luzi82.homuvalue.Value;
 import com.luzi82.homuvalue.Value.Variable;
@@ -39,8 +40,10 @@ public class HsClient implements HsCmdManager {
 	ObjectMapper mObjectMapper = new ObjectMapper();
 	List<DataLoad> dataLoadList = new LinkedList<HsClient.DataLoad>();
 	final Map<String, Object> tmpMap;
+	final Map<String, List> dataMap;
 	final Map<String, Variable> statusVariableMap;
 	final Map<String, Class> statusClassMap;
+	long serverTimeOffset;
 
 	// final HsCmdManager cmdManager;
 
@@ -51,6 +54,7 @@ public class HsClient implements HsCmdManager {
 		this.executor = executor;
 		this.jsonClient = jsonClient;
 		mObjectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+		this.dataMap = new HashMap<String, List>();
 		this.tmpMap = new HashMap<String, Object>();
 		this.statusVariableMap = new HashMap<String, Variable>();
 		this.statusClassMap = new HashMap<String, Class>();
@@ -75,6 +79,8 @@ public class HsClient implements HsCmdManager {
 	public static class Response {
 		public boolean success;
 		public JsonNode data;
+		public List<StatusUpdate> status_update_list;
+		public long time;
 	}
 
 	private class SendRequestFuture<Result> extends GuriFuture<Result>
@@ -127,17 +133,21 @@ public class HsClient implements HsCmdManager {
 			public void _run() throws Exception {
 				String v = f0.get();
 				Response res = mObjectMapper.readValue(v, Response.class);
-				// StatusUpdate statusUpdate =
-				// mObjectMapper.convertValue(res.data, StatusUpdate.class);
-				Result result = mObjectMapper.convertValue(res.data, class1);
-				AbstractResult result0 = (AbstractResult) result;
-				if (result0.status_update_list != null) {
-					for (AbstractResult.StatusUpdate status_update : result0.status_update_list) {
+				if (res.status_update_list != null) {
+					for (StatusUpdate status_update : res.status_update_list) {
 						String appName = status_update.app_name;
-						Object status = mObjectMapper.convertValue(status_update.status, statusClassMap.get(appName));
+						Object status = mObjectMapper.convertValue(
+								status_update.status,
+								statusClassMap.get(appName));
 						statusVariableMap.get(appName).set(status);
 					}
 				}
+				serverTimeOffset = res.time - System.currentTimeMillis();
+
+				// StatusUpdate statusUpdate =
+				// mObjectMapper.convertValue(res.data, StatusUpdate.class);
+				Result result = mObjectMapper.convertValue(res.data, class1);
+				// AbstractResult result0 = (AbstractResult) result;
 				completed(result);
 			}
 
@@ -164,98 +174,25 @@ public class HsClient implements HsCmdManager {
 	}
 
 	@Override
-	public <Data> Future<List<Data>> getDataList(String appName,
-			String dataName, Class<Data> dataClass,
-			FutureCallback<List<Data>> futureCallback) {
-		GetDataListFuture<Data> ret = new GetDataListFuture<Data>(appName,
-				dataName, dataClass, futureCallback);
-		ret.start();
-		return ret;
-	}
-
-	private class GetDataListFuture<Data> extends GuriFuture<List<Data>> {
-
-		final String appName;
-		final String dataName;
-		final Class<Data> dataClass;
-
-		public GetDataListFuture(String appName, String dataName,
-				Class<Data> dataClass, FutureCallback<List<Data>> callback) {
-			super(false, callback, HsClient.this.executor);
-			this.appName = appName;
-			this.dataName = dataName;
-			this.dataClass = dataClass;
-		}
-
-		public void fire() {
-			new Step0().start();
-		}
-
-		class Step0 extends Step {
-			@Override
-			public void _run() throws Exception {
-				String key = "hsclient__data__" + appName + "__" + dataName;
-				f0 = storage.get(key, new Callback<String>(new Step1()));
-				setFuture(f0);
-			}
-		}
-
-		Future<String> f0;
-
-		class Step1 extends Step {
-			@Override
-			public void _run() throws Exception {
-				String dataString = f0.get();
-				StringReader sr = new StringReader(dataString);
-
-				CSVReader cr = new CSVReader(sr);
-				List<String[]> csvDataList = cr.readAll();
-				cr.close();
-				Iterator<String[]> csvDataItr = csvDataList.iterator();
-
-				Map<String, Integer> colNameToIdx = new HashMap<String, Integer>();
-				String[] keyRow = csvDataItr.next();
-				for (int i = 0; i < keyRow.length; ++i) {
-					String cellValue = keyRow[i];
-					if (cellValue == null)
-						continue;
-					if (cellValue.length() <= 0)
-						continue;
-					colNameToIdx.put(cellValue, i);
-				}
-
-				Field[] dataClassFieldAry = dataClass.getFields();
-
-				LinkedList<Data> ret = new LinkedList<Data>();
-				while (csvDataItr.hasNext()) {
-					String[] dataRow = csvDataItr.next();
-					Data data = dataClass.newInstance();
-					for (Field dataClassField : dataClassFieldAry) {
-						String fieldname = dataClassField.getName();
-						int colIdx = colNameToIdx.get(fieldname);
-						dataClassField.set(data, dataRow[colIdx]);
-					}
-					ret.add(data);
-				}
-
-				completed(ret);
-			}
-
-		}
-
+	public <Data> List<Data> getDataList(String appName, String dataName,
+			Class<Data> dataClass) {
+		String key = appName + "__" + dataName;
+		return dataMap.get(key);
 	}
 
 	@Override
-	public void addDataLoad(String appName, String dataName) {
+	public void addDataLoad(String appName, String dataName, Class dataClass) {
 		DataLoad dataLoad = new DataLoad();
 		dataLoad.appName = appName;
 		dataLoad.dataName = dataName;
+		dataLoad.dataClass = dataClass;
 		dataLoadList.add(dataLoad);
 	}
 
 	public class DataLoad {
 		public String appName;
 		public String dataName;
+		public Class dataClass;
 	}
 
 	public Future<Void> syncData(final FutureCallback<Void> callback) {
@@ -307,6 +244,14 @@ public class HsClient implements HsCmdManager {
 			@Override
 			public void _run() throws Exception {
 				String csv = f1.get();
+
+				// save data to dataMap
+				List dataList = CsvParser
+						.toList(csv, currentDataLoad.dataClass);
+				dataMap.put(currentDataLoad.appName + "__"
+						+ currentDataLoad.dataName, dataList);
+
+				// save data to storage
 				String key = "hsclient__data__" + currentDataLoad.appName
 						+ "__" + currentDataLoad.dataName;
 				currentDataLoad = null;
@@ -339,14 +284,114 @@ public class HsClient implements HsCmdManager {
 	@Override
 	public <Status> Value<Status> getStatusValue(String appName,
 			Class<Status> class1) {
+		// System.err.println("faYQHNEC getStatusValue "+appName);
 		return (Value<Status>) statusVariableMap.get(appName);
 	}
 
 	@Override
 	public <Status> void addStatus(String appName, Class<Status> statusClass) {
+		// System.err.println("V0n72BRm addStatus "+appName);
 		Variable<Status> var = new Variable<Status>();
 		statusVariableMap.put(appName, var);
 		statusClassMap.put(appName, statusClass);
 	}
+
+	public long getServerTimeOffset() {
+		return serverTimeOffset;
+	}
+
+	// TODO change to load data from disk to memory
+	// public <Data> Future<List<Data>> getDataList(String appName,
+	// String dataName, Class<Data> dataClass,
+	// FutureCallback<List<Data>> futureCallback) {
+	// GetDataListFuture<Data> ret = new GetDataListFuture<Data>(appName,
+	// dataName, dataClass, futureCallback);
+	// ret.start();
+	// return ret;
+	// }
+	//
+	// private class GetDataListFuture<Data> extends GuriFuture<List<Data>> {
+	//
+	// final String appName;
+	// final String dataName;
+	// final Class<Data> dataClass;
+	//
+	// public GetDataListFuture(String appName, String dataName,
+	// Class<Data> dataClass, FutureCallback<List<Data>> callback) {
+	// super(false, callback, HsClient.this.executor);
+	// this.appName = appName;
+	// this.dataName = dataName;
+	// this.dataClass = dataClass;
+	// }
+	//
+	// public void fire() {
+	// new Step0().start();
+	// }
+	//
+	// class Step0 extends Step {
+	// @Override
+	// public void _run() throws Exception {
+	// String key = "hsclient__data__" + appName + "__" + dataName;
+	// f0 = storage.get(key, new Callback<String>(new Step1()));
+	// setFuture(f0);
+	// }
+	// }
+	//
+	// Future<String> f0;
+	//
+	// class Step1 extends Step {
+	// @Override
+	// public void _run() throws Exception {
+	// String dataString = f0.get();
+	// StringReader sr = new StringReader(dataString);
+	//
+	// CSVReader cr = new CSVReader(sr);
+	// List<String[]> csvDataList = cr.readAll();
+	// cr.close();
+	// Iterator<String[]> csvDataItr = csvDataList.iterator();
+	//
+	// Map<String, Integer> colNameToIdx = new HashMap<String, Integer>();
+	// String[] keyRow = csvDataItr.next();
+	// for (int i = 0; i < keyRow.length; ++i) {
+	// String cellValue = keyRow[i];
+	// if (cellValue == null)
+	// continue;
+	// if (cellValue.length() <= 0)
+	// continue;
+	// colNameToIdx.put(cellValue, i);
+	// }
+	//
+	// Field[] dataClassFieldAry = dataClass.getFields();
+	//
+	// LinkedList<Data> ret = new LinkedList<Data>();
+	// while (csvDataItr.hasNext()) {
+	// String[] dataRow = csvDataItr.next();
+	// Data data = dataClass.newInstance();
+	// for (Field dataClassField : dataClassFieldAry) {
+	// String fieldname = dataClassField.getName();
+	// int colIdx = colNameToIdx.get(fieldname);
+	// Class dataClassFieldType = dataClassField.getType();
+	// if (dataClassFieldType == String.class) {
+	// dataClassField.set(data, dataRow[colIdx]);
+	// } else if (dataClassFieldType == Integer.class) {
+	// dataClassField.set(data,
+	// Integer.parseInt(dataRow[colIdx]));
+	// } else if (dataClassFieldType == Integer.TYPE) {
+	// dataClassField.set(data,
+	// Integer.parseInt(dataRow[colIdx]));
+	// } else {
+	// throw new NotImplementedException("RHDTI3GN: "
+	// + dataClassFieldType.getName());
+	// }
+	// }
+	// ret.add(data);
+	// }
+	//
+	// completed(ret);
+	// }
+	//
+	// }
+	//
+	// }
 
 }

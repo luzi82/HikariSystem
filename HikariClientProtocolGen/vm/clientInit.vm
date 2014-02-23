@@ -11,7 +11,7 @@ public class ClientInit {
 		cmdManager.addStatus("${status.appName}",${status.cnamefull}.class);
 #end
 #foreach( $dataload in $dataload_list )
-		cmdManager.addDataLoad("${dataload.appName}","${dataload.jname}");
+		cmdManager.addDataLoad("${dataload.appName}","${dataload.jname}",${dataload.cnamefull}.class);
 #end
 	}
 

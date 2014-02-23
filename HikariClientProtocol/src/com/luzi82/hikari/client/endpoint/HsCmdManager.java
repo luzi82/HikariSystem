@@ -13,12 +13,17 @@ public interface HsCmdManager {
 			String string, Object request, Class<Result> class1,
 			FutureCallback<Result> futureCallback);
 
-	public <Status> Value<Status> getStatusValue(String appName, Class<Status> class1);
+	public <Status> Value<Status> getStatusValue(String appName,
+			Class<Status> class1);
 
-	public <Data> Future<List<Data>> getDataList(String appName, String string,
-			Class<Data> class1, FutureCallback<List<Data>> futureCallback);
+	// public <Data> Future<List<Data>> getDataList(String appName, String
+	// string,
+	// Class<Data> class1, FutureCallback<List<Data>> futureCallback);
 
-	public void addDataLoad(String appName, String dataName);
+	public <Data> List<Data> getDataList(String appName, String dataName,
+			Class<Data> class1);
+
+	public void addDataLoad(String appName, String dataName, Class dataClass);
 
 	public <Status> void addStatus(String appName, Class<Status> statusClass);
 

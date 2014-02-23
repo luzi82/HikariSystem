@@ -1,13 +1,14 @@
 package com.luzi82.hikari.client.test;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.luzi82.hikari.client.Base;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.Quest;
 import com.luzi82.hikari.client.Resource;
@@ -25,7 +26,7 @@ public class QuestTest extends AbstractTest {
 		User.login(client, null).get(5, TimeUnit.SECONDS);
 
 		List<Quest.HsQuestEntryData> questEntryList = Quest
-				.getHsQuestEntryDataList(client, null).get();
+				.getHsQuestEntryDataList(client);
 		Quest.HsQuestEntryData questEntry = questEntryList.get(0);
 
 		int questInstanceId;
@@ -50,7 +51,7 @@ public class QuestTest extends AbstractTest {
 		User.login(client, null).get(5, TimeUnit.SECONDS);
 
 		List<Quest.HsQuestEntryData> questEntryList = Quest
-				.getHsQuestEntryDataList(client, null).get();
+				.getHsQuestEntryDataList(client);
 		Quest.HsQuestEntryData questEntry = questEntryList.get(0);
 
 		int questInstanceId0;
@@ -84,7 +85,7 @@ public class QuestTest extends AbstractTest {
 		User.login(client, null).get(5, TimeUnit.SECONDS);
 
 		List<Quest.HsQuestEntryData> questEntryList = Quest
-				.getHsQuestEntryDataList(client, null).get();
+				.getHsQuestEntryDataList(client);
 		Quest.HsQuestEntryData questEntry = questEntryList.get(0);
 
 		int questInstanceId;
@@ -103,37 +104,47 @@ public class QuestTest extends AbstractTest {
 	public void testQuestCost() throws Exception {
 		HsClient client = createClient();
 		client.syncData(null).get();
-		Base.syncTime(client, null).get();
 		createLogin(client);
 
+		Resource.Mgr resMgr = new Resource.Mgr(client);
+
 		List<Quest.HsQuestEntryData> questEntryList = Quest
-				.getHsQuestEntryDataList(client, null).get();
+				.getHsQuestEntryDataList(client);
 		Quest.HsQuestEntryData questEntry = questEntryList.get(0);
 
 		List<Quest.HsQuestCostData> allQuestCostList = Quest
-				.getHsQuestCostDataList(client, null).get();
+				.getHsQuestCostDataList(client);
 		List<Quest.HsQuestCostData> questCostList = Quest.filter(
 				allQuestCostList, questEntry.key);
 
-		Resource.Status resourceStatus0 = Resource.getStatusValue(client).get();
+		// Resource.Status resourceStatus0 =
+		// Resource.getStatusValue(client).get();
+		// Assert.assertNotNull(resourceStatus0);
+
+		long now;
+		now = System.currentTimeMillis();
+
+		Map<String, Long> oldValue = new HashMap<String, Long>();
 
 		for (Quest.HsQuestCostData questCost : questCostList) {
-			int count0 = Resource.getCount(resourceStatus0,
-					questCost.resource_key);
+			String key = questCost.resource_key;
+			long count0 = resMgr.value(key, now);
 			int cost = questCost.count;
 			Assert.assertTrue(count0 >= cost);
+			oldValue.put(key, count0);
 		}
 
 		Quest.questStart(client, questEntry.key, null).get();
 
-		Resource.Status resourceStatus1 = Resource.getStatusValue(client).get();
+		now = System.currentTimeMillis();
 
 		for (Quest.HsQuestCostData questCost : questCostList) {
-			int count0 = Resource.getCount(resourceStatus0,
-					questCost.resource_key);
-			int count1 = Resource.getCount(resourceStatus1,
-					questCost.resource_key);
+			String key = questCost.resource_key;
+			long count0 = oldValue.get(key);
+			long count1 = resMgr.value(key, now);
 			int cost = questCost.count;
+			System.err.println("count0 "+count0);
+			System.err.println("count1 "+count1);
 			Assert.assertTrue(count1 < count0);
 			Assert.assertTrue(count1 >= count0 - cost);
 		}

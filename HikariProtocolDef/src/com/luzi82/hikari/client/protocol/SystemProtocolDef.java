@@ -7,7 +7,7 @@ public class SystemProtocolDef {
 		public static class Request {
 		}
 
-		public static class Result extends AbstractResult {
+		public static class Result {
 			public long time;
 		}
 

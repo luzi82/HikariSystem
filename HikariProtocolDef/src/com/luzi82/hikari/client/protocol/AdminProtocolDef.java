@@ -6,7 +6,7 @@ public class AdminProtocolDef {
 		public static class Request {
 		}
 
-		public static class Result extends AbstractResult {
+		public static class Result {
 		}
 	}
 
