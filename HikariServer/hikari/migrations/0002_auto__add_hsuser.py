@@ -8,6 +8,23 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding model 'HsResource'
+        db.create_table(u'hikari_hsresource', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+            ('type', self.gf('django.db.models.fields.IntegerField')()),
+            ('max', self.gf('django.db.models.fields.BigIntegerField')()),
+            ('init_count', self.gf('django.db.models.fields.IntegerField')()),
+        ))
+        db.send_create_signal('hikari', ['HsResource'])
+
+        # Adding model 'HsQuestEntry'
+        db.create_table(u'hikari_hsquestentry', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+        ))
+        db.send_create_signal('hikari', ['HsQuestEntry'])
+
         # Adding model 'HsQuestInstance'
         db.create_table(u'hikari_hsquestinstance', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -19,13 +36,6 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal('hikari', ['HsQuestInstance'])
 
-        # Adding model 'HsQuestEntry'
-        db.create_table(u'hikari_hsquestentry', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
-        ))
-        db.send_create_signal('hikari', ['HsQuestEntry'])
-
         # Adding model 'HsUser'
         db.create_table(u'hikari_hsuser', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -35,16 +45,50 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal('hikari', ['HsUser'])
 
+        # Adding model 'HsQuestCost'
+        db.create_table(u'hikari_hsquestcost', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('quest_entry_key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+            ('resource_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
+            ('count', self.gf('django.db.models.fields.IntegerField')()),
+        ))
+        db.send_create_signal('hikari', ['HsQuestCost'])
+
+        # Adding model 'HsUserResource'
+        db.create_table(u'hikari_hsuserresource', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('resource_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
+            ('count', self.gf('django.db.models.fields.IntegerField')()),
+            ('time', self.gf('django.db.models.fields.BigIntegerField')()),
+        ))
+        db.send_create_signal('hikari', ['HsUserResource'])
+
+        # Adding index on 'HsUserResource', fields ['user', 'resource_key']
+        db.create_index(u'hikari_hsuserresource', ['user_id', 'resource_key'])
+
 
     def backwards(self, orm):
-        # Deleting model 'HsQuestInstance'
-        db.delete_table(u'hikari_hsquestinstance')
+        # Removing index on 'HsUserResource', fields ['user', 'resource_key']
+        db.delete_index(u'hikari_hsuserresource', ['user_id', 'resource_key'])
+
+        # Deleting model 'HsResource'
+        db.delete_table(u'hikari_hsresource')
 
         # Deleting model 'HsQuestEntry'
         db.delete_table(u'hikari_hsquestentry')
 
+        # Deleting model 'HsQuestInstance'
+        db.delete_table(u'hikari_hsquestinstance')
+
         # Deleting model 'HsUser'
         db.delete_table(u'hikari_hsuser')
+
+        # Deleting model 'HsQuestCost'
+        db.delete_table(u'hikari_hsquestcost')
+
+        # Deleting model 'HsUserResource'
+        db.delete_table(u'hikari_hsuserresource')
 
 
     models = {
@@ -84,6 +128,13 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
+        'hikari.hsquestcost': {
+            'Meta': {'object_name': 'HsQuestCost'},
+            'count': ('django.db.models.fields.IntegerField', [], {}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'quest_entry_key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
+            'resource_key': ('django.db.models.fields.CharField', [], {'max_length': '64'})
+        },
         'hikari.hsquestentry': {
             'Meta': {'object_name': 'HsQuestEntry'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -98,11 +149,27 @@ class Migration(SchemaMigration):
             'state': ('django.db.models.fields.IntegerField', [], {}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
         },
+        'hikari.hsresource': {
+            'Meta': {'object_name': 'HsResource'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'init_count': ('django.db.models.fields.IntegerField', [], {}),
+            'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
+            'max': ('django.db.models.fields.BigIntegerField', [], {}),
+            'type': ('django.db.models.fields.IntegerField', [], {})
+        },
         'hikari.hsuser': {
             'Meta': {'object_name': 'HsUser'},
             'create_at': ('django.db.models.fields.BigIntegerField', [], {}),
             'device_model': ('django.db.models.fields.TextField', [], {'max_length': '1024'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
+        },
+        'hikari.hsuserresource': {
+            'Meta': {'object_name': 'HsUserResource', 'index_together': "[['user', 'resource_key']]"},
+            'count': ('django.db.models.fields.IntegerField', [], {}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'resource_key': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
+            'time': ('django.db.models.fields.BigIntegerField', [], {}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
         }
     }

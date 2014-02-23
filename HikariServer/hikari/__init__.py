@@ -3,6 +3,10 @@ import string
 from django.contrib.auth.models import User, UserManager
 import time
 
+# dummy object add to request
+class Hikari(object):
+    pass
+
 def create_random_user(username_length=8,password_length=8):
 
     while(True):

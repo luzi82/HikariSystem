@@ -9,6 +9,16 @@ class HsQuestEntry(models.Model):
         app_label = 'hikari'
 
 
+class HsQuestCost(models.Model):
+
+    quest_entry_key = models.CharField(max_length=64,db_index=True)
+    resource_key = models.CharField(max_length=64)
+    count = models.IntegerField()
+
+    class Meta:
+        app_label = 'hikari'
+
+
 class HsQuestInstance(models.Model):
     
     user = models.ForeignKey(User,db_index=True)

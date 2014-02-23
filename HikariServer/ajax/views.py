@@ -10,6 +10,7 @@ from ajax.decorators import json_response
 import ajax
 import sys
 from hikari.seqid import seqid
+from hikari import status, now64, Hikari
 
 
 logger = getLogger('django.request')
@@ -59,6 +60,10 @@ def endpoint_loader(request, application, model, **kwargs):
         except NotRegistered:
             raise AJAXError(500, _('Invalid model.'))
 
+    request.hikari = Hikari()
+    status.prepare_status_update(request)
+    request.hikari.time = now64()
+
     try:
         data = endpoint(request)
     except Exception as e:
@@ -70,7 +75,9 @@ def endpoint_loader(request, application, model, **kwargs):
     else:
         payload = {
             'success': True,
-            'data': data
+            'data': data,
+            'time': request.hikari.time,
         }
+        status.put_status_update(request,payload)
         v = json.dumps(payload, separators=(',', ':'));
         return HttpResponse(v)

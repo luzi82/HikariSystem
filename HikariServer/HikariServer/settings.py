@@ -96,5 +96,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 HIKARI_CSV_OUTPUT = {
-    'HsQuestEntry': ['key']
+    'HsQuestEntry': ['key'],
+    'HsQuestCost': ['quest_entry_key','resource_key','count'],
+    'HsResource': ['key','type'],
 }

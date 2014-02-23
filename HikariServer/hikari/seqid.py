@@ -6,16 +6,16 @@ import json
 from hikari import now64
 
 
-def to_response(data):
-    if isinstance(data, HttpResponse):
-        return data
-    else:
-        payload = {
-            'success': True,
-            'data': data
-        }
-        v = json.dumps(payload, separators=(',', ':'));
-        return HttpResponse(v)
+# def to_response(data):
+#     if isinstance(data, HttpResponse):
+#         return data
+#     else:
+#         payload = {
+#             'success': True,
+#             'data': data
+#         }
+#         v = json.dumps(payload, separators=(',', ':'));
+#         return HttpResponse(v)
 
 @decorator
 def seqid(f, *args, **kwargs):
@@ -33,7 +33,7 @@ def seqid(f, *args, **kwargs):
 #         print "seqid == session_seqid"
         
         result = f(*args, **kwargs)
-        result = to_response(result)
+#         result = to_response(result)
         
         if result.status_code == 200:
             next_seqid = now64()

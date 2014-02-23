@@ -5,7 +5,7 @@ import django.contrib.auth as auth
 import sys
 from ajax.decorators import login_required
 from hikari.models import HsUser
-from hikari import now64
+from hikari import now64, status, resource
 
 def create_user(request):
     
@@ -23,14 +23,16 @@ def create_user(request):
         create_at = now
     )
     hs_user.save()
-
+    
+    resource.init_user(user_data['user'])
+    
     return {
         'username': user_data['username'],
         'password': user_data['password'],
     }
 
 def login(request):
-
+    
     argJson = request.POST['arg']
     arg = json.loads(argJson)
     
@@ -48,7 +50,9 @@ def login(request):
             raise AJAXError(403, 'user not active')
     else:
         raise AJAXError(403, 'auth fails')
-        
+
+    status.set_update_all(request)
+    
     return {}
 
 @login_required
