@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 
+import com.luzi82.concurrent.DummyFutureCallback;
 import com.luzi82.concurrent.FutureCallback;
 
 public class FutureDialog<T> extends DummyFutureCallback<T> implements

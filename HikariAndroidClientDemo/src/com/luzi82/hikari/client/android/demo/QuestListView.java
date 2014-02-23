@@ -6,6 +6,7 @@ import java.util.concurrent.Future;
 
 import android.content.Context;
 
+import com.luzi82.concurrent.DummyFutureCallback;
 import com.luzi82.hikari.client.Quest;
 import com.luzi82.hikari.client.protocol.QuestProtocolDef.HsQuestEntryData;
 import com.luzi82.hikari.client.protocol.QuestProtocolDef.QuestStartCmd;

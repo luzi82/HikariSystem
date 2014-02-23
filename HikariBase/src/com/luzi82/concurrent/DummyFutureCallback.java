@@ -1,6 +1,5 @@
-package com.luzi82.hikari.client.android.demo;
+package com.luzi82.concurrent;
 
-import com.luzi82.concurrent.FutureCallback;
 
 public class DummyFutureCallback<T> implements FutureCallback<T> {
 

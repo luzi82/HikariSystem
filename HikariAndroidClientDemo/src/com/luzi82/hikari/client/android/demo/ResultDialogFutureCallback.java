@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.luzi82.concurrent.DummyFutureCallback;
 import com.luzi82.concurrent.FutureCallback;
 
 public class ResultDialogFutureCallback<T> extends DummyFutureCallback<T> {
