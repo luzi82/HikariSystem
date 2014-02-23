@@ -38,14 +38,14 @@ public class HttpClient implements HsHttpClient {
 
 		public SendRequestFuture(String url, String request,
 				FutureCallback<String> callback) {
-			super(callback, HttpClient.this.executor);
+			super(false, callback, HttpClient.this.executor);
 			this.url = url;
 			this.request = request;
 			System.err.println("AUEFR1Zp url: " + url);
 			System.err.println("fdXtwJSl request: " + request);
 		}
 
-		public void start() {
+		public void fire() {
 			new Step0().start();
 		}
 
@@ -138,12 +138,12 @@ public class HttpClient implements HsHttpClient {
 		final String url;
 
 		public GetFuture(String url, FutureCallback<String> callback) {
-			super(callback, HttpClient.this.executor);
+			super(false, callback, HttpClient.this.executor);
 			this.url = url;
 			System.err.println("lLzTDyYv url: " + url);
 		}
 
-		public void start() {
+		public void fire() {
 			new Step0().start();
 		}
 
@@ -207,9 +207,9 @@ public class HttpClient implements HsHttpClient {
 	public String getCookie(String domain, String path, String name) {
 		List<Cookie> cookieList = cookieStore.getCookies();
 		for (Cookie cookie : cookieList) {
-//			System.err.println(cookie.getDomain());
-//			System.err.println(cookie.getPath());
-//			System.err.println(cookie.getName());
+			// System.err.println(cookie.getDomain());
+			// System.err.println(cookie.getPath());
+			// System.err.println(cookie.getName());
 			if (!cookie.getName().equals(name)) {
 				continue;
 			}

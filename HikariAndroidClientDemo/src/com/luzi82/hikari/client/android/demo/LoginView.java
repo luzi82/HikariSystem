@@ -74,10 +74,10 @@ public class LoginView extends HikariListView {
 	public class SyncFuture extends GuriFuture<Void> {
 
 		public SyncFuture(FutureCallback<Void> callback) {
-			super(callback, getMain().executorService);
+			super(false, callback, getMain().executorService);
 		}
 
-		public void start() {
+		public void fire() {
 			new Step0().start();
 		}
 
