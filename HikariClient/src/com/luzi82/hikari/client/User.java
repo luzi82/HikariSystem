@@ -6,10 +6,10 @@ import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.concurrent.GuriFuture;
 import com.luzi82.hikari.client.protocol.UserProtocol;
 import com.luzi82.hikari.client.protocol.UserProtocolDef;
+import com.luzi82.homuvalue.Value;
+import com.luzi82.homuvalue.Value.Variable;
 
 public class User extends UserProtocol {
-
-	public static final String APP_NAME = UserProtocol.APP_NAME;
 
 	public static final String DB_USERNAME = "username";
 	public static final String DB_PASSWORD = "password";
@@ -147,6 +147,7 @@ public class User extends UserProtocol {
 
 			@Override
 			public void _run() throws Exception {
+				isLoginDoneVar(client).set(Boolean.TRUE);
 				completed(f2.get());
 			}
 
@@ -160,6 +161,24 @@ public class User extends UserProtocol {
 		LoginFuture ret = new LoginFuture(client, futureCallback);
 		ret.start();
 		return ret;
+	}
+
+	public static String LOGIN_DONE_KEY = "LOGIN_DONE";
+
+	protected static Variable<Boolean> isLoginDoneVar(HsClient client) {
+		Variable<Boolean> ret = (Variable<Boolean>) client.getTmp(APP_NAME,
+				LOGIN_DONE_KEY);
+		if (ret == null) {
+			ret = new Variable<Boolean>();
+			ret.setAlwaysCallback(true);
+			ret.set(Boolean.FALSE);
+			client.putTmp(APP_NAME, LOGIN_DONE_KEY, ret);
+		}
+		return ret;
+	}
+	
+	public static Value<Boolean> isLoginDoneValue(HsClient client){
+		return isLoginDoneVar(client);
 	}
 
 }

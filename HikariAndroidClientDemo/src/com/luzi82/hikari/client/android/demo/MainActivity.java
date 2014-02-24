@@ -1,7 +1,6 @@
 package com.luzi82.hikari.client.android.demo;
 
 import java.net.URISyntaxException;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -19,8 +18,9 @@ import android.view.ViewGroup;
 
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.HsMemStorage;
-import com.luzi82.hikari.client.protocol.QuestProtocolDef.HsQuestEntryData;
 import com.luzi82.hikari.client.protocol.QuestProtocolDef.QuestInstance;
+import com.luzi82.homuvalue.Value;
+import com.luzi82.homuvalue.Value.Listener;
 import com.luzi82.homuvalue.Value.Variable;
 
 public class MainActivity extends FragmentActivity {
@@ -46,7 +46,9 @@ public class MainActivity extends FragmentActivity {
 
 	// public List<HsQuestEntryData> questEntryAry;
 
-	public final Variable<List<HsQuestEntryData>> questEntryListVar = new Variable<List<HsQuestEntryData>>();
+	// public final Variable<List<HsQuestEntryData>> questEntryListVar = new
+	// Variable<List<HsQuestEntryData>>();
+	public final Variable<Long> dataSyncTimeVar = new Variable<Long>();
 
 	public final Variable<QuestInstance> questInstanceVar = new Variable<QuestInstance>();
 
@@ -74,6 +76,8 @@ public class MainActivity extends FragmentActivity {
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
+
+		dataSyncTimeVar.setAlwaysCallback(true);
 	}
 
 	@Override

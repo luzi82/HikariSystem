@@ -1,7 +1,5 @@
 package com.luzi82.hikari.client;
 
-import java.io.StringReader;
-import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -12,10 +10,7 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.ObjectUtils;
-
-import au.com.bytecode.opencsv.CSVReader;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +22,7 @@ import com.luzi82.hikari.client.endpoint.HsCmdManager;
 import com.luzi82.hikari.client.protocol.StatusUpdate;
 import com.luzi82.hikari.client.protocol.gen.out.ClientInit;
 import com.luzi82.homuvalue.Value;
+import com.luzi82.homuvalue.Value.Listener;
 import com.luzi82.homuvalue.Value.Variable;
 
 public class HsClient implements HsCmdManager {
@@ -43,6 +39,7 @@ public class HsClient implements HsCmdManager {
 	final Map<String, List> dataMap;
 	final Map<String, Variable> statusVariableMap;
 	final Map<String, Class> statusClassMap;
+	final Variable<Long> statusUpdateVar;
 	long serverTimeOffset;
 
 	// final HsCmdManager cmdManager;
@@ -58,10 +55,13 @@ public class HsClient implements HsCmdManager {
 		this.tmpMap = new HashMap<String, Object>();
 		this.statusVariableMap = new HashMap<String, Variable>();
 		this.statusClassMap = new HashMap<String, Class>();
+		this.statusUpdateVar = new Variable<Long>();
 
 		serverHost = new URI(server).getHost();
 
 		ClientInit.initClient(this);
+		
+		statusUpdateVar.setAlwaysCallback(true);
 	}
 
 	public Future<Void> put(String appName, String key, String value,
@@ -141,6 +141,7 @@ public class HsClient implements HsCmdManager {
 								statusClassMap.get(appName));
 						statusVariableMap.get(appName).set(status);
 					}
+					statusUpdateVar.set(System.currentTimeMillis());
 				}
 				serverTimeOffset = res.time - System.currentTimeMillis();
 
@@ -286,6 +287,10 @@ public class HsClient implements HsCmdManager {
 			Class<Status> class1) {
 		// System.err.println("faYQHNEC getStatusValue "+appName);
 		return (Value<Status>) statusVariableMap.get(appName);
+	}
+
+	public Value<Long> getStatusUpdateVar() {
+		return statusUpdateVar;
 	}
 
 	@Override
