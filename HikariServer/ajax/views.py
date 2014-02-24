@@ -66,9 +66,10 @@ def endpoint_loader(request, application, model, **kwargs):
 
     try:
         data = endpoint(request)
+    except AJAXError as e:
+        raise e
     except Exception as e:
         print sys.exc_info()[0]
-        raise e
         
     if isinstance(data, HttpResponse):
         return data

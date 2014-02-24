@@ -300,6 +300,10 @@ public class HsClient implements HsCmdManager {
 		return serverTimeOffset;
 	}
 
+	public long getServerTime(long clientTime) {
+		return clientTime + getServerTimeOffset();
+	}
+
 	// TODO change to load data from disk to memory
 	// public <Data> Future<List<Data>> getDataList(String appName,
 	// String dataName, Class<Data> dataClass,

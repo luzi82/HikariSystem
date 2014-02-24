@@ -40,7 +40,7 @@ public class Resource extends ResourceProtocol {
 			if (rv.count != null)
 				return rv.count;
 			if (rv.time != null) {
-				long ret = now + client.getServerTimeOffset() - rv.time;
+				long ret = client.getServerTime(now) + rv.max - rv.time;
 				ret = Math.min(ret, rv.max);
 				ret = Math.max(ret, 0);
 				return ret;

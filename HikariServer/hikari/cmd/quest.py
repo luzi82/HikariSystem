@@ -1,19 +1,25 @@
+from django.core.exceptions import FieldError
+from django.http.response import HttpResponseBadRequest
 import json
-from hikari.models.quest import HsQuestEntry, HsQuestInstance
+
 from ajax.decorators import login_required
 from hikari import now64
-from django.core.exceptions import FieldError
+from hikari.models.quest import HsQuestEntry, HsQuestInstance
+
 
 @login_required
 def quest_start(request):
     
     argJson = request.POST['arg']
     arg = json.loads(argJson)
-    now = now64()
+    now = request.hikari.time
 
     quest_entry_key = arg['quest_entry_key']
     
     quest_entry = HsQuestEntry.objects.get(key=quest_entry_key)
+    quest_entry.check_resource(request.user,now)
+    quest_entry.reduce_resource(request.user,now)
+    
     HsQuestInstance.objects.filter(
         user=request.user,
         state=HsQuestInstance.STATE_STARTED
@@ -28,6 +34,8 @@ def quest_start(request):
         create_at=now
     )
     quest_instance.save()
+
+    request.hikari.status_update_set.add('resource')
 
     return {
         'quest_instance': {
@@ -50,8 +58,8 @@ def quest_end(request):
         user=request.user,
         state=HsQuestInstance.STATE_STARTED
     )
-    quest_instance.state=HsQuestInstance.STATE_SUCCESS if success else HsQuestInstance.STATE_FAIL
-    quest_instance.complete_at=now
+    quest_instance.state = HsQuestInstance.STATE_SUCCESS if success else HsQuestInstance.STATE_FAIL
+    quest_instance.complete_at = now
     quest_instance.save()
 
     return {}

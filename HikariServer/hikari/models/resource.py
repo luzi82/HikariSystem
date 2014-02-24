@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from ajax.exceptions import AJAXError
 
 class HsResource(models.Model):
     
@@ -41,7 +42,26 @@ class HsUserResource(models.Model):
         v = 0
         if selftype == HsResource.TYPE_COUNT:
             v = self.count
-        if selftype == HsResource.TYPE_TIME:
+        elif selftype == HsResource.TYPE_TIME:
             v = selfmax + now - self.time
         v = min(v,selfmax)
         return v
+    
+    def check(self,value,time):
+        self_value = self.value(time)
+        if self_value < value:
+            raise AJAXError(400,'bN3XaWtF: self_value={self_value}, value={value}'.format(self_value=self_value,value=value))
+    
+    def consume(self,value,time):
+        self_value = self.value(time)
+        if self_value < value:
+            # should be 500, dev should check before consume
+            raise AJAXError(500,'b7lWLaop: self_value={self_value}, value={value}'.format(self_value=self_value,value=value))
+        selftype = self.type()
+        if selftype == HsResource.TYPE_COUNT:
+            self.count = self_value-value
+        elif selftype == HsResource.TYPE_TIME:
+            if self.time < time:
+                self.time = time
+            self.time += value
+        self.save()

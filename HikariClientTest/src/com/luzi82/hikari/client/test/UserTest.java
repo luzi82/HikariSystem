@@ -174,6 +174,8 @@ public class UserTest extends AbstractTest {
 					}
 				});
 		HttpResponse hrr = future.get();
+		
+		Thread.sleep(100); // WARNING: get may faster than completed
 
 		Assert.assertNotNull(hrr);
 		Assert.assertEquals(hrr, hr[0]);

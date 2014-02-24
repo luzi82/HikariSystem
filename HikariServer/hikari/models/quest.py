@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from hikari.models.resource import HsUserResource
+from ajax.exceptions import AJAXError
 
 class HsQuestEntry(models.Model):
 
@@ -7,6 +9,22 @@ class HsQuestEntry(models.Model):
 
     class Meta:
         app_label = 'hikari'
+    
+    def check_resource(self,user,time):
+        quest_cost_db_query = HsQuestCost.objects.filter(quest_entry_key=self.key)
+        for quest_cost_db in quest_cost_db_query:
+            HsUserResource.objects.get(
+                user=user,
+                resource_key=quest_cost_db.resource_key
+            ).check(quest_cost_db.count,time)
+
+    def reduce_resource(self,user,time):
+        quest_cost_db_query = HsQuestCost.objects.filter(quest_entry_key=self.key)
+        for quest_cost_db in quest_cost_db_query:
+            HsUserResource.objects.get(
+                user=user,
+                resource_key=quest_cost_db.resource_key
+            ).consume(quest_cost_db.count,time)
 
 
 class HsQuestCost(models.Model):
