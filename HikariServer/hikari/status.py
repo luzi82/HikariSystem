@@ -1,11 +1,14 @@
 from hikari.app_module_util import get_app_module_dict, get_func_list
 
 status_module_dict = get_app_module_dict("hs_status")
-status_func_list = []
+status_func_dict = {}
 
 for _, status_module in status_module_dict.items():
     for func in get_func_list(status_module):
-        status_func_list.append(func)
+        status_key = func.__name__
+        if status_key in status_func_dict:
+            raise Exception("xD2j06bT Repeat status key: {status_key}".format(status_key=status_key))
+        status_func_dict[status_key] = func
         
 
 def prepare_status_update(request):
@@ -13,8 +16,8 @@ def prepare_status_update(request):
 
 
 def set_update_all(request):
-    for status_func in status_func_list:
-        request.hikari.status_update_set.add(status_func.__name__)
+    for status_key, _ in status_func_dict.items():
+        request.hikari.status_update_set.add(status_key)
 
 
 def put_status_update(request,result):
@@ -25,9 +28,8 @@ def put_status_update(request,result):
     
     status_update_dict = {}
     
-    for func in status_func_list:
-        if not func.__name__ in request.hikari.status_update_set:
-            continue
-        status_update_dict[func.__name__] = func(request)
-        
+    for status_key in request.hikari.status_update_set:
+        func = status_func_dict[status_key]
+        status_update_dict[status_key] = func(request)
+    
     result['status_update_dict'] = status_update_dict
