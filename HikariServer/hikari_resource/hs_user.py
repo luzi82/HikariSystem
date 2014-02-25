@@ -1,6 +1,6 @@
 from hikari_resource.models import HsUserResource, HsResource
 
-def init_user(user):
+def on_user_created(user):
     
     resource_db_set = HsResource.objects.all()
     

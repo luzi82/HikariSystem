@@ -4,8 +4,9 @@ import json
 import django.contrib.auth as auth
 import sys
 from ajax.decorators import login_required
-from hikari import now64, status, resource
+from hikari import now64, status
 from hikari_user.models import HsUser
+from hikari_user import on_user_created_func_list
 
 def create_user(request):
     
@@ -24,7 +25,8 @@ def create_user(request):
     )
     hs_user.save()
     
-    resource.init_user(user_data['user'])
+    for on_user_created_func in on_user_created_func_list:
+        on_user_created_func(user_data['user'])
     
     return {
         'username': user_data['username'],

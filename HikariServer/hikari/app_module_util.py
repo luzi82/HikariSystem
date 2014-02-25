@@ -11,6 +11,7 @@ def get_app_module_dict(module_name):
             installed_app=installed_app,
             module_name=module_name
         )
+        module = None
         try:
             module = importlib.import_module(full_module_name)
         except ImportError:
@@ -42,7 +43,11 @@ def get_app_module_func_dict(module_name,func_name):
             installed_app=installed_app,
             module_name=module_name
         )
-        module = importlib.import_module(full_module_name)
+        module = None
+        try:
+            module = importlib.import_module(full_module_name)
+        except ImportError:
+            continue
         if not hasattr(module,func_name):
             continue
         func = getattr(module,func_name)
