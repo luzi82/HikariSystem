@@ -1,10 +1,8 @@
-from django.core.exceptions import FieldError
-from django.http.response import HttpResponseBadRequest
 import json
 
 from ajax.decorators import login_required
 from hikari import now64
-from hikari.models.quest import HsQuestEntry, HsQuestInstance
+from hikari_quest.models import HsQuestEntry, HsQuestInstance
 
 
 @login_required
@@ -13,7 +11,7 @@ def quest_start(request):
     argJson = request.POST['arg']
     arg = json.loads(argJson)
     now = request.hikari.time
-
+    
     quest_entry_key = arg['quest_entry_key']
     
     quest_entry = HsQuestEntry.objects.get(key=quest_entry_key)

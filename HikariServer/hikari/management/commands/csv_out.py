@@ -2,9 +2,10 @@ from django.core.management.base import BaseCommand
 from django.conf import settings
 import os
 import csv
-from hikari import models
-import re
+from django.db import models
 import shutil
+import importlib
+import inspect
 
 class Command(BaseCommand):
     
@@ -17,22 +18,36 @@ class Command(BaseCommand):
             shutil.rmtree(output_path)
         os.makedirs(output_path)
         
-        for model_name, col_list in settings.HIKARI_CSV_OUTPUT.items():
-
-            csv_name = uncamel(model_name)
-            model = getattr(models, model_name)
+        for installed_app in settings.INSTALLED_APPS:
+            models_module_name = "{installed_app}.models".format(installed_app=installed_app)
+            models_module = importlib.import_module(models_module_name)
             
-            with open(output_path+'/'+csv_name+'.csv', 'wb') as csvfile:
-
-                csv_writer = csv.writer(csvfile)
-                csv_writer.writerow(col_list)
+            for model_name in dir(models_module):
                 
-                for model_object in model.objects.all():
-                    row = []
-                    for col in col_list:
-                        row.append(getattr(model_object,col))
-                    csv_writer.writerow(row)
+                model = getattr(models_module,model_name)
+                if not inspect.isclass(model):
+                    continue
+                if ( model.__module__ != models_module_name ):
+                    continue
+                if not issubclass(model, models.Model):
+                    continue
+                if not hasattr(model, "HIKARI_STATIC_NAME"):
+                    continue
+                
+                static_name = model.HIKARI_STATIC_NAME
+                member_list = None
+                if hasattr(model, "HIKARI_STATIC_MEMBER_LIST"):
+                    member_list = model.HIKARI_STATIC_MEMBER_LIST
+                else:
+                    member_list = model._meta.get_all_field_names()
+                    
+                with open(output_path+'/'+static_name+'.csv', 'wb') as csvfile:
 
-def uncamel(name):
-    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+                    csv_writer = csv.writer(csvfile)
+                    csv_writer.writerow(member_list)
+                    
+                    for model_object in model.objects.all():
+                        row = []
+                        for member in member_list:
+                            row.append(getattr(model_object,member))
+                        csv_writer.writerow(row)

@@ -4,8 +4,8 @@ import json
 import django.contrib.auth as auth
 import sys
 from ajax.decorators import login_required
-from hikari.models import HsUser
 from hikari import now64, status, resource
+from hikari_user.models import HsUser
 
 def create_user(request):
     

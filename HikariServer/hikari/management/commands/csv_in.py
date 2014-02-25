@@ -10,8 +10,6 @@ class Command(BaseCommand):
     help = 'Load csv files from csv_in to database'
 
     def handle(self, *args, **options):
-        model_module = importlib.import_module('hikari.models')
-        
         csv_in_path = settings.BASE_DIR + "/csv_in"
         for csv_filename in os.listdir(csv_in_path):
             if not csv_filename.endswith(".csv"):
@@ -19,9 +17,16 @@ class Command(BaseCommand):
             csv_full_filename = csv_in_path + "/" + csv_filename
 #             self.stderr.write(csv_full_filename)
             csv_name = csv_filename[:-4]
-            model_name = ''.join((n[:1].upper()+n[1:]) for n in string.split(csv_name,'_'))
+            csv_name_split = csv_name.rsplit('.',1)
+            model_name = csv_name_split[0]
+            class_name = csv_name_split[1]
 
-            self.stderr.write("Import {csv_filename} to {model_name}...".format(csv_filename=csv_filename,model_name=model_name))
+            self.stderr.write("Import {csv_filename} to {model_name}.{class_name}...".format(csv_filename=csv_filename,model_name=model_name,class_name=class_name))
+            
+            model_module = importlib.import_module(model_name)
+            model_class = getattr(model_module,class_name)
+            model_class_field_list = model_class._meta.get_all_field_names()
+            model_class.objects.all().delete()
             
             col_name_to_idx = {}
             csv_reader = csv.reader(open(csv_full_filename))
@@ -34,10 +39,6 @@ class Command(BaseCommand):
                 col_name_to_idx[key_list[i]] = i
 #             self.stderr.write(json.dumps(col_name_to_idx))
             
-            model_class = getattr(model_module,model_name)
-            model_class_field_list = model_class._meta.get_all_field_names()
-            model_class.objects.all().delete()
-
             for data_list in data_list_list[1:]:
 #                 self.stderr.write(json.dumps(data_list))
                 db_row_map = {}

@@ -1,4 +1,4 @@
-from hikari.models.resource import HsUserResource, HsResource
+from hikari_resource.models import HsUserResource, HsResource
 
 def status(request):
     

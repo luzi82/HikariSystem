@@ -1,10 +1,11 @@
 from django.test import TestCase
 from django.test.client import Client
 import simplejson
-from hikari.models import HsUser
 from django.contrib.auth.models import User
 from hikari import now64
 from django.core.management import call_command
+from hikari_user.models import HsUser
+from hikari_quest.models import HsQuestEntry
 
 # Create your tests here.
 
@@ -86,7 +87,7 @@ class SimpleTest(TestCase):
         self.assertEqual(result['success'], True)
 
         response = client.post("/ajax/hikari/quest__quest_start.json", {"arg":simplejson.dumps({
-            "quest_entry_key":'1',
+            "quest_entry_key":HsQuestEntry.objects.all()[0].key,
         })})
         content = response.content
         result = simplejson.loads(content)
@@ -127,9 +128,11 @@ class SimpleTest(TestCase):
         result = simplejson.loads(content)
 
         self.assertEqual(result['success'], True)
+        
+        quest_key = HsQuestEntry.objects.all()[0].key
 
         response = client.post("/ajax/hikari/quest__quest_start.json", {"arg":simplejson.dumps({
-            "quest_entry_key":'1',
+            "quest_entry_key":quest_key,
         })})
         content = response.content
         result = simplejson.loads(content)
@@ -138,7 +141,7 @@ class SimpleTest(TestCase):
         quest_instance_id0 = result['data']['quest_instance']['id']
 
         response = client.post("/ajax/hikari/quest__quest_start.json", {"arg":simplejson.dumps({
-            "quest_entry_key":'1',
+            "quest_entry_key":quest_key,
         })})
         content = response.content
         result = simplejson.loads(content)
