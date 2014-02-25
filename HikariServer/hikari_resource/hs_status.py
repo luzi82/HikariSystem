@@ -17,9 +17,7 @@ def resource(request):
             
         resource_dict[user_resource_db.resource_key]=resource_value
     
-    return {
-        'resource_dict':resource_dict
-    }
+    return resource_dict
 
 status_update_dict = {
     'resource': resource
