@@ -20,3 +20,7 @@ def resource(request):
     return {
         'resource_dict':resource_dict
     }
+
+status_update_dict = {
+    'resource': resource
+}

@@ -82,6 +82,7 @@ class SimpleTest(TestCase):
             "password":password,
         })})
         content = response.content
+#         print content
         result = simplejson.loads(content)
 
         self.assertEqual(result['success'], True)
@@ -90,6 +91,7 @@ class SimpleTest(TestCase):
             "quest_entry_key":HsQuestEntry.objects.all()[0].key,
         })})
         content = response.content
+#         print content
         result = simplejson.loads(content)
         
         self.assertEqual(result['success'], True)

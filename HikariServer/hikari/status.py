@@ -1,11 +1,14 @@
-from hikari.app_module_util import get_app_module_dict, get_func_list
+from hikari.app_module_util import get_app_module_dict
+
 
 status_module_dict = get_app_module_dict("hs_status")
 status_func_dict = {}
 
 for _, status_module in status_module_dict.items():
-    for func in get_func_list(status_module):
-        status_key = func.__name__
+    if not hasattr(status_module, 'status_update_dict'):
+        continue
+    status_update_dict = status_module.status_update_dict
+    for status_key, func in status_update_dict.items():
         if status_key in status_func_dict:
             raise Exception("xD2j06bT Repeat status key: {status_key}".format(status_key=status_key))
         status_func_dict[status_key] = func
