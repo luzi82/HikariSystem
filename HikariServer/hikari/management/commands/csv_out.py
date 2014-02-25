@@ -4,8 +4,8 @@ import os
 import csv
 from django.db import models
 import shutil
-import importlib
 import inspect
+from hikari.app_module_util import get_app_module_dict
 
 class Command(BaseCommand):
     
@@ -18,9 +18,7 @@ class Command(BaseCommand):
             shutil.rmtree(output_path)
         os.makedirs(output_path)
         
-        for installed_app in settings.INSTALLED_APPS:
-            models_module_name = "{installed_app}.models".format(installed_app=installed_app)
-            models_module = importlib.import_module(models_module_name)
+        for models_module_name, models_module in get_app_module_dict("models").items():
             
             for model_name in dir(models_module):
                 
