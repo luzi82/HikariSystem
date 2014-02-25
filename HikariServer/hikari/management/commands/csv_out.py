@@ -18,14 +18,14 @@ class Command(BaseCommand):
             shutil.rmtree(output_path)
         os.makedirs(output_path)
         
-        for models_module_name, models_module in get_app_module_dict("models").items():
+        for _, models_module in get_app_module_dict("models").items():
             
             for model_name in dir(models_module):
                 
                 model = getattr(models_module,model_name)
                 if not inspect.isclass(model):
                     continue
-                if ( model.__module__ != models_module_name ):
+                if ( model.__module__ != models_module.__name__ ):
                     continue
                 if not issubclass(model, models.Model):
                     continue
