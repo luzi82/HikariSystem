@@ -40,6 +40,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     
     'hikari',
+    'hikari_admin',
+    'hikari_dev',
     'hikari_quest',
     'hikari_resource',
     'hikari_user',

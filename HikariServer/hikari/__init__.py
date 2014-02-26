@@ -35,5 +35,3 @@ def now64():
     ret *= 1000
     ret = int(ret)
     return ret
-
-__import__("hikari.cmd")

@@ -18,7 +18,7 @@ class SimpleTest(TestCase):
         client = Client()
         
 #        response = client.post(reverse('ajax')+"/hikari/hello.json",{
-        response = client.post("/ajax/hikari/user__create_user.json", {"arg":simplejson.dumps({
+        response = client.post("/ajax/hikari_user/create_user.json", {"arg":simplejson.dumps({
             "device_model":SimpleTest.TEST_DEVICE_MODEL
         })})
         content = response.content
@@ -39,7 +39,7 @@ class SimpleTest(TestCase):
         client = Client()
         
 #        response = client.post(reverse('ajax')+"/hikari/hello.json",{
-        response = client.post("/ajax/hikari/user__create_user.json", {"arg":simplejson.dumps({
+        response = client.post("/ajax/hikari_user/create_user.json", {"arg":simplejson.dumps({
             "device_model":SimpleTest.TEST_DEVICE_MODEL
         })})
         content = response.content
@@ -49,7 +49,7 @@ class SimpleTest(TestCase):
         username = result['data']['username']
         password = result['data']['password']
 
-        response = client.post("/ajax/hikari/user__login.json", {"arg":simplejson.dumps({
+        response = client.post("/ajax/hikari_user/login.json", {"arg":simplejson.dumps({
             "username":username,
             "password":password,
         })})
@@ -67,7 +67,7 @@ class SimpleTest(TestCase):
         
         client = Client()
         
-        response = client.post("/ajax/hikari/user__create_user.json", {"arg":simplejson.dumps({
+        response = client.post("/ajax/hikari_user/create_user.json", {"arg":simplejson.dumps({
             "device_model":SimpleTest.TEST_DEVICE_MODEL
         })})
         content = response.content
@@ -77,7 +77,7 @@ class SimpleTest(TestCase):
         username = result['data']['username']
         password = result['data']['password']
         
-        response = client.post("/ajax/hikari/user__login.json", {"arg":simplejson.dumps({
+        response = client.post("/ajax/hikari_user/login.json", {"arg":simplejson.dumps({
             "username":username,
             "password":password,
         })})
@@ -87,7 +87,7 @@ class SimpleTest(TestCase):
 
         self.assertEqual(result['success'], True)
 
-        response = client.post("/ajax/hikari/quest__quest_start.json", {"arg":simplejson.dumps({
+        response = client.post("/ajax/hikari_quest/quest_start.json", {"arg":simplejson.dumps({
             "quest_entry_key":HsQuestEntry.objects.all()[0].key,
         })})
         content = response.content
@@ -97,7 +97,7 @@ class SimpleTest(TestCase):
         self.assertEqual(result['success'], True)
         quest_instance_id = result['data']['quest_instance']['id']
 
-        response = client.post("/ajax/hikari/quest__quest_end.json", {"arg":simplejson.dumps({
+        response = client.post("/ajax/hikari_quest/quest_end.json", {"arg":simplejson.dumps({
             "quest_instance_id":quest_instance_id,
             'success': True
         })})
@@ -112,7 +112,7 @@ class SimpleTest(TestCase):
         
         client = Client()
         
-        response = client.post("/ajax/hikari/user__create_user.json", {"arg":simplejson.dumps({
+        response = client.post("/ajax/hikari_user/create_user.json", {"arg":simplejson.dumps({
             "device_model":SimpleTest.TEST_DEVICE_MODEL
         })})
         content = response.content
@@ -122,7 +122,7 @@ class SimpleTest(TestCase):
         username = result['data']['username']
         password = result['data']['password']
         
-        response = client.post("/ajax/hikari/user__login.json", {"arg":simplejson.dumps({
+        response = client.post("/ajax/hikari_user/login.json", {"arg":simplejson.dumps({
             "username":username,
             "password":password,
         })})
@@ -133,7 +133,7 @@ class SimpleTest(TestCase):
         
         quest_key = HsQuestEntry.objects.all()[0].key
 
-        response = client.post("/ajax/hikari/quest__quest_start.json", {"arg":simplejson.dumps({
+        response = client.post("/ajax/hikari_quest/quest_start.json", {"arg":simplejson.dumps({
             "quest_entry_key":quest_key,
         })})
         content = response.content
@@ -142,7 +142,7 @@ class SimpleTest(TestCase):
         self.assertEqual(result['success'], True)
         quest_instance_id0 = result['data']['quest_instance']['id']
 
-        response = client.post("/ajax/hikari/quest__quest_start.json", {"arg":simplejson.dumps({
+        response = client.post("/ajax/hikari_quest/quest_start.json", {"arg":simplejson.dumps({
             "quest_entry_key":quest_key,
         })})
         content = response.content
@@ -151,7 +151,7 @@ class SimpleTest(TestCase):
         self.assertEqual(result['success'], True)
         quest_instance_id1 = result['data']['quest_instance']['id']
 
-        response = client.post("/ajax/hikari/quest__quest_end.json", {"arg":simplejson.dumps({
+        response = client.post("/ajax/hikari_quest/quest_end.json", {"arg":simplejson.dumps({
             "quest_instance_id":quest_instance_id0,
             'success': True
         })})
@@ -160,7 +160,7 @@ class SimpleTest(TestCase):
         
 #         self.assertEqual(result['success'], True)
 
-        response = client.post("/ajax/hikari/quest__quest_end.json", {"arg":simplejson.dumps({
+        response = client.post("/ajax/hikari_quest/quest_end.json", {"arg":simplejson.dumps({
             "quest_instance_id":quest_instance_id1,
             'success': True
         })})
@@ -173,14 +173,14 @@ class SimpleTest(TestCase):
         
         client = Client()
 
-        response = client.post("/ajax/hikari/system__get_time.json", {"arg":"{}"})
+        response = client.post("/ajax/hikari/get_time.json", {"arg":"{}"})
         content = response.content
         simplejson.loads(content)
 
         seqid = client.cookies['seqid'].value
 #         print "client seqid = "+seqid
         
-        response = client.post("/ajax/hikari/system__get_time.json", {"arg":"{}"})
+        response = client.post("/ajax/hikari/get_time.json", {"arg":"{}"})
         content = response.content
         result = simplejson.loads(content)
         
@@ -189,7 +189,7 @@ class SimpleTest(TestCase):
         
         client.cookies['seqid'] = seqid
         
-        response = client.post("/ajax/hikari/system__get_time.json", {"arg":"{}"})
+        response = client.post("/ajax/hikari/get_time.json", {"arg":"{}"})
         content = response.content
         result = simplejson.loads(content)
         
