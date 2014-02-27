@@ -12,26 +12,30 @@ import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestCostData;
 import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestEntryData;
 import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestStartCmd;
 import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestStartCmd.Result;
-import com.luzi82.homuvalue.Value;
-import com.luzi82.homuvalue.Value.Listener;
 
-public class QuestListView extends HikariListView {
+public class QuestListView extends HikariListView implements
+		HikariListView.UpdateList {
 
-	Listener<Long> dataSyncTimeListener;
+	// Listener<Long> dataSyncTimeListener;
+
+	UpdateListObserver updateListObserver;
 
 	public QuestListView(Context context) {
 		super(context);
 
-		dataSyncTimeListener = new Listener<Long>() {
-			@Override
-			public void onValueDirty(Value<Long> v) {
-				System.err.println("oWZpPqC7");
-				updateList();
-			}
+		updateListObserver = new UpdateListObserver(this);
 
-		};
+		// dataSyncTimeListener = new Listener<Long>() {
+		// @Override
+		// public void onValueDirty(Value<Long> v) {
+		// System.err.println("oWZpPqC7");
+		// updateList();
+		// }
+		//
+		// };
 
-		getMain().dataSyncTimeVar.addListener(dataSyncTimeListener);
+		// getMain().dataSyncTimeVar.addListener(dataSyncTimeListener);
+		getMain().dataSyncTimeObservable.addObserver(updateListObserver);
 		updateList();
 
 	}

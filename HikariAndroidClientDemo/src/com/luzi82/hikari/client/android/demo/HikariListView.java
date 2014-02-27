@@ -1,16 +1,18 @@
 package com.luzi82.hikari.client.android.demo;
 
 import java.util.List;
+import java.util.Observable;
 import java.util.concurrent.Future;
-
-import com.luzi82.concurrent.FutureCallback;
-import com.luzi82.hikari.client.HsClient;
 
 import android.content.Context;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.luzi82.concurrent.FutureCallback;
+import com.luzi82.hikari.client.HsClient;
+import com.luzi82.lang.WeakObserver;
 
 public class HikariListView extends ListView {
 
@@ -99,6 +101,23 @@ public class HikariListView extends ListView {
 
 	public HsClient getClient() {
 		return getMain().hsClient;
+	}
+
+	protected static class UpdateListObserver extends WeakObserver<UpdateList> {
+
+		public UpdateListObserver(UpdateList host) {
+			super(host);
+		}
+
+		@Override
+		protected void update(UpdateList h, Observable o, Object arg) {
+			h.updateList();
+		}
+
+	}
+
+	public interface UpdateList {
+		public void updateList();
 	}
 
 }

@@ -6,8 +6,7 @@ import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.concurrent.GuriFuture;
 import com.luzi82.hikari.client.protocol.HikariUserProtocol;
 import com.luzi82.hikari.client.protocol.HikariUserProtocolDef;
-import com.luzi82.homuvalue.Value;
-import com.luzi82.homuvalue.Value.Variable;
+import com.luzi82.lang.GuriObservable;
 
 public class User extends HikariUserProtocol {
 
@@ -147,7 +146,7 @@ public class User extends HikariUserProtocol {
 
 			@Override
 			public void _run() throws Exception {
-				isLoginDoneVar(client).set(Boolean.TRUE);
+				loginDoneObservable(client).setNotify(true);
 				completed(f2.get());
 			}
 
@@ -166,20 +165,15 @@ public class User extends HikariUserProtocol {
 
 	public static String LOGIN_DONE_KEY = "LOGIN_DONE";
 
-	protected static Variable<Boolean> isLoginDoneVar(HsClient client) {
-		Variable<Boolean> ret = (Variable<Boolean>) client.getTmp(APP_NAME,
-				LOGIN_DONE_KEY);
+	public static GuriObservable<Boolean> loginDoneObservable(HsClient client) {
+		GuriObservable<Boolean> ret = (GuriObservable<Boolean>) client.getTmp(
+				APP_NAME, LOGIN_DONE_KEY);
 		if (ret == null) {
-			ret = new Variable<Boolean>();
-			ret.setAlwaysCallback(true);
-			ret.set(Boolean.FALSE);
+			ret = new GuriObservable<Boolean>();
+			ret.set(false);
 			client.putTmp(APP_NAME, LOGIN_DONE_KEY, ret);
 		}
 		return ret;
-	}
-
-	public static Value<Boolean> isLoginDoneValue(HsClient client) {
-		return isLoginDoneVar(client);
 	}
 
 }

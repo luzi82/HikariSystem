@@ -24,17 +24,17 @@ import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ResourceData;
 import com.luzi82.hikari.client.protocol.HikariUserProtocolDef.CreateUserCmd;
 import com.luzi82.hikari.client.protocol.HikariUserProtocolDef.LoginCmd;
 import com.luzi82.hikari.client.protocol.HikariUserProtocolDef.LoginCmd.Result;
-import com.luzi82.homuvalue.Value;
-import com.luzi82.homuvalue.Value.Listener;
 
-public class LoginView extends HikariListView {
+public class LoginView extends HikariListView implements HikariListView.UpdateList {
 
-	Listener<Long> dataSyncTimeListener;
-	Listener<Boolean> loginListener;
+	// Listener<Long> dataSyncTimeListener;
+	// Listener<Boolean> loginListener;
 
 	ObjectMapper objectMapper;
 
 	Resource.Mgr resourceMgr;
+
+	UpdateListObserver updateListObserver;
 
 	public LoginView(Context context) {
 		super(context);
@@ -42,21 +42,14 @@ public class LoginView extends HikariListView {
 		objectMapper = new ObjectMapper();
 		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 
-		dataSyncTimeListener = new Listener<Long>() {
-			@Override
-			public void onValueDirty(Value<Long> v) {
-				System.err.println("PyJcV4bM");
-				updateList();
-			}
-		};
-		loginListener = new Listener<Boolean>() {
-
-			@Override
-			public void onValueDirty(Value<Boolean> v) {
-				updateList();
-			}
-
-		};
+		// dataSyncTimeListener = new Listener<Long>() {
+		// @Override
+		// public void onValueDirty(Value<Long> v) {
+		// System.err.println("PyJcV4bM");
+		// updateList();
+		// }
+		// };
+		updateListObserver = new UpdateListObserver(this);
 
 		// addOnAttachStateChangeListener(new OnAttachStateChangeListener() {
 		// @Override
@@ -75,8 +68,8 @@ public class LoginView extends HikariListView {
 		// }
 		// });
 
-		getMain().dataSyncTimeVar.addListener(dataSyncTimeListener);
-		User.isLoginDoneValue(getClient()).addListener(loginListener);
+		getMain().dataSyncTimeObservable.addObserver(updateListObserver);
+		User.loginDoneObservable(getClient()).addObserver(updateListObserver);
 		updateList();
 
 		updateTimer();
@@ -123,7 +116,7 @@ public class LoginView extends HikariListView {
 
 		List<ResourceData> resourceList = Resource
 				.getResourceDataList(getClient());
-		if ((User.isLoginDoneValue(getClient()).get())
+		if ((User.loginDoneObservable(getClient()).get())
 				&& (resourceList != null)) {
 			resourceMgr = new Resource.Mgr(getClient());
 			for (ResourceData resource : resourceList) {
@@ -166,7 +159,8 @@ public class LoginView extends HikariListView {
 			public void _run() throws Exception {
 				System.err.println("8lpgs4Rw");
 				// getMain().questEntryListVar.set(Quest.getHsQuestEntryDataList(getClient()));
-				getMain().dataSyncTimeVar.set(System.currentTimeMillis());
+				getMain().dataSyncTimeObservable.setNotify(System
+						.currentTimeMillis());
 				completed(null);
 			}
 		}

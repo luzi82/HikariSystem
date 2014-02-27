@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
@@ -19,10 +20,10 @@ import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.concurrent.GuriFuture;
 import com.luzi82.concurrent.RetryableFuture;
 import com.luzi82.hikari.client.endpoint.HsCmdManager;
-import com.luzi82.hikari.client.protocol.StatusUpdate;
 import com.luzi82.hikari.client.protocol.gen.out.ClientInit;
 import com.luzi82.homuvalue.Value;
 import com.luzi82.homuvalue.Value.Variable;
+import com.luzi82.lang.GuriObservable;
 
 public class HsClient implements HsCmdManager {
 
@@ -38,7 +39,7 @@ public class HsClient implements HsCmdManager {
 	final Map<String, List> dataMap;
 	final Map<String, Variable> statusVariableMap;
 	final Map<String, Class> statusClassMap;
-	final Variable<Long> statusUpdateVar;
+	final GuriObservable<Long> statusObservable;
 	long serverTimeOffset;
 
 	// final HsCmdManager cmdManager;
@@ -54,13 +55,13 @@ public class HsClient implements HsCmdManager {
 		this.tmpMap = new HashMap<String, Object>();
 		this.statusVariableMap = new HashMap<String, Variable>();
 		this.statusClassMap = new HashMap<String, Class>();
-		this.statusUpdateVar = new Variable<Long>();
+		// this.statusUpdateVar = new Variable<Long>();
+		this.statusObservable = new GuriObservable();
 
 		serverHost = new URI(server).getHost();
 
 		ClientInit.initClient(this);
 
-		statusUpdateVar.setAlwaysCallback(true);
 	}
 
 	public Future<Void> put(String appName, String key, String value,
@@ -144,7 +145,7 @@ public class HsClient implements HsCmdManager {
 								statusClassMap.get(appName));
 						statusVariableMap.get(appName).set(status);
 					}
-					statusUpdateVar.set(System.currentTimeMillis());
+					statusObservable.setNotify(System.currentTimeMillis());
 				}
 				serverTimeOffset = res.time - System.currentTimeMillis();
 
@@ -286,7 +287,7 @@ public class HsClient implements HsCmdManager {
 	}
 
 	private String statusKey(String appName, String statusName) {
-//		return String.format("%s__%s", appName, statusName);
+		// return String.format("%s__%s", appName, statusName);
 		return statusName;
 	}
 
@@ -298,8 +299,8 @@ public class HsClient implements HsCmdManager {
 		return (Value<Status>) statusVariableMap.get(key);
 	}
 
-	public Value<Long> getStatusUpdateVar() {
-		return statusUpdateVar;
+	public Observable getStatusObservable() {
+		return statusObservable;
 	}
 
 	@Override
@@ -319,6 +320,16 @@ public class HsClient implements HsCmdManager {
 	public long getServerTime(long clientTime) {
 		return clientTime + getServerTimeOffset();
 	}
+
+	// public Observable getObservable(String appName, String obsName) {
+	// String key = String.format("%s__%s", appName, obsName);
+	// Observable ret = appObservable.get(key);
+	// if (ret != null) {
+	// ret = new Observable();
+	// appObservable.put(key, ret);
+	// }
+	// return ret;
+	// }
 
 	// TODO change to load data from disk to memory
 	// public <Data> Future<List<Data>> getDataList(String appName,

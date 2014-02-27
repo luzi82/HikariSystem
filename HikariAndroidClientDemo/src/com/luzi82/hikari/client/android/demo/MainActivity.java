@@ -19,9 +19,8 @@ import android.view.ViewGroup;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.HsMemStorage;
 import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestInstance;
-import com.luzi82.homuvalue.Value;
-import com.luzi82.homuvalue.Value.Listener;
 import com.luzi82.homuvalue.Value.Variable;
+import com.luzi82.lang.GuriObservable;
 
 public class MainActivity extends FragmentActivity {
 
@@ -48,7 +47,9 @@ public class MainActivity extends FragmentActivity {
 
 	// public final Variable<List<HsQuestEntryData>> questEntryListVar = new
 	// Variable<List<HsQuestEntryData>>();
-	public final Variable<Long> dataSyncTimeVar = new Variable<Long>();
+//	public final Variable<Long> dataSyncTimeVar = new Variable<Long>();
+	
+	public final GuriObservable<Long> dataSyncTimeObservable=new GuriObservable<Long>();
 
 	public final Variable<QuestInstance> questInstanceVar = new Variable<QuestInstance>();
 
@@ -77,7 +78,7 @@ public class MainActivity extends FragmentActivity {
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
-		dataSyncTimeVar.setAlwaysCallback(true);
+//		dataSyncTimeVar.setAlwaysCallback(true);
 	}
 
 	@Override
