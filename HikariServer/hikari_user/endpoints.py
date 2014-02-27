@@ -51,7 +51,7 @@ def login(request):
         else:
             raise AJAXError(403, 'user not active')
     else:
-        raise AJAXError(403, 'auth fails')
+        raise AJAXError(401, 'auth fails')
 
     status.set_update_all(request)
     

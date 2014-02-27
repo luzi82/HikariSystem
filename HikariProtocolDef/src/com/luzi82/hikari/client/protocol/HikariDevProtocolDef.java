@@ -1,6 +1,6 @@
 package com.luzi82.hikari.client.protocol;
 
-public class DevelopmentProtocolDef {
+public class HikariDevProtocolDef {
 
 	public static class PassTimeCmd {
 		public static class Request {

@@ -1,6 +1,6 @@
 package com.luzi82.hikari.client.protocol;
 
-public class UserProtocolDef {
+public class HikariUserProtocolDef {
 
 	public static class CreateUserCmd {
 

@@ -58,3 +58,14 @@ class SimpleTest(TestCase):
         
         self.assertEqual(result['success'], True)
         self.assertIn('_auth_user_id', client.session)
+
+
+    def test_login_401(self):
+        
+        client = Client()
+        
+        response = client.post("/ajax/hikari_user/login.json", {"arg":simplejson.dumps({
+            "username":'XXX',
+            "password":'XXX',
+        })})
+        self.assertEqual(response.status_code,401)

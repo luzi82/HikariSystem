@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.HsMemStorage;
-import com.luzi82.hikari.client.protocol.QuestProtocolDef.QuestInstance;
+import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestInstance;
 import com.luzi82.homuvalue.Value;
 import com.luzi82.homuvalue.Value.Listener;
 import com.luzi82.homuvalue.Value.Variable;

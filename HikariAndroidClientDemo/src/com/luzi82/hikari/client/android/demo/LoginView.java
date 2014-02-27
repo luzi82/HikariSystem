@@ -20,10 +20,10 @@ import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.concurrent.GuriFuture;
 import com.luzi82.hikari.client.Resource;
 import com.luzi82.hikari.client.User;
-import com.luzi82.hikari.client.protocol.ResourceProtocolDef.HsResourceData;
-import com.luzi82.hikari.client.protocol.UserProtocolDef.CreateUserCmd;
-import com.luzi82.hikari.client.protocol.UserProtocolDef.LoginCmd;
-import com.luzi82.hikari.client.protocol.UserProtocolDef.LoginCmd.Result;
+import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ResourceData;
+import com.luzi82.hikari.client.protocol.HikariUserProtocolDef.CreateUserCmd;
+import com.luzi82.hikari.client.protocol.HikariUserProtocolDef.LoginCmd;
+import com.luzi82.hikari.client.protocol.HikariUserProtocolDef.LoginCmd.Result;
 import com.luzi82.homuvalue.Value;
 import com.luzi82.homuvalue.Value.Listener;
 
@@ -121,12 +121,12 @@ public class LoginView extends HikariListView {
 			}
 		});
 
-		List<HsResourceData> resourceList = Resource
-				.getHsResourceDataList(getClient());
+		List<ResourceData> resourceList = Resource
+				.getResourceDataList(getClient());
 		if ((User.isLoginDoneValue(getClient()).get())
 				&& (resourceList != null)) {
 			resourceMgr = new Resource.Mgr(getClient());
-			for (HsResourceData resource : resourceList) {
+			for (ResourceData resource : resourceList) {
 				itemList.add(new Item(resource.key) {
 					@Override
 					public String toString() {

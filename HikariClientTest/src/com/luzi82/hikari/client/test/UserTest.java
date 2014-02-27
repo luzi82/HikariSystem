@@ -17,7 +17,7 @@ import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.User;
 import com.luzi82.hikari.client.apache.HsClientApache.StatusCodeException;
-import com.luzi82.hikari.client.protocol.UserProtocolDef;
+import com.luzi82.hikari.client.protocol.HikariUserProtocolDef;
 
 public class UserTest extends AbstractTest {
 
@@ -25,17 +25,17 @@ public class UserTest extends AbstractTest {
 	public void testCreateUser() throws Exception {
 		HsClient client = createClient();
 
-		final UserProtocolDef.CreateUserCmd.Result[] curv = new UserProtocolDef.CreateUserCmd.Result[1];
-		Future<UserProtocolDef.CreateUserCmd.Result> f = User.createUser(
+		final HikariUserProtocolDef.CreateUserCmd.Result[] curv = new HikariUserProtocolDef.CreateUserCmd.Result[1];
+		Future<HikariUserProtocolDef.CreateUserCmd.Result> f = User.createUser(
 				client, TEST_DEV,
-				new FutureCallback<UserProtocolDef.CreateUserCmd.Result>() {
+				new FutureCallback<HikariUserProtocolDef.CreateUserCmd.Result>() {
 					@Override
 					public void cancelled() {
 					}
 
 					@Override
 					public void completed(
-							UserProtocolDef.CreateUserCmd.Result arg0) {
+							HikariUserProtocolDef.CreateUserCmd.Result arg0) {
 						curv[0] = arg0;
 					}
 
@@ -48,7 +48,7 @@ public class UserTest extends AbstractTest {
 		Assert.assertNotNull(f);
 
 		// System.err.println("0");
-		UserProtocolDef.CreateUserCmd.Result cur = f.get(5, TimeUnit.SECONDS);
+		HikariUserProtocolDef.CreateUserCmd.Result cur = f.get(5, TimeUnit.SECONDS);
 		// System.err.println("1");
 		Assert.assertNotNull(cur);
 		Assert.assertEquals(cur, curv[0]);

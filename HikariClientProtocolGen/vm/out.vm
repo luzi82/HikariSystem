@@ -22,14 +22,15 @@ public class ${main}Protocol extends ${main}ProtocolDef {
 		);
 	}
 #end
-#if( $status_exist )
+#foreach( $status in $status_list )
 
-	public static Value<Status> getStatusValue(
+	public static Value<${status.Cnamefull}> getStatusValue(
 		final HsCmdManager cmdManager
 	) {
 		return cmdManager.getStatusValue(
 			APP_NAME,
-			Status.class
+			"${status.Jname}",
+			${status.Cnamefull}.class
 		);
 	}
 #end

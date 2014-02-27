@@ -139,17 +139,23 @@ public class Main {
 				}
 				vc.put("data_list", dataList);
 
-				boolean statusExist = false;
+//				boolean statusExist = false;
+				List<Status> statusList0 = new LinkedList<Status>();
 				for (Class<?> dataClass : cls.getDeclaredClasses()) {
-					if (ObjectUtils.equals("Status", dataClass.getSimpleName())) {
-						statusExist = true;
-						Status status = new Status();
-						status.appName = appName;
-						status.cnamefull = dataClass.getCanonicalName();
-						statusList.add(status);
-					}
+					String classSimpleName = dataClass.getSimpleName();
+					if (!classSimpleName.endsWith("Status"))
+						continue;
+//					statusExist = true;
+					Status status = new Status();
+					status.appName = appName;
+					status.jname = camelToLower(classSimpleName.substring(0,
+							classSimpleName.length() - 6));
+					status.cnamefull = dataClass.getCanonicalName();
+					statusList0.add(status);
+					statusList.add(status);
 				}
-				vc.put("status_exist", statusExist);
+//				vc.put("status_exist", statusExist);
+				vc.put("status_list", statusList0);
 
 				BufferedWriter bw = new BufferedWriter(new FileWriter(out));
 				template.merge(vc, bw);
@@ -239,12 +245,18 @@ public class Main {
 			return cnamefull;
 		}
 	}
-	
+
 	public static class Status {
 		public String appName;
 		public String cnamefull;
+		public String jname;
+
 		public String getAppName() {
 			return appName;
+		}
+
+		public String getJname() {
+			return jname;
 		}
 
 		public String getCnamefull() {
@@ -255,6 +267,14 @@ public class Main {
 	public static void main(String[] argv) throws Exception {
 		Main main = new Main();
 		main.m(argv);
+	}
+
+	private static String camelToLower(String in) {
+		String[] ns = StringUtils.splitByCharacterTypeCamelCase(in);
+		for (int i = 0; i < ns.length; ++i) {
+			ns[i] = ns[i].toLowerCase();
+		}
+		return StringUtils.join(ns, "_");
 	}
 
 }

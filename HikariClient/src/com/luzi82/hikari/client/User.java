@@ -4,12 +4,12 @@ import java.util.concurrent.Future;
 
 import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.concurrent.GuriFuture;
-import com.luzi82.hikari.client.protocol.UserProtocol;
-import com.luzi82.hikari.client.protocol.UserProtocolDef;
+import com.luzi82.hikari.client.protocol.HikariUserProtocol;
+import com.luzi82.hikari.client.protocol.HikariUserProtocolDef;
 import com.luzi82.homuvalue.Value;
 import com.luzi82.homuvalue.Value.Variable;
 
-public class User extends UserProtocol {
+public class User extends HikariUserProtocol {
 
 	public static final String DB_USERNAME = "username";
 	public static final String DB_PASSWORD = "password";
@@ -38,7 +38,7 @@ public class User extends UserProtocol {
 
 			@Override
 			public void _run() throws Exception {
-				f0 = UserProtocol.createUser(client, device_model,
+				f0 = HikariUserProtocol.createUser(client, device_model,
 						new Callback<CreateUserCmd.Result>(new Step1()));
 				setFuture(f0);
 			}
@@ -78,10 +78,10 @@ public class User extends UserProtocol {
 
 	}
 
-	public static Future<UserProtocolDef.CreateUserCmd.Result> createUser(
+	public static Future<HikariUserProtocolDef.CreateUserCmd.Result> createUser(
 			final HsClient client,
 			final String device_model,
-			final FutureCallback<UserProtocolDef.CreateUserCmd.Result> futureCallback) {
+			final FutureCallback<HikariUserProtocolDef.CreateUserCmd.Result> futureCallback) {
 
 		CreateUserFuture cuf = new CreateUserFuture(client, device_model,
 				futureCallback);
@@ -155,8 +155,9 @@ public class User extends UserProtocol {
 
 	}
 
-	public static Future<LoginCmd.Result> login(final HsClient client,
-			final FutureCallback<UserProtocolDef.LoginCmd.Result> futureCallback) {
+	public static Future<LoginCmd.Result> login(
+			final HsClient client,
+			final FutureCallback<HikariUserProtocolDef.LoginCmd.Result> futureCallback) {
 
 		LoginFuture ret = new LoginFuture(client, futureCallback);
 		ret.start();
@@ -176,8 +177,8 @@ public class User extends UserProtocol {
 		}
 		return ret;
 	}
-	
-	public static Value<Boolean> isLoginDoneValue(HsClient client){
+
+	public static Value<Boolean> isLoginDoneValue(HsClient client) {
 		return isLoginDoneVar(client);
 	}
 

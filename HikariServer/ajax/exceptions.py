@@ -17,9 +17,14 @@ class PrimaryKeyMissing(Exception):
     pass
 
 
+class Http401(HttpResponse):
+    status_code = 401
+
+
 class AJAXError(Exception):
     RESPONSES = {
         400: HttpResponseBadRequest,
+        401: Http401,
         403: HttpResponseForbidden,
         404: HttpResponseNotFound,
         405: HttpResponseNotAllowed,

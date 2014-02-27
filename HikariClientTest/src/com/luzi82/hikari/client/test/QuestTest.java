@@ -25,9 +25,9 @@ public class QuestTest extends AbstractTest {
 		User.createUser(client, TEST_DEV, null).get(5, TimeUnit.SECONDS);
 		User.login(client, null).get(5, TimeUnit.SECONDS);
 
-		List<Quest.HsQuestEntryData> questEntryList = Quest
-				.getHsQuestEntryDataList(client);
-		Quest.HsQuestEntryData questEntry = questEntryList.get(0);
+		List<Quest.QuestEntryData> questEntryList = Quest
+				.getQuestEntryDataList(client);
+		Quest.QuestEntryData questEntry = questEntryList.get(0);
 
 		int questInstanceId;
 
@@ -50,9 +50,9 @@ public class QuestTest extends AbstractTest {
 		User.createUser(client, TEST_DEV, null).get(5, TimeUnit.SECONDS);
 		User.login(client, null).get(5, TimeUnit.SECONDS);
 
-		List<Quest.HsQuestEntryData> questEntryList = Quest
-				.getHsQuestEntryDataList(client);
-		Quest.HsQuestEntryData questEntry = questEntryList.get(0);
+		List<Quest.QuestEntryData> questEntryList = Quest
+				.getQuestEntryDataList(client);
+		Quest.QuestEntryData questEntry = questEntryList.get(0);
 
 		int questInstanceId0;
 		int questInstanceId1;
@@ -84,9 +84,9 @@ public class QuestTest extends AbstractTest {
 		User.createUser(client, TEST_DEV, null).get(5, TimeUnit.SECONDS);
 		User.login(client, null).get(5, TimeUnit.SECONDS);
 
-		List<Quest.HsQuestEntryData> questEntryList = Quest
-				.getHsQuestEntryDataList(client);
-		Quest.HsQuestEntryData questEntry = questEntryList.get(0);
+		List<Quest.QuestEntryData> questEntryList = Quest
+				.getQuestEntryDataList(client);
+		Quest.QuestEntryData questEntry = questEntryList.get(0);
 
 		int questInstanceId;
 
@@ -108,13 +108,13 @@ public class QuestTest extends AbstractTest {
 
 		Resource.Mgr resMgr = new Resource.Mgr(client);
 
-		List<Quest.HsQuestEntryData> questEntryList = Quest
-				.getHsQuestEntryDataList(client);
-		Quest.HsQuestEntryData questEntry = questEntryList.get(0);
+		List<Quest.QuestEntryData> questEntryList = Quest
+				.getQuestEntryDataList(client);
+		Quest.QuestEntryData questEntry = questEntryList.get(0);
 
-		List<Quest.HsQuestCostData> allQuestCostList = Quest
-				.getHsQuestCostDataList(client);
-		List<Quest.HsQuestCostData> questCostList = Quest.filter(
+		List<Quest.QuestCostData> allQuestCostList = Quest
+				.getQuestCostDataList(client);
+		List<Quest.QuestCostData> questCostList = Quest.filter(
 				allQuestCostList, questEntry.key);
 
 		// Resource.Status resourceStatus0 =
@@ -126,7 +126,7 @@ public class QuestTest extends AbstractTest {
 
 		Map<String, Long> oldValue = new HashMap<String, Long>();
 
-		for (Quest.HsQuestCostData questCost : questCostList) {
+		for (Quest.QuestCostData questCost : questCostList) {
 			String key = questCost.resource_key;
 			long count0 = resMgr.value(key, now);
 			int cost = questCost.count;
@@ -138,13 +138,13 @@ public class QuestTest extends AbstractTest {
 
 		now = System.currentTimeMillis();
 
-		for (Quest.HsQuestCostData questCost : questCostList) {
+		for (Quest.QuestCostData questCost : questCostList) {
 			String key = questCost.resource_key;
 			long count0 = oldValue.get(key);
 			long count1 = resMgr.value(key, now);
 			int cost = questCost.count;
-			System.err.println("count0 "+count0);
-			System.err.println("count1 "+count1);
+			System.err.println("count0 " + count0);
+			System.err.println("count1 " + count1);
 			Assert.assertTrue(count1 < count0);
 			Assert.assertTrue(count1 >= count0 - cost);
 		}

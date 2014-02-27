@@ -14,7 +14,7 @@ public interface HsCmdManager {
 			FutureCallback<Result> futureCallback);
 
 	public <Status> Value<Status> getStatusValue(String appName,
-			Class<Status> class1);
+			String statusName, Class<Status> class1);
 
 	// public <Data> Future<List<Data>> getDataList(String appName, String
 	// string,
@@ -25,6 +25,7 @@ public interface HsCmdManager {
 
 	public void addDataLoad(String appName, String dataName, Class dataClass);
 
-	public <Status> void addStatus(String appName, Class<Status> statusClass);
+	public <Status> void addStatus(String appName, String statusName,
+			Class<Status> statusClass);
 
 }

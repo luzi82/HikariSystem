@@ -5,15 +5,15 @@ import java.util.List;
 
 import org.apache.commons.lang.ObjectUtils;
 
-import com.luzi82.hikari.client.protocol.QuestProtocol;
-import com.luzi82.hikari.client.protocol.QuestProtocolDef;
+import com.luzi82.hikari.client.protocol.HikariQuestProtocol;
+import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef;
 
-public class Quest extends QuestProtocol {
+public class Quest extends HikariQuestProtocol {
 
-	public static List<HsQuestCostData> filter(
-			List<HsQuestCostData> allQuestCostList, String key) {
-		List<HsQuestCostData> ret = new LinkedList<QuestProtocolDef.HsQuestCostData>();
-		for (HsQuestCostData data : allQuestCostList) {
+	public static List<QuestCostData> filter(
+			List<QuestCostData> allQuestCostList, String key) {
+		List<QuestCostData> ret = new LinkedList<HikariQuestProtocolDef.QuestCostData>();
+		for (QuestCostData data : allQuestCostList) {
 			if (ObjectUtils.equals(data.quest_entry_key, key)) {
 				ret.add(data);
 			}
@@ -21,9 +21,9 @@ public class Quest extends QuestProtocol {
 		return ret;
 	}
 
-	public static HsQuestCostData get(List<HsQuestCostData> allQuestCostList,
+	public static QuestCostData get(List<QuestCostData> allQuestCostList,
 			String questKey, String resourceKey) {
-		for (HsQuestCostData data : allQuestCostList) {
+		for (QuestCostData data : allQuestCostList) {
 			if (!ObjectUtils.equals(data.quest_entry_key, questKey))
 				continue;
 			if (!ObjectUtils.equals(data.resource_key, resourceKey))

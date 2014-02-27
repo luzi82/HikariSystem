@@ -8,9 +8,9 @@ import org.junit.Test;
 import com.luzi82.concurrent.RecordFutureCallback;
 import com.luzi82.concurrent.RetryableFuture;
 import com.luzi82.hikari.client.HsClient;
-import com.luzi82.hikari.client.protocol.DevelopmentProtocol;
-import com.luzi82.hikari.client.protocol.DevelopmentProtocolDef.PassTimeCmd;
-import com.luzi82.hikari.client.protocol.SystemProtocol;
+import com.luzi82.hikari.client.protocol.HikariDevProtocol;
+import com.luzi82.hikari.client.protocol.HikariDevProtocolDef.PassTimeCmd;
+import com.luzi82.hikari.client.protocol.HikariProtocol;
 
 public class CacheTest extends AbstractTest {
 
@@ -23,20 +23,20 @@ public class CacheTest extends AbstractTest {
 		String seqId = client.getCookie("seqid");
 		Assert.assertNotNull(seqId);
 
-		long systemTime0 = SystemProtocol.getTime(client, null).get().time;
+		long systemTime0 = HikariProtocol.getTime(client, null).get().time;
 		Assert.assertTrue(systemTime0 != 0);
 		String seqId2 = client.getCookie("seqid");
 
 		client.setCookie("seqid", seqId);
 
-		long systemTime1 = SystemProtocol.getTime(client, null).get().time;
+		long systemTime1 = HikariProtocol.getTime(client, null).get().time;
 		Assert.assertEquals(systemTime0, systemTime1);
 
 		Assert.assertEquals(seqId2, client.getCookie("seqid"));
 
 		client.setCookie("seqid", seqId);
 
-		systemTime1 = SystemProtocol.getTime(client, null).get().time;
+		systemTime1 = HikariProtocol.getTime(client, null).get().time;
 		Assert.assertEquals(systemTime0, systemTime1);
 
 		Assert.assertEquals(seqId2, client.getCookie("seqid"));
@@ -48,12 +48,12 @@ public class CacheTest extends AbstractTest {
 
 		createLogin(client);
 
-		long serverTime = SystemProtocol.getTime(client, null).get().time;
+		long serverTime = HikariProtocol.getTime(client, null).get().time;
 		long clientTime = System.currentTimeMillis();
 
 		RecordFutureCallback<PassTimeCmd.Result> rfc = new RecordFutureCallback<PassTimeCmd.Result>(
 				null);
-		RetryableFuture<PassTimeCmd.Result> retryableFuture = DevelopmentProtocol
+		RetryableFuture<PassTimeCmd.Result> retryableFuture = HikariDevProtocol
 				.passTime(client, serverTime + 1000, -1, rfc);
 
 		try {
@@ -92,12 +92,12 @@ public class CacheTest extends AbstractTest {
 
 		createLogin(client);
 
-		long serverTime = SystemProtocol.getTime(client, null).get().time;
+		long serverTime = HikariProtocol.getTime(client, null).get().time;
 		long clientTime = System.currentTimeMillis();
 
 		RecordFutureCallback<PassTimeCmd.Result> rfc = new RecordFutureCallback<PassTimeCmd.Result>(
 				null);
-		RetryableFuture<PassTimeCmd.Result> retryableFuture = DevelopmentProtocol
+		RetryableFuture<PassTimeCmd.Result> retryableFuture = HikariDevProtocol
 				.passTime(client, serverTime + 1000, -1, rfc);
 
 		try {
@@ -113,7 +113,7 @@ public class CacheTest extends AbstractTest {
 		Assert.assertNotNull(rfc.ex);
 
 		// call appear in between
-		SystemProtocol.getTime(client, null).get();
+		HikariProtocol.getTime(client, null).get();
 
 		rfc.clear();
 		try {

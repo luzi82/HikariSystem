@@ -8,9 +8,9 @@ import android.content.Context;
 
 import com.luzi82.concurrent.DummyFutureCallback;
 import com.luzi82.hikari.client.Quest;
-import com.luzi82.hikari.client.protocol.QuestProtocolDef.QuestEndCmd;
-import com.luzi82.hikari.client.protocol.QuestProtocolDef.QuestEndCmd.Result;
-import com.luzi82.hikari.client.protocol.QuestProtocolDef.QuestInstance;
+import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestEndCmd;
+import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestEndCmd.Result;
+import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestInstance;
 import com.luzi82.homuvalue.Value;
 import com.luzi82.homuvalue.Value.Listener;
 

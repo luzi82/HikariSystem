@@ -1,12 +1,12 @@
 package com.luzi82.hikari.client;
 
-import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
 
-import com.luzi82.hikari.client.protocol.ResourceProtocol;
+import com.luzi82.hikari.client.protocol.HikariResourceProtocol;
 
-public class Resource extends ResourceProtocol {
+public class Resource extends HikariResourceProtocol {
 
 	// public static int getCount(
 	// List<ResourceProtocolDef.HsResourceData> dataList,
@@ -27,14 +27,14 @@ public class Resource extends ResourceProtocol {
 		}
 
 		public long value(String resource_key, long now) {
-			List<ResourceValue> dataList = getStatusValue(client).get().resource_value_list;
-			ResourceValue rv = null;
-			for (ResourceValue value : dataList) {
-				if (!ObjectUtils.equals(resource_key, value.resource_key))
-					continue;
-				rv = value;
-				break;
-			}
+			Map<String, ResourceValue> dataList = getStatusValue(client).get();
+			ResourceValue rv = dataList.get(resource_key);
+			// for (ResourceValue value : dataList) {
+			// if (!ObjectUtils.equals(resource_key, value.resource_key))
+			// continue;
+			// rv = value;
+			// break;
+			// }
 			if (rv == null)
 				return 0;
 			if (rv.count != null)

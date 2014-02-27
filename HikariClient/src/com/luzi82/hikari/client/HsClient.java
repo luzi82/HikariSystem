@@ -22,7 +22,6 @@ import com.luzi82.hikari.client.endpoint.HsCmdManager;
 import com.luzi82.hikari.client.protocol.StatusUpdate;
 import com.luzi82.hikari.client.protocol.gen.out.ClientInit;
 import com.luzi82.homuvalue.Value;
-import com.luzi82.homuvalue.Value.Listener;
 import com.luzi82.homuvalue.Value.Variable;
 
 public class HsClient implements HsCmdManager {
@@ -60,7 +59,7 @@ public class HsClient implements HsCmdManager {
 		serverHost = new URI(server).getHost();
 
 		ClientInit.initClient(this);
-		
+
 		statusUpdateVar.setAlwaysCallback(true);
 	}
 
@@ -79,7 +78,7 @@ public class HsClient implements HsCmdManager {
 	public static class Response {
 		public boolean success;
 		public JsonNode data;
-		public List<StatusUpdate> status_update_list;
+		public Map<String, JsonNode> status_update_dict;
 		public long time;
 	}
 
@@ -113,8 +112,11 @@ public class HsClient implements HsCmdManager {
 		class Step0 extends Step {
 			@Override
 			public void _run() throws Exception {
-				String url = server + "/ajax/hikari/" + appName + "__" + string
-						+ ".json";
+				String url = String.format("%s/ajax/%s/%s.json", server,
+						appName, string);
+				// String url = server + "/ajax/hikari/" + appName + "__" +
+				// string
+				// + ".json";
 				// System.err.println(url);
 
 				String json = null;
@@ -133,11 +135,12 @@ public class HsClient implements HsCmdManager {
 			public void _run() throws Exception {
 				String v = f0.get();
 				Response res = mObjectMapper.readValue(v, Response.class);
-				if (res.status_update_list != null) {
-					for (StatusUpdate status_update : res.status_update_list) {
-						String appName = status_update.app_name;
+				if (res.status_update_dict != null) {
+					for (Map.Entry<String, JsonNode> status_update : res.status_update_dict
+							.entrySet()) {
+						String appName = status_update.getKey();
 						Object status = mObjectMapper.convertValue(
-								status_update.status,
+								status_update.getValue(),
 								statusClassMap.get(appName));
 						statusVariableMap.get(appName).set(status);
 					}
@@ -282,11 +285,17 @@ public class HsClient implements HsCmdManager {
 		return tmpMap.get(k);
 	}
 
+	private String statusKey(String appName, String statusName) {
+//		return String.format("%s__%s", appName, statusName);
+		return statusName;
+	}
+
 	@Override
 	public <Status> Value<Status> getStatusValue(String appName,
-			Class<Status> class1) {
+			String statusName, Class<Status> class1) {
 		// System.err.println("faYQHNEC getStatusValue "+appName);
-		return (Value<Status>) statusVariableMap.get(appName);
+		String key = statusKey(appName, statusName);
+		return (Value<Status>) statusVariableMap.get(key);
 	}
 
 	public Value<Long> getStatusUpdateVar() {
@@ -294,11 +303,13 @@ public class HsClient implements HsCmdManager {
 	}
 
 	@Override
-	public <Status> void addStatus(String appName, Class<Status> statusClass) {
+	public <Status> void addStatus(String appName, String statusName,
+			Class<Status> statusClass) {
 		// System.err.println("V0n72BRm addStatus "+appName);
+		String key = statusKey(appName, statusName);
 		Variable<Status> var = new Variable<Status>();
-		statusVariableMap.put(appName, var);
-		statusClassMap.put(appName, statusClass);
+		statusVariableMap.put(key, var);
+		statusClassMap.put(key, statusClass);
 	}
 
 	public long getServerTimeOffset() {

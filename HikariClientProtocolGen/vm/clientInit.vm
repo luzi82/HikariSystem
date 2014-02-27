@@ -8,7 +8,7 @@ public class ClientInit {
 		final HsCmdManager cmdManager
 	) {
 #foreach( $status in $status_list )
-		cmdManager.addStatus("${status.appName}",${status.cnamefull}.class);
+		cmdManager.addStatus("${status.appName}","${status.jname}",${status.cnamefull}.class);
 #end
 #foreach( $dataload in $dataload_list )
 		cmdManager.addDataLoad("${dataload.appName}","${dataload.jname}",${dataload.cnamefull}.class);

@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.luzi82.hikari.client.HsClient;
-import com.luzi82.hikari.client.protocol.SystemProtocol;
+import com.luzi82.hikari.client.protocol.HikariProtocol;
 
 public class SystemTest extends AbstractTest {
 
@@ -12,7 +12,7 @@ public class SystemTest extends AbstractTest {
 	public void testGetTime() throws Exception {
 		HsClient client = createClient();
 
-		long systemTime = SystemProtocol.getTime(client, null).get().time;
+		long systemTime = HikariProtocol.getTime(client, null).get().time;
 		Assert.assertTrue(systemTime != 0);
 	}
 

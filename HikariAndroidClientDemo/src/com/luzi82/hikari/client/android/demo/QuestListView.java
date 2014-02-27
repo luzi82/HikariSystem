@@ -8,10 +8,10 @@ import android.content.Context;
 
 import com.luzi82.concurrent.DummyFutureCallback;
 import com.luzi82.hikari.client.Quest;
-import com.luzi82.hikari.client.protocol.QuestProtocolDef.HsQuestCostData;
-import com.luzi82.hikari.client.protocol.QuestProtocolDef.HsQuestEntryData;
-import com.luzi82.hikari.client.protocol.QuestProtocolDef.QuestStartCmd;
-import com.luzi82.hikari.client.protocol.QuestProtocolDef.QuestStartCmd.Result;
+import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestCostData;
+import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestEntryData;
+import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestStartCmd;
+import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestStartCmd.Result;
 import com.luzi82.homuvalue.Value;
 import com.luzi82.homuvalue.Value.Listener;
 
@@ -37,13 +37,13 @@ public class QuestListView extends HikariListView {
 	}
 
 	public void updateList() {
-		List<HsQuestEntryData> questEntryList = Quest
-				.getHsQuestEntryDataList(getClient());
-		List<HsQuestCostData> questCostList = Quest
-				.getHsQuestCostDataList(getClient());
+		List<QuestEntryData> questEntryList = Quest
+				.getQuestEntryDataList(getClient());
+		List<QuestCostData> questCostList = Quest
+				.getQuestCostDataList(getClient());
 		List<Item> itemList = new LinkedList<Item>();
 		if (questEntryList != null) {
-			for (final HsQuestEntryData questEntry : questEntryList) {
+			for (final QuestEntryData questEntry : questEntryList) {
 				long cost = Quest.get(questCostList, questEntry.key, "ap").count;
 				itemList.add(new FutureDialogItem<QuestStartCmd.Result>(String
 						.format("%s: %d", questEntry.key, cost),
