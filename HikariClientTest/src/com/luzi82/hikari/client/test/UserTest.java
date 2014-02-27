@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.User;
+import com.luzi82.hikari.client.apache.HsClientApache.StatusCodeException;
 import com.luzi82.hikari.client.protocol.UserProtocolDef;
 
 public class UserTest extends AbstractTest {
@@ -103,11 +104,14 @@ public class UserTest extends AbstractTest {
 	public void testBadLogin() throws Exception {
 		HsClient client = createClient();
 
+		StatusCodeException sce = null;
 		try {
 			User.login(client, "XXX", "XXX", null).get();
 			Assert.fail();
 		} catch (ExecutionException ee) {
+			sce = (StatusCodeException) ee.getCause();
 		}
+		Assert.assertEquals(401, sce.code);
 	}
 
 	@Test
@@ -174,7 +178,7 @@ public class UserTest extends AbstractTest {
 					}
 				});
 		HttpResponse hrr = future.get();
-		
+
 		Thread.sleep(100); // WARNING: get may faster than completed
 
 		Assert.assertNotNull(hrr);
