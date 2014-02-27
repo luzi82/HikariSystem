@@ -47,9 +47,11 @@ public class MainActivity extends FragmentActivity {
 
 	// public final Variable<List<HsQuestEntryData>> questEntryListVar = new
 	// Variable<List<HsQuestEntryData>>();
-//	public final Variable<Long> dataSyncTimeVar = new Variable<Long>();
-	
-	public final GuriObservable<Long> dataSyncTimeObservable=new GuriObservable<Long>();
+	// public final Variable<Long> dataSyncTimeVar = new Variable<Long>();
+
+	public final GuriObservable<Long> dataSyncTimeObservable = new GuriObservable<Long>();
+
+	public final GuriObservable<Boolean> foregroundObservable = new GuriObservable<Boolean>();
 
 	public final Variable<QuestInstance> questInstanceVar = new Variable<QuestInstance>();
 
@@ -78,7 +80,7 @@ public class MainActivity extends FragmentActivity {
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
-//		dataSyncTimeVar.setAlwaysCallback(true);
+		// dataSyncTimeVar.setAlwaysCallback(true);
 	}
 
 	@Override
@@ -166,6 +168,18 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	ProgressDialog startLoadDialog;
+
+	@Override
+	protected void onPause() {
+		foregroundObservable.setNotify(false);
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		foregroundObservable.setNotify(true);
+	}
 
 	// private void startLoad() {
 	// // mSectionsPagerAdapter.startUpdate(mViewPager);

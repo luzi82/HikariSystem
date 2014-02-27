@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Future;
@@ -24,8 +25,10 @@ import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ResourceData;
 import com.luzi82.hikari.client.protocol.HikariUserProtocolDef.CreateUserCmd;
 import com.luzi82.hikari.client.protocol.HikariUserProtocolDef.LoginCmd;
 import com.luzi82.hikari.client.protocol.HikariUserProtocolDef.LoginCmd.Result;
+import com.luzi82.lang.WeakObserver;
 
-public class LoginView extends HikariListView implements HikariListView.UpdateList {
+public class LoginView extends HikariListView implements
+		HikariListView.UpdateList {
 
 	// Listener<Long> dataSyncTimeListener;
 	// Listener<Boolean> loginListener;
@@ -72,6 +75,8 @@ public class LoginView extends HikariListView implements HikariListView.UpdateLi
 		User.loginDoneObservable(getClient()).addObserver(updateListObserver);
 		updateList();
 
+		getMain().foregroundObservable
+				.addObserver(new UpdateTimerObserver(this));
 		updateTimer();
 	}
 
@@ -208,7 +213,11 @@ public class LoginView extends HikariListView implements HikariListView.UpdateLi
 	}
 
 	void updateTimer() {
-		enableTimer(isShown());
+		enableTimer(shouldTimerEnable());
+	}
+
+	boolean shouldTimerEnable() {
+		return isShown() && getMain().foregroundObservable.get();
 	}
 
 	@Override
@@ -223,6 +232,19 @@ public class LoginView extends HikariListView implements HikariListView.UpdateLi
 		System.err.println("sz8nPPfg");
 		updateTimer();
 		super.onWindowVisibilityChanged(visibility);
+	}
+
+	static class UpdateTimerObserver extends WeakObserver<LoginView> {
+
+		public UpdateTimerObserver(LoginView host) {
+			super(host);
+		}
+
+		@Override
+		protected void update(LoginView h, Observable o, Object arg) {
+			h.updateTimer();
+		}
+
 	}
 
 }
