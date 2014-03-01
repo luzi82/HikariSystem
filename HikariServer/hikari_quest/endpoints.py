@@ -60,4 +60,10 @@ def quest_end(request):
     quest_instance.complete_at = now
     quest_instance.save()
 
+    if success :
+        quest_entry = HsQuestEntry.objects.get(key=quest_instance.entry_key)
+        quest_entry.reward_resource(request.user,now)
+    
+    request.hikari.status_update_set.add('resource')
+
     return {}

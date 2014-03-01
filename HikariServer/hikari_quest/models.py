@@ -25,11 +25,26 @@ class HsQuestEntry(models.Model):
                 resource_key=quest_cost_db.resource_key
             ).consume(quest_cost_db.count,time)
 
+    def reward_resource(self,user,time):
+        quest_reward_db_query = HsQuestReward.objects.filter(quest_entry_key=self.key)
+        for quest_reward_db in quest_reward_db_query:
+            HsUserResource.objects.get(
+                user=user,
+                resource_key=quest_reward_db.resource_key
+            ).add(quest_reward_db.count,time)
+
 
 class HsQuestCost(models.Model):
     
     HIKARI_STATIC_NAME = "quest_cost"
 
+    quest_entry_key = models.CharField(max_length=64,db_index=True)
+    resource_key = models.CharField(max_length=64)
+    count = models.IntegerField()
+
+
+class HsQuestReward(models.Model):
+    
     quest_entry_key = models.CharField(max_length=64,db_index=True)
     resource_key = models.CharField(max_length=64)
     count = models.IntegerField()

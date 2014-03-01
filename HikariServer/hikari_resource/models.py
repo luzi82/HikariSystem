@@ -65,3 +65,17 @@ class HsUserResource(models.Model):
                 self.time = time
             self.time += value
         self.save()
+
+    def add(self,value,time):
+        self_value = self.value(time)
+        self_type = self.type()
+        if self_type == HsResource.TYPE_COUNT:
+            self_max = self.max()
+            self.count = self_value+value
+            if self.count > self_max:
+                self.count = self_max
+        elif self_type == HsResource.TYPE_TIME:
+            self.time -= value
+            if self.time < time:
+                self.time = time
+        self.save()

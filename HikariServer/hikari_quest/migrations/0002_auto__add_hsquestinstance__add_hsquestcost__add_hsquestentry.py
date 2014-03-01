@@ -28,6 +28,15 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'hikari_quest', ['HsQuestCost'])
 
+        # Adding model 'HsQuestReward'
+        db.create_table(u'hikari_quest_hsquestreward', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('quest_entry_key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+            ('resource_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
+            ('count', self.gf('django.db.models.fields.IntegerField')()),
+        ))
+        db.send_create_signal(u'hikari_quest', ['HsQuestReward'])
+
         # Adding model 'HsQuestEntry'
         db.create_table(u'hikari_quest_hsquestentry', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -42,6 +51,9 @@ class Migration(SchemaMigration):
 
         # Deleting model 'HsQuestCost'
         db.delete_table(u'hikari_quest_hsquestcost')
+
+        # Deleting model 'HsQuestReward'
+        db.delete_table(u'hikari_quest_hsquestreward')
 
         # Deleting model 'HsQuestEntry'
         db.delete_table(u'hikari_quest_hsquestentry')
@@ -104,6 +116,13 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'state': ('django.db.models.fields.IntegerField', [], {}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
+        },
+        u'hikari_quest.hsquestreward': {
+            'Meta': {'object_name': 'HsQuestReward'},
+            'count': ('django.db.models.fields.IntegerField', [], {}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'quest_entry_key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
+            'resource_key': ('django.db.models.fields.CharField', [], {'max_length': '64'})
         }
     }
 

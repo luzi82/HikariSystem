@@ -170,7 +170,7 @@ public class QuestTest extends AbstractTest {
 
 		QuestStartCmd.Result startResult = Quest.questStart(client,
 				questEntry.key, null).get();
-		Quest.questEnd(client, startResult.quest_instance.id, true, null);
+		Quest.questEnd(client, startResult.quest_instance.id, true, null).get();
 
 		now = System.currentTimeMillis();
 
