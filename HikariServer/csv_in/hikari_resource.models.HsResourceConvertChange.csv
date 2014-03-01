@@ -1,0 +1,3 @@
+key,resource_key,change
+coin_to_gold,coin,-10000
+coin_to_gold,gold,10

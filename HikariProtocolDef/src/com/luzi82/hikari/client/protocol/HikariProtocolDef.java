@@ -13,4 +13,12 @@ public class HikariProtocolDef {
 
 	}
 
+	public static class SyncStatusCmd {
+		public static class Request {
+		}
+
+		public static class Result {
+		}
+	}
+
 }

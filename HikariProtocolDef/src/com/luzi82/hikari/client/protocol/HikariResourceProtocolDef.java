@@ -11,6 +11,12 @@ public class HikariResourceProtocolDef {
 		public int type;
 	}
 
+	public static class ResourceConvertChangeData {
+		public String key;
+		public String resource_key;
+		public long change;
+	}
+
 	public static class ResourceStatus extends HashMap<String, ResourceValue> {
 
 		/**
@@ -25,6 +31,31 @@ public class HikariResourceProtocolDef {
 		public Integer count;
 		public Long time;
 		public Long max;
+	}
+
+	public static class ConvertCmd {
+
+		public static class Request {
+			public String resource_convert_key;
+			public long count;
+		}
+
+		public static class Result {
+		}
+
+	}
+
+	public static class SetUserResourceCountCmd {
+
+		public static class Request {
+			public String username;
+			public String resource_key;
+			public long count;
+		}
+
+		public static class Result {
+		}
+
 	}
 
 }

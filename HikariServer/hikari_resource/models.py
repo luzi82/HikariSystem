@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from ajax.exceptions import AJAXError
+from django.core.exceptions import ObjectDoesNotExist
 
 class HsResource(models.Model):
     
@@ -16,12 +17,37 @@ class HsResource(models.Model):
     init_count = models.IntegerField()
 
 
+class HsUserResourceManager(models.Manager):
+    
+    def get(self,user,resource_key,*args,**kwargs):
+        try:
+            return models.Manager.get(
+                self,
+                user=user,
+                resource_key=resource_key,
+                *args,**kwargs
+            )
+        except ObjectDoesNotExist:
+            pass
+        resource_db = HsResource.objects.get(key=resource_key)
+        user_resource_db = HsUserResource.objects.create(
+            user=user,
+            resource_key=resource_db.key,
+            count=resource_db.init_count,
+            time=0
+        )
+        user_resource_db.save()
+        return user_resource_db
+
+
 class HsUserResource(models.Model):
     
     user = models.ForeignKey(User,db_index=True)
     resource_key = models.CharField(max_length=64)
     count = models.IntegerField()
     time = models.BigIntegerField()
+    
+    objects = HsUserResourceManager()
 
     class Meta:
         index_together = [
@@ -79,3 +105,28 @@ class HsUserResource(models.Model):
             if self.time < time:
                 self.time = time
         self.save()
+        
+    def change(self,value,time):
+        if(value>0):
+            self.add(value,time)
+        else:
+            self.consume(value,time)
+
+
+class HsResourceConvertChange(models.Model):
+
+    HIKARI_STATIC_NAME = "resource_convert_change"
+
+    key = models.CharField(max_length=64, db_index=True)
+    resource_key = models.CharField(max_length=64)
+    change = models.BigIntegerField()
+
+    def check_resource(self,user,count,now):
+        if self.change > 0 :
+            return
+        user_resource = HsUserResource.objects.get(user=user,resource_key=self.resource_key)
+        user_resource.check(count*(-self.change),now)
+
+    def process(self,user,count,now):
+        user_resource = HsUserResource.objects.get(user=user,resource_key=self.resource_key)
+        user_resource.change(count*self.change,now)

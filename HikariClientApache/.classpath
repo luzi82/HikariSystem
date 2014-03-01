@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="/import/lib/apache/httpcore-4.3.jar"/>
 	<classpathentry kind="lib" path="/import/lib/apache/httpcore-nio-4.3.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/HikariBase"/>
+	<classpathentry kind="lib" path="/import/lib/apache/commons-io-2.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -14,7 +14,7 @@ logger = getLogger('django.request')
 @decorator
 def login_required(f, *args, **kwargs):
     if not args[0].user.is_authenticated():
-        raise AJAXError(403, _('User must be authenticated.'))
+        raise AJAXError(401, _('User must be authenticated.'))
 
     return f(*args, **kwargs)
 
@@ -22,7 +22,7 @@ def login_required(f, *args, **kwargs):
 @decorator
 def stuff_required(f, *args, **kwargs):
     if not args[0].user.is_authenticated():
-        raise AJAXError(403, _('User must be authenticated.'))
+        raise AJAXError(401, _('User must be authenticated.'))
     if not args[0].user.is_staff:
         raise AJAXError(403, _('User must be staff.'))
 

@@ -18,6 +18,15 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'hikari_resource', ['HsResource'])
 
+        # Adding model 'HsResourceConvertChange'
+        db.create_table(u'hikari_resource_hsresourceconvertchange', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+            ('resource_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
+            ('change', self.gf('django.db.models.fields.BigIntegerField')()),
+        ))
+        db.send_create_signal(u'hikari_resource', ['HsResourceConvertChange'])
+
         # Adding model 'HsUserResource'
         db.create_table(u'hikari_resource_hsuserresource', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -38,6 +47,9 @@ class Migration(SchemaMigration):
 
         # Deleting model 'HsResource'
         db.delete_table(u'hikari_resource_hsresource')
+
+        # Deleting model 'HsResourceConvertChange'
+        db.delete_table(u'hikari_resource_hsresourceconvertchange')
 
         # Deleting model 'HsUserResource'
         db.delete_table(u'hikari_resource_hsuserresource')
@@ -87,6 +99,13 @@ class Migration(SchemaMigration):
             'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
             'max': ('django.db.models.fields.BigIntegerField', [], {}),
             'type': ('django.db.models.fields.IntegerField', [], {})
+        },
+        u'hikari_resource.hsresourceconvertchange': {
+            'Meta': {'object_name': 'HsResourceConvertChange'},
+            'change': ('django.db.models.fields.BigIntegerField', [], {}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
+            'resource_key': ('django.db.models.fields.CharField', [], {'max_length': '64'})
         },
         u'hikari_resource.hsuserresource': {
             'Meta': {'object_name': 'HsUserResource', 'index_together': "[['user', 'resource_key']]"},

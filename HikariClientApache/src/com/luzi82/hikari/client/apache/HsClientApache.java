@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -93,6 +94,9 @@ public class HsClientApache implements HsHttpClient {
 				int code = hr.getStatusLine().getStatusCode();
 				System.err.println("P9wc1jhk code: " + code);
 				if (code != 200) {
+					String msg = IOUtils.toString(hr.getEntity().getContent(),
+							"utf-8");
+					System.err.println("PuMzYp8X code: " + msg);
 					throw new StatusCodeException(code);
 				}
 				HttpEntity he = hr.getEntity();

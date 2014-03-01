@@ -15,6 +15,7 @@ public class AbstractTest {
 	public static Random RANDOM = new Random();
 
 	public static String SERVER = "http://192.168.1.50";
+//	public static String SERVER = "http://localhost:8000";
 	public static String TEST_DEV = "test_dev";
 	public static String BACKDOOR_FILENAME = "../HikariServer/backdoor.json";
 	public static long BACKDOOR_PERIOD = 10000; // 10 sec backdoor open
@@ -28,6 +29,14 @@ public class AbstractTest {
 	public static void createLogin(HsClient client) throws Exception {
 		User.createUser(client, TEST_DEV, null).get(5, TimeUnit.SECONDS);
 		User.login(client, null).get(5, TimeUnit.SECONDS);
+	}
+
+	public static HsClient createAdmin() throws Exception {
+		HsClient client = createClient();
+		client.put(User.APP_NAME, User.DB_USERNAME, "admin", null).get();
+		client.put(User.APP_NAME, User.DB_PASSWORD, "password", null).get();
+		User.login(client, null).get();
+		return client;
 	}
 
 }
