@@ -39,6 +39,8 @@ public class CsvParser {
 		LinkedList<Data> ret = new LinkedList<Data>();
 		while (csvDataItr.hasNext()) {
 			String[] dataRow = csvDataItr.next();
+//			System.err.println("yGvAyBxC dataRow.length "+dataRow.length);
+//			System.err.println("hUmRvex9 "+StringUtils.join(dataRow, "_"));
 			Data data = dataClass.newInstance();
 			for (Field dataClassField : dataClassFieldAry) {
 				if (Modifier.isStatic(dataClassField.getModifiers())) {
@@ -46,6 +48,7 @@ public class CsvParser {
 				}
 				String fieldname = dataClassField.getName();
 				int colIdx = colNameToIdx.get(fieldname);
+//				System.err.println("yGvAyBxC colIdx "+colIdx);
 				Class dataClassFieldType = dataClassField.getType();
 				if (dataClassFieldType == String.class) {
 					dataClassField.set(data, dataRow[colIdx]);

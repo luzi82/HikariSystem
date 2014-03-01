@@ -13,6 +13,7 @@ import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.Quest;
 import com.luzi82.hikari.client.Resource;
 import com.luzi82.hikari.client.User;
+import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestStartCmd;
 
 public class QuestTest extends AbstractTest {
 
@@ -148,5 +149,35 @@ public class QuestTest extends AbstractTest {
 			Assert.assertTrue(count1 < count0);
 			Assert.assertTrue(count1 >= count0 - cost);
 		}
+	}
+
+	@Test
+	public void testQuestReward() throws Exception {
+		HsClient client = createClient();
+		client.syncData(null).get();
+		createLogin(client);
+
+		Resource.Mgr resMgr = new Resource.Mgr(client);
+
+		List<Quest.QuestEntryData> questEntryList = Quest
+				.getQuestEntryDataList(client);
+		Quest.QuestEntryData questEntry = questEntryList.get(0);
+
+		long now;
+		now = System.currentTimeMillis();
+
+		long oldCoin = resMgr.value("coin", now);
+
+		QuestStartCmd.Result startResult = Quest.questStart(client,
+				questEntry.key, null).get();
+		Quest.questEnd(client, startResult.quest_instance.id, true, null);
+
+		now = System.currentTimeMillis();
+
+		long newCoin = resMgr.value("coin", now);
+
+		Assert.assertTrue(String.format("old: %d,  new: %d", oldCoin, newCoin),
+				newCoin > oldCoin);
+
 	}
 }
