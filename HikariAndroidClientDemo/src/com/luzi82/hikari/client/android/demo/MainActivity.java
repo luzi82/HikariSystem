@@ -5,6 +5,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -115,21 +116,12 @@ public class MainActivity extends FragmentActivity {
 
 		@Override
 		public int getCount() {
-			// Show 3 total pages.
-			return 3;
+			return PAGE_DEF_ARY.length;
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			switch (position) {
-			case 0:
-				return "Main";
-			case 1:
-				return "Quest list";
-			case 2:
-				return "Quest";
-			}
-			return null;
+			return PAGE_DEF_ARY[position].title;
 		}
 	}
 
@@ -154,16 +146,18 @@ public class MainActivity extends FragmentActivity {
 			// savedInstanceState.getInt(ARG_SECTION_NUMBER);
 			int section_number = getArguments().getInt(ARG_SECTION_NUMBER);
 			// System.err.println("znl2P9it section_number " + section_number);
-			switch (section_number) {
-			case 0:
-				return new LoginView(container.getContext());
-			case 1:
-				return new QuestListView(container.getContext());
-			case 2:
-				return new QuestView(container.getContext());
-			default:
-				return null;
-			}
+			// switch (section_number) {
+			// case 0:
+			// return new LoginView(container.getContext());
+			// case 1:
+			// return new QuestListView(container.getContext());
+			// case 2:
+			// return new QuestView(container.getContext());
+			// default:
+			// return null;
+			// }
+			return PAGE_DEF_ARY[section_number].onCreateView(container
+					.getContext());
 		}
 	}
 
@@ -181,38 +175,41 @@ public class MainActivity extends FragmentActivity {
 		foregroundObservable.setNotify(true);
 	}
 
-	// private void startLoad() {
-	// // mSectionsPagerAdapter.startUpdate(mViewPager);
-	// startLoadDialog = ProgressDialog.show(MainActivity.this, "Sync",
-	// "Wait...", false, false, null);
-	// new StartLoadFuture(new FutureCallback<Void>() {
-	// @Override
-	// public void failed(Exception ex) {
-	// System.err.println("gvpMHtXv failed");
-	// startLoadDialog.dismiss();
-	// startLoadDialog = null;
-	// }
-	//
-	// @Override
-	// public void completed(Void result) {
-	// System.err.println("gvpMHtXv completed");
-	// startLoadDialog.dismiss();
-	// startLoadDialog = null;
-	// // runOnUiThread(new Runnable() {
-	// // @Override
-	// // public void run() {
-	// // mSectionsPagerAdapter = new SectionsPagerAdapter(
-	// // getSupportFragmentManager());
-	// // mViewPager.setAdapter(mSectionsPagerAdapter);
-	// // }
-	// // });
-	// }
-	//
-	// @Override
-	// public void cancelled() {
-	// System.err.println("rMcN7Rkw cancelled");
-	// }
-	// }).start();
-	// }
+	public static abstract class PageDef {
+		public final String title;
+
+		public abstract View onCreateView(Context context);
+
+		public PageDef(String title) {
+			this.title = title;
+		}
+	}
+
+	public static final PageDef[] PAGE_DEF_ARY = { //
+	new PageDef("User") {
+		@Override
+		public View onCreateView(Context context) {
+			return new LoginView(context);
+		}
+	}, //
+			new PageDef("Resource") {
+				@Override
+				public View onCreateView(Context context) {
+					return new ResourceView(context);
+				}
+			}, //
+			new PageDef("Quest list") {
+				@Override
+				public View onCreateView(Context context) {
+					return new QuestListView(context);
+				}
+			},//
+			new PageDef("Quest") {
+				@Override
+				public View onCreateView(Context context) {
+					return new QuestView(context);
+				}
+			}, //
+	};
 
 }

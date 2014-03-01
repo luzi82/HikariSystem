@@ -2,42 +2,26 @@ package com.luzi82.hikari.client.android.demo;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Future;
 
 import android.content.Context;
 import android.os.Build;
-import android.view.View;
-import android.widget.ArrayAdapter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.concurrent.GuriFuture;
-import com.luzi82.hikari.client.Resource;
 import com.luzi82.hikari.client.User;
-import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ResourceData;
 import com.luzi82.hikari.client.protocol.HikariUserProtocolDef.CreateUserCmd;
 import com.luzi82.hikari.client.protocol.HikariUserProtocolDef.LoginCmd;
 import com.luzi82.hikari.client.protocol.HikariUserProtocolDef.LoginCmd.Result;
-import com.luzi82.lang.WeakObserver;
 
 public class LoginView extends HikariListView implements
 		HikariListView.UpdateList {
 
-	// Listener<Long> dataSyncTimeListener;
-	// Listener<Boolean> loginListener;
-
 	ObjectMapper objectMapper;
-
-	Resource.Mgr resourceMgr;
-
-	UpdateListObserver updateListObserver;
 
 	public LoginView(Context context) {
 		super(context);
@@ -45,39 +29,9 @@ public class LoginView extends HikariListView implements
 		objectMapper = new ObjectMapper();
 		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 
-		// dataSyncTimeListener = new Listener<Long>() {
-		// @Override
-		// public void onValueDirty(Value<Long> v) {
-		// System.err.println("PyJcV4bM");
-		// updateList();
-		// }
-		// };
-		updateListObserver = new UpdateListObserver(this);
-
-		// addOnAttachStateChangeListener(new OnAttachStateChangeListener() {
-		// @Override
-		// public void onViewDetachedFromWindow(View v) {
-		// }
-		//
-		// @Override
-		// public void onViewAttachedToWindow(View v) {
-		// }
-		// });
-
-		// setOnFocusChangeListener(new OnFocusChangeListener() {
-		// @Override
-		// public void onFocusChange(View v, boolean hasFocus) {
-		// enableTimer(isShown());
-		// }
-		// });
-
-		getMain().dataSyncTimeObservable.addObserver(updateListObserver);
-		User.loginDoneObservable(getClient()).addObserver(updateListObserver);
+		User.loginDoneObservable(getClient()).addObserver(
+				new NotifyDataSetChangedObserver(this));
 		updateList();
-
-		getMain().foregroundObservable
-				.addObserver(new UpdateTimerObserver(this));
-		updateTimer();
 	}
 
 	public void updateList() {
@@ -118,26 +72,14 @@ public class LoginView extends HikariListView implements
 				return User.login(getClient(), this);
 			}
 		});
-
-		List<ResourceData> resourceList = Resource
-				.getResourceDataList(getClient());
-		if ((User.loginDoneObservable(getClient()).get())
-				&& (resourceList != null)) {
-			resourceMgr = new Resource.Mgr(getClient());
-			for (ResourceData resource : resourceList) {
-				itemList.add(new Item(resource.key) {
-					@Override
-					public String toString() {
-						String key = super.toString();
-						return "res."
-								+ key
-								+ " = "
-								+ resourceMgr.value(key,
-										System.currentTimeMillis());
-					}
-				});
+		itemList.add(new Item(null) {
+			@Override
+			public String toString() {
+				return "Login done: "
+						+ (User.loginDoneObservable(getClient()).get() ? "true"
+								: "false");
 			}
-		}
+		});
 
 		setItemList(itemList);
 	}
@@ -168,81 +110,6 @@ public class LoginView extends HikariListView implements
 						.currentTimeMillis());
 				completed(null);
 			}
-		}
-
-	}
-
-	Timer updateTimer;
-
-	synchronized void timerOn() {
-		System.err.println("Xj8Xpw2I");
-		if (updateTimer != null)
-			return;
-		updateTimer = new Timer();
-		updateTimer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				System.err.println("Hd4j1aP0");
-				getMain().runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						final ArrayAdapter aa = (ArrayAdapter) getAdapter();
-						if (aa == null)
-							return;
-						aa.notifyDataSetChanged();
-					}
-				});
-				updateTimer();
-			}
-		}, 500, 500);
-	}
-
-	synchronized void timerOff() {
-		System.err.println("7rdRdgSh");
-		if (updateTimer == null)
-			return;
-		updateTimer.cancel();
-		updateTimer = null;
-	}
-
-	void enableTimer(boolean v) {
-		if (v)
-			timerOn();
-		else
-			timerOff();
-	}
-
-	void updateTimer() {
-		enableTimer(shouldTimerEnable());
-	}
-
-	boolean shouldTimerEnable() {
-		return isShown() && getMain().foregroundObservable.get();
-	}
-
-	@Override
-	protected void onVisibilityChanged(View changedView, int visibility) {
-		System.err.println("Kf5TiZtn");
-		updateTimer();
-		super.onVisibilityChanged(changedView, visibility);
-	}
-
-	@Override
-	protected void onWindowVisibilityChanged(int visibility) {
-		System.err.println("sz8nPPfg");
-		updateTimer();
-		super.onWindowVisibilityChanged(visibility);
-	}
-
-	static class UpdateTimerObserver extends WeakObserver<LoginView> {
-
-		public UpdateTimerObserver(LoginView host) {
-			super(host);
-		}
-
-		@Override
-		protected void update(LoginView h, Observable o, Object arg) {
-			h.updateTimer();
 		}
 
 	}

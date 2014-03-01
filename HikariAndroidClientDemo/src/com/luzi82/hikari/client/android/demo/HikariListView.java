@@ -8,6 +8,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.luzi82.concurrent.FutureCallback;
@@ -118,6 +119,24 @@ public class HikariListView extends ListView {
 
 	public interface UpdateList {
 		public void updateList();
+	}
+
+	protected static class NotifyDataSetChangedObserver extends
+			WeakObserver<HikariListView> {
+		public NotifyDataSetChangedObserver(HikariListView host) {
+			super(host);
+		}
+
+		@Override
+		protected void update(final HikariListView h, Observable o, Object arg) {
+			h.getMain().runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					BaseAdapter a = (BaseAdapter) h.getAdapter();
+					a.notifyDataSetChanged();
+				}
+			});
+		}
 	}
 
 }
