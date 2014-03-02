@@ -3,6 +3,25 @@ from django.contrib.auth.models import User
 from ajax.exceptions import AJAXError
 from django.core.exceptions import ObjectDoesNotExist
 
+class HsResourceChangeModel(models.Model):
+
+    resource_key = models.CharField(max_length=64)
+    change = models.BigIntegerField()
+    
+    class Meta:
+        abstract = True
+
+    def check_resource(self,user,count,now):
+        if self.change > 0 :
+            return
+        user_resource = HsUserResource.objects.get(user=user,resource_key=self.resource_key)
+        user_resource.check(count*(-self.change),now)
+
+    def process(self,user,count,now):
+        user_resource = HsUserResource.objects.get(user=user,resource_key=self.resource_key)
+        user_resource.change(count*self.change,now)
+
+
 class HsResource(models.Model):
     
     HIKARI_STATIC_NAME = "resource"
@@ -113,20 +132,8 @@ class HsUserResource(models.Model):
             self.consume(-value,time)
 
 
-class HsResourceConvertChange(models.Model):
+class HsResourceConvertChange(HsResourceChangeModel):
 
     HIKARI_STATIC_NAME = "resource_convert_change"
 
     resource_convert_key = models.CharField(max_length=64, db_index=True)
-    resource_key = models.CharField(max_length=64)
-    change = models.BigIntegerField()
-
-    def check_resource(self,user,count,now):
-        if self.change > 0 :
-            return
-        user_resource = HsUserResource.objects.get(user=user,resource_key=self.resource_key)
-        user_resource.check(count*(-self.change),now)
-
-    def process(self,user,count,now):
-        user_resource = HsUserResource.objects.get(user=user,resource_key=self.resource_key)
-        user_resource.change(count*self.change,now)
