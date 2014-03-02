@@ -150,6 +150,7 @@ public class Main {
 					status.appName = appName;
 					status.jname = camelToLower(classSimpleName.substring(0,
 							classSimpleName.length() - 6));
+					status.cname = dataClass.getSimpleName();
 					status.cnamefull = dataClass.getCanonicalName();
 					statusList0.add(status);
 					statusList.add(status);
@@ -249,6 +250,7 @@ public class Main {
 	public static class Status {
 		public String appName;
 		public String cnamefull;
+		public String cname;
 		public String jname;
 
 		public String getAppName() {
@@ -257,6 +259,10 @@ public class Main {
 
 		public String getJname() {
 			return jname;
+		}
+
+		public String getCname() {
+			return cname;
 		}
 
 		public String getCnamefull() {

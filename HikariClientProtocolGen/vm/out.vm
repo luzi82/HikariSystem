@@ -24,7 +24,7 @@ public class ${main}Protocol extends ${main}ProtocolDef {
 #end
 #foreach( $status in $status_list )
 
-	public static Value<${status.Cnamefull}> getStatusValue(
+	public static Value<${status.Cnamefull}> get${status.Cname}Value(
 		final HsCmdManager cmdManager
 	) {
 		return cmdManager.getStatusValue(
