@@ -107,7 +107,7 @@ public class QuestTest extends AbstractTest {
 		client.syncData(null).get();
 		createLogin(client);
 
-		Resource.Mgr resMgr = new Resource.Mgr(client);
+		// Resource.Mgr resMgr = new Resource.Mgr(client);
 
 		List<Quest.QuestEntryData> questEntryList = Quest
 				.getQuestEntryDataList(client);
@@ -129,7 +129,7 @@ public class QuestTest extends AbstractTest {
 
 		for (Quest.QuestCostData questCost : questCostList) {
 			String key = questCost.resource_key;
-			long count0 = resMgr.value(key, now);
+			long count0 = Resource.value(client, key, now);
 			int cost = questCost.count;
 			Assert.assertTrue(count0 >= cost);
 			oldValue.put(key, count0);
@@ -142,7 +142,7 @@ public class QuestTest extends AbstractTest {
 		for (Quest.QuestCostData questCost : questCostList) {
 			String key = questCost.resource_key;
 			long count0 = oldValue.get(key);
-			long count1 = resMgr.value(key, now);
+			long count1 = Resource.value(client, key, now);
 			int cost = questCost.count;
 			System.err.println("count0 " + count0);
 			System.err.println("count1 " + count1);
@@ -157,7 +157,7 @@ public class QuestTest extends AbstractTest {
 		client.syncData(null).get();
 		createLogin(client);
 
-		Resource.Mgr resMgr = new Resource.Mgr(client);
+		// Resource.Mgr resMgr = new Resource.Mgr(client);
 
 		List<Quest.QuestEntryData> questEntryList = Quest
 				.getQuestEntryDataList(client);
@@ -166,7 +166,7 @@ public class QuestTest extends AbstractTest {
 		long now;
 		now = System.currentTimeMillis();
 
-		long oldCoin = resMgr.value("coin", now);
+		long oldCoin = Resource.value(client, "coin", now);
 
 		QuestStartCmd.Result startResult = Quest.questStart(client,
 				questEntry.key, null).get();
@@ -174,7 +174,7 @@ public class QuestTest extends AbstractTest {
 
 		now = System.currentTimeMillis();
 
-		long newCoin = resMgr.value("coin", now);
+		long newCoin = Resource.value(client, "coin", now);
 
 		Assert.assertTrue(String.format("old: %d,  new: %d", oldCoin, newCoin),
 				newCoin > oldCoin);

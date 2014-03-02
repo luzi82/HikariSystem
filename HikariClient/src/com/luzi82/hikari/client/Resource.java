@@ -1,52 +1,42 @@
 package com.luzi82.hikari.client;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.ObjectUtils;
-
 import com.luzi82.hikari.client.protocol.HikariResourceProtocol;
+import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ResourceConvertChangeData;
 
 public class Resource extends HikariResourceProtocol {
 
-	// public static int getCount(
-	// List<ResourceProtocolDef.HsResourceData> dataList,
-	// Status resourceStatus0, String resource_key) {
-	// for (ResourceValue rkc : resourceStatus0.resource_value_list) {
-	// if (ObjectUtils.equals(rkc.resource_key, resource_key)) {
-	// return rkc.count;
-	// }
-	// }
-	// return 0;
-	// }
-
-	public static class Mgr {
-		final HsClient client;
-
-		public Mgr(HsClient client) {
-			this.client = client;
-		}
-
-		public long value(String resource_key, long now) {
-			Map<String, ResourceValue> dataList = getStatusValue(client).get();
-			ResourceValue rv = dataList.get(resource_key);
-			// for (ResourceValue value : dataList) {
-			// if (!ObjectUtils.equals(resource_key, value.resource_key))
-			// continue;
-			// rv = value;
-			// break;
-			// }
-			if (rv == null)
-				return 0;
-			if (rv.count != null)
-				return rv.count;
-			if (rv.time != null) {
-				long ret = client.getServerTime(now) + rv.max - rv.time;
-				ret = Math.min(ret, rv.max);
-				ret = Math.max(ret, 0);
-				return ret;
-			}
+	public static long value(HsClient client, String resource_key, long now) {
+		Map<String, ResourceValue> dataList = getStatusValue(client).get();
+		ResourceValue rv = dataList.get(resource_key);
+		if (rv == null)
 			return 0;
+		if (rv.count != null)
+			return rv.count;
+		if (rv.time != null) {
+			long ret = client.getServerTime(now) + rv.max - rv.time;
+			ret = Math.min(ret, rv.max);
+			ret = Math.max(ret, 0);
+			return ret;
 		}
+		return 0;
+	}
+
+	public static List<String> getConvertList(HsClient client) {
+		List<String> ret = new LinkedList<String>();
+		List<ResourceConvertChangeData> resourceConvertChangeDataList = getResourceConvertChangeDataList(client);
+
+		for (ResourceConvertChangeData resourceConvertChangeData : resourceConvertChangeDataList) {
+			String key = resourceConvertChangeData.key;
+			if (ret.contains(key))
+				continue;
+			ret.add(key);
+		}
+
+		return ret;
 	}
 
 }

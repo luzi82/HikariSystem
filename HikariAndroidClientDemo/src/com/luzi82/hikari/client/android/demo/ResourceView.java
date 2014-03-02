@@ -18,7 +18,7 @@ import com.luzi82.lang.WeakObserver;
 public class ResourceView extends HikariListView implements
 		HikariListView.UpdateList {
 
-	Resource.Mgr resourceMgr;
+	// Resource.Mgr resourceMgr;
 
 	UpdateListObserver updateListObserver;
 
@@ -43,7 +43,7 @@ public class ResourceView extends HikariListView implements
 				.getResourceDataList(getClient());
 		if ((User.loginDoneObservable(getClient()).get())
 				&& (resourceList != null)) {
-			resourceMgr = new Resource.Mgr(getClient());
+			// resourceMgr = new Resource.Mgr(getClient());
 			for (ResourceData resource : resourceList) {
 				itemList.add(new Item(resource.key) {
 					@Override
@@ -52,7 +52,7 @@ public class ResourceView extends HikariListView implements
 						return "res."
 								+ key
 								+ " = "
-								+ resourceMgr.value(key,
+								+ Resource.value(getClient(), key,
 										System.currentTimeMillis());
 					}
 				});

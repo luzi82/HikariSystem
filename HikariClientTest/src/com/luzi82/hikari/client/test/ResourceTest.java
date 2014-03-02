@@ -1,5 +1,7 @@
 package com.luzi82.hikari.client.test;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -27,8 +29,25 @@ public class ResourceTest extends AbstractTest {
 
 		Resource.convert(client, "coin_to_gold", 1, null).get();
 
-		Resource.Mgr rMgr = new Resource.Mgr(client);
-		Assert.assertEquals(10, rMgr.value("gold", System.currentTimeMillis()));
+		Assert.assertEquals(10,
+				Resource.value(client, "gold", System.currentTimeMillis()));
+	}
+
+	@Test
+	public void testConvertList() throws Exception {
+		HsClient client = createClient();
+		client.syncData(null).get();
+		createLogin(client);
+
+		List<String> convertList = Resource.getConvertList(client);
+		Assert.assertTrue(convertList.size() >= 1);
+		Assert.assertEquals("coin_to_gold", convertList.get(0));
+
+		if (convertList.size() > 1) {
+			for (int i = 1; i < convertList.size(); ++i) {
+				Assert.assertNotEquals("coin_to_gold", convertList.get(i));
+			}
+		}
 	}
 
 }
