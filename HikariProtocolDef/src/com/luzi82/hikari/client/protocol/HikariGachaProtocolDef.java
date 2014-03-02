@@ -21,7 +21,7 @@ public class HikariGachaProtocolDef {
 		}
 
 		public static class Result {
-			public List<Integer> item_id_list;
+			public List<Integer> user_card_id_list;
 		}
 
 	}

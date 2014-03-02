@@ -5,10 +5,12 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.luzi82.hikari.client.Card;
 import com.luzi82.hikari.client.Gacha;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.Resource;
 import com.luzi82.hikari.client.User;
+import com.luzi82.hikari.client.protocol.HikariGachaProtocolDef.GachaCmd;
 import com.luzi82.hikari.client.protocol.HikariProtocol;
 
 public class GachaTest extends AbstractTest {
@@ -31,10 +33,15 @@ public class GachaTest extends AbstractTest {
 		Assert.assertEquals(10000,
 				Resource.value(client, "gold", System.currentTimeMillis()));
 
-		Gacha.gacha(client, "gacha_0", null).get();
+		GachaCmd.Result gachaResult = Gacha.gacha(client, "gacha_0", null)
+				.get();
 
 		Assert.assertEquals(9995,
 				Resource.value(client, "gold", System.currentTimeMillis()));
+		Assert.assertEquals(1, gachaResult.user_card_id_list.size());
+
+		Assert.assertTrue(Card.getCardListStatusObservable(client).get()
+				.containsKey(gachaResult.user_card_id_list.get(0)));
 	}
 
 	@Test
