@@ -14,3 +14,8 @@ class HsUserCard(models.Model):
 
     user = models.ForeignKey(User,db_index=True)
     card_type_key = models.CharField(max_length=64)
+
+
+class HsInitUserCard(models.Model):
+
+    card_type_key = models.CharField(max_length=64)
