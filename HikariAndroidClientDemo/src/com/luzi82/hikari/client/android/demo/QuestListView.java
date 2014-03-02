@@ -2,14 +2,13 @@ package com.luzi82.hikari.client.android.demo;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 
 import android.content.Context;
 
 import com.luzi82.concurrent.DummyFutureCallback;
 import com.luzi82.hikari.client.Quest;
-import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestCostResourceChangeData;
-import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestEntryData;
 import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestStartCmd;
 import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestStartCmd.Result;
 
@@ -41,14 +40,12 @@ public class QuestListView extends HikariListView implements
 	}
 
 	public void updateList() {
-		List<QuestEntryData> questEntryList = Quest
-				.getQuestEntryDataList(getClient());
-		List<QuestCostResourceChangeData> questCostList = Quest
-				.getQuestCostResourceChangeDataList(getClient());
+		Map<String, Quest.Entry> entryMap = Quest.getEntryMap(getClient());
+
 		List<Item> itemList = new LinkedList<Item>();
-		if (questEntryList != null) {
-			for (final QuestEntryData questEntry : questEntryList) {
-				long change = Quest.get(questCostList, questEntry.key, "ap").change;
+		if (entryMap != null) {
+			for (final Quest.Entry questEntry : entryMap.values()) {
+				long change = questEntry.resourceChangeDict.get("ap").change;
 				itemList.add(new FutureDialogItem<QuestStartCmd.Result>(String
 						.format("%s: %d", questEntry.key, change),
 						new DummyFutureCallback<QuestStartCmd.Result>(null) {

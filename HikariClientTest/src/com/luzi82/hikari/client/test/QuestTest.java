@@ -107,27 +107,16 @@ public class QuestTest extends AbstractTest {
 		client.syncData(null).get();
 		createLogin(client);
 
-		// Resource.Mgr resMgr = new Resource.Mgr(client);
-
 		List<Quest.QuestEntryData> questEntryList = Quest
 				.getQuestEntryDataList(client);
-		Quest.QuestEntryData questEntry = questEntryList.get(0);
-
-		List<Quest.QuestCostResourceChangeData> allQuestCostList = Quest
-				.getQuestCostResourceChangeDataList(client);
-		List<Quest.QuestCostResourceChangeData> questCostList = Quest.filter(
-				allQuestCostList, questEntry.key);
-
-		// Resource.Status resourceStatus0 =
-		// Resource.getStatusValue(client).get();
-		// Assert.assertNotNull(resourceStatus0);
+		Quest.Entry entry = Quest.getEntryMap(client).get("quest_0");
 
 		long now;
 		now = System.currentTimeMillis();
 
 		Map<String, Long> oldValue = new HashMap<String, Long>();
 
-		for (Quest.QuestCostResourceChangeData questCost : questCostList) {
+		for (Quest.ResourceChange questCost : entry.resourceChangeDict.values()) {
 			String key = questCost.resource_key;
 			long count0 = Resource.value(client, key, now);
 			long change = questCost.change;
@@ -135,11 +124,11 @@ public class QuestTest extends AbstractTest {
 			oldValue.put(key, count0);
 		}
 
-		Quest.questStart(client, questEntry.key, null).get();
+		Quest.questStart(client, "quest_0", null).get();
 
 		now = System.currentTimeMillis();
 
-		for (Quest.QuestCostResourceChangeData questCost : questCostList) {
+		for (Quest.ResourceChange questCost : entry.resourceChangeDict.values()) {
 			String key = questCost.resource_key;
 			long count0 = oldValue.get(key);
 			long count1 = Resource.value(client, key, now);
