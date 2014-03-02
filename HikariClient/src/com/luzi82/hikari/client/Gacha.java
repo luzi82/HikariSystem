@@ -40,7 +40,7 @@ public class Gacha extends HikariGachaProtocol {
 
 	public static class Cost {
 		public String resource_key;
-		public int value;
+		public long value;
 	}
 
 }

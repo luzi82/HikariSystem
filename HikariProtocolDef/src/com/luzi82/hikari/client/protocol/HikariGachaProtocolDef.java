@@ -11,7 +11,7 @@ public class HikariGachaProtocolDef {
 	public static class GachaCostData {
 		public String gacha_key;
 		public String resource_key;
-		public int value;
+		public long value;
 	}
 
 	public static class GachaCmd {
