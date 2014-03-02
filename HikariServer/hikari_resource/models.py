@@ -110,7 +110,7 @@ class HsUserResource(models.Model):
         if(value>0):
             self.add(value,time)
         else:
-            self.consume(value,time)
+            self.consume(-value,time)
 
 
 class HsResourceConvertChange(models.Model):
