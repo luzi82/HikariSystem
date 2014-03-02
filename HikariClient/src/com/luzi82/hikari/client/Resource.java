@@ -44,10 +44,7 @@ public class Resource extends HikariResourceProtocol {
 		for (ResourceConvertChangeData resourceConvertChangeData : resourceConvertChangeDataList) {
 			String convert_key = resourceConvertChangeData.parent_key;
 			ConvertEntry convertEntry = ret.get(convert_key);
-			Change change = new Change();
-			change.resource_key = resourceConvertChangeData.resource_key;
-			change.change = resourceConvertChangeData.change;
-			convertEntry.changeMap.put(change.resource_key, change);
+			convertEntry.changeMap.put(resourceConvertChangeData.resource_key, resourceConvertChangeData);
 		}
 
 		return ret;
@@ -55,12 +52,7 @@ public class Resource extends HikariResourceProtocol {
 
 	public static class ConvertEntry {
 		public String key;
-		public Map<String, Change> changeMap = new HashMap<String, Change>();
-	}
-
-	public static class Change {
-		public String resource_key;
-		public long change;
+		public Map<String, AbstractResourceChangeD> changeMap = new HashMap<String, AbstractResourceChangeD>();
 	}
 
 }

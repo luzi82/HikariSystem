@@ -14,6 +14,7 @@ import com.luzi82.hikari.client.Quest;
 import com.luzi82.hikari.client.Resource;
 import com.luzi82.hikari.client.User;
 import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestStartCmd;
+import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.AbstractResourceChangeD;
 
 public class QuestTest extends AbstractTest {
 
@@ -116,7 +117,7 @@ public class QuestTest extends AbstractTest {
 
 		Map<String, Long> oldValue = new HashMap<String, Long>();
 
-		for (Quest.ResourceChange questCost : entry.resourceChangeDict.values()) {
+		for (AbstractResourceChangeD questCost : entry.resourceChangeDict.values()) {
 			String key = questCost.resource_key;
 			long count0 = Resource.value(client, key, now);
 			long change = questCost.change;
@@ -128,7 +129,7 @@ public class QuestTest extends AbstractTest {
 
 		now = System.currentTimeMillis();
 
-		for (Quest.ResourceChange questCost : entry.resourceChangeDict.values()) {
+		for (AbstractResourceChangeD questCost : entry.resourceChangeDict.values()) {
 			String key = questCost.resource_key;
 			long count0 = oldValue.get(key);
 			long count1 = Resource.value(client, key, now);
