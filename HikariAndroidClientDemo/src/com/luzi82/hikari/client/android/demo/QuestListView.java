@@ -8,7 +8,7 @@ import android.content.Context;
 
 import com.luzi82.concurrent.DummyFutureCallback;
 import com.luzi82.hikari.client.Quest;
-import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestCostData;
+import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestCostResourceChangeData;
 import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestEntryData;
 import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestStartCmd;
 import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestStartCmd.Result;
@@ -43,14 +43,14 @@ public class QuestListView extends HikariListView implements
 	public void updateList() {
 		List<QuestEntryData> questEntryList = Quest
 				.getQuestEntryDataList(getClient());
-		List<QuestCostData> questCostList = Quest
-				.getQuestCostDataList(getClient());
+		List<QuestCostResourceChangeData> questCostList = Quest
+				.getQuestCostResourceChangeDataList(getClient());
 		List<Item> itemList = new LinkedList<Item>();
 		if (questEntryList != null) {
 			for (final QuestEntryData questEntry : questEntryList) {
-				long cost = Quest.get(questCostList, questEntry.key, "ap").count;
+				long change = Quest.get(questCostList, questEntry.key, "ap").change;
 				itemList.add(new FutureDialogItem<QuestStartCmd.Result>(String
-						.format("%s: %d", questEntry.key, cost),
+						.format("%s: %d", questEntry.key, change),
 						new DummyFutureCallback<QuestStartCmd.Result>(null) {
 							@Override
 							public void completed(Result result) {

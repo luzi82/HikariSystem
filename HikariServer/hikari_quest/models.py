@@ -1,53 +1,30 @@
 from django.contrib.auth.models import User
 from django.db import models
-from hikari_resource.models import HsUserResource
+
+from hikari_resource.models import HsResourceChangeModel,\
+    HsResourceChangeGroupModel
 
 
-class HsQuestEntry(models.Model):
+class HsQuestCostResourceChange(HsResourceChangeModel):
+    
+    HIKARI_STATIC_NAME = "quest_cost_resource_change"
+
+
+class HsQuestRewardResourceChange(HsResourceChangeModel):
+    
+    HIKARI_STATIC_NAME = "quest_reward_resource_change"
+
+
+class HsQuestEntry(HsResourceChangeGroupModel):
     
     HIKARI_STATIC_NAME = "quest_entry"
     
     key = models.CharField(max_length=64,db_index=True)
-
-    def check_resource(self,user,time):
-        quest_cost_db_query = HsQuestCost.objects.filter(quest_entry_key=self.key)
-        for quest_cost_db in quest_cost_db_query:
-            HsUserResource.objects.get(
-                user=user,
-                resource_key=quest_cost_db.resource_key
-            ).check(quest_cost_db.count,time)
-
-    def reduce_resource(self,user,time):
-        quest_cost_db_query = HsQuestCost.objects.filter(quest_entry_key=self.key)
-        for quest_cost_db in quest_cost_db_query:
-            HsUserResource.objects.get(
-                user=user,
-                resource_key=quest_cost_db.resource_key
-            ).consume(quest_cost_db.count,time)
+    
+    change_model = HsQuestCostResourceChange
 
     def reward_resource(self,user,time):
-        quest_reward_db_query = HsQuestReward.objects.filter(quest_entry_key=self.key)
-        for quest_reward_db in quest_reward_db_query:
-            HsUserResource.objects.get(
-                user=user,
-                resource_key=quest_reward_db.resource_key
-            ).add(quest_reward_db.count,time)
-
-
-class HsQuestCost(models.Model):
-    
-    HIKARI_STATIC_NAME = "quest_cost"
-
-    quest_entry_key = models.CharField(max_length=64,db_index=True)
-    resource_key = models.CharField(max_length=64)
-    count = models.IntegerField()
-
-
-class HsQuestReward(models.Model):
-    
-    quest_entry_key = models.CharField(max_length=64,db_index=True)
-    resource_key = models.CharField(max_length=64)
-    count = models.IntegerField()
+        self.process(user, time, 1, HsQuestRewardResourceChange)
 
 
 class HsQuestInstance(models.Model):

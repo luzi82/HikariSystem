@@ -15,7 +15,7 @@ def quest_start(request):
     
     quest_entry = HsQuestEntry.objects.get(key=quest_entry_key)
     quest_entry.check_resource(request.user,now)
-    quest_entry.reduce_resource(request.user,now)
+    quest_entry.process(request.user,now)
     
     HsQuestInstance.objects.filter(
         user=request.user,

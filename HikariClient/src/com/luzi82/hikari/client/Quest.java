@@ -10,21 +10,22 @@ import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef;
 
 public class Quest extends HikariQuestProtocol {
 
-	public static List<QuestCostData> filter(
-			List<QuestCostData> allQuestCostList, String key) {
-		List<QuestCostData> ret = new LinkedList<HikariQuestProtocolDef.QuestCostData>();
-		for (QuestCostData data : allQuestCostList) {
-			if (ObjectUtils.equals(data.quest_entry_key, key)) {
+	public static List<QuestCostResourceChangeData> filter(
+			List<QuestCostResourceChangeData> allQuestCostList, String key) {
+		List<QuestCostResourceChangeData> ret = new LinkedList<HikariQuestProtocolDef.QuestCostResourceChangeData>();
+		for (QuestCostResourceChangeData data : allQuestCostList) {
+			if (ObjectUtils.equals(data.parent_key, key)) {
 				ret.add(data);
 			}
 		}
 		return ret;
 	}
 
-	public static QuestCostData get(List<QuestCostData> allQuestCostList,
+	public static QuestCostResourceChangeData get(
+			List<QuestCostResourceChangeData> allQuestCostList,
 			String questKey, String resourceKey) {
-		for (QuestCostData data : allQuestCostList) {
-			if (!ObjectUtils.equals(data.quest_entry_key, questKey))
+		for (QuestCostResourceChangeData data : allQuestCostList) {
+			if (!ObjectUtils.equals(data.parent_key, questKey))
 				continue;
 			if (!ObjectUtils.equals(data.resource_key, resourceKey))
 				continue;

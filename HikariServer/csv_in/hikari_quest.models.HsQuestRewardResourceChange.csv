@@ -1,4 +1,4 @@
-quest_entry_key,resource_key,count
+parent_key,resource_key,change
 quest_1,coin,1
 quest_2,coin,2
 quest_3,coin,3

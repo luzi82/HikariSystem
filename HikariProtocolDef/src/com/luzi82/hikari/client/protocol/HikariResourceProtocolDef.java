@@ -14,11 +14,14 @@ public class HikariResourceProtocolDef {
 	public static class ResourceConvertData {
 		public String key;
 	}
-
-	public static class ResourceConvertChangeData {
+	
+	public static class AbstractResourceChangeD {
 		public String parent_key;
 		public String resource_key;
 		public long change;
+	}
+
+	public static class ResourceConvertChangeData extends AbstractResourceChangeD {
 	}
 
 	public static class ResourceStatus extends TreeMap<String, ResourceValue> {

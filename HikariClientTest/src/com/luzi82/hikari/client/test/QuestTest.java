@@ -113,9 +113,9 @@ public class QuestTest extends AbstractTest {
 				.getQuestEntryDataList(client);
 		Quest.QuestEntryData questEntry = questEntryList.get(0);
 
-		List<Quest.QuestCostData> allQuestCostList = Quest
-				.getQuestCostDataList(client);
-		List<Quest.QuestCostData> questCostList = Quest.filter(
+		List<Quest.QuestCostResourceChangeData> allQuestCostList = Quest
+				.getQuestCostResourceChangeDataList(client);
+		List<Quest.QuestCostResourceChangeData> questCostList = Quest.filter(
 				allQuestCostList, questEntry.key);
 
 		// Resource.Status resourceStatus0 =
@@ -127,11 +127,11 @@ public class QuestTest extends AbstractTest {
 
 		Map<String, Long> oldValue = new HashMap<String, Long>();
 
-		for (Quest.QuestCostData questCost : questCostList) {
+		for (Quest.QuestCostResourceChangeData questCost : questCostList) {
 			String key = questCost.resource_key;
 			long count0 = Resource.value(client, key, now);
-			int cost = questCost.count;
-			Assert.assertTrue(count0 >= cost);
+			long change = questCost.change;
+			Assert.assertTrue(count0 + change >= 0);
 			oldValue.put(key, count0);
 		}
 
@@ -139,15 +139,15 @@ public class QuestTest extends AbstractTest {
 
 		now = System.currentTimeMillis();
 
-		for (Quest.QuestCostData questCost : questCostList) {
+		for (Quest.QuestCostResourceChangeData questCost : questCostList) {
 			String key = questCost.resource_key;
 			long count0 = oldValue.get(key);
 			long count1 = Resource.value(client, key, now);
-			int cost = questCost.count;
+			long change = questCost.change;
 			System.err.println("count0 " + count0);
 			System.err.println("count1 " + count1);
 			Assert.assertTrue(count1 < count0);
-			Assert.assertTrue(count1 >= count0 - cost);
+			Assert.assertTrue(count1 >= count0 + change);
 		}
 	}
 

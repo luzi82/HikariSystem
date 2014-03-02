@@ -1,15 +1,15 @@
 package com.luzi82.hikari.client.protocol;
 
+import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.AbstractResourceChangeD;
+
 public class HikariQuestProtocolDef {
 
 	public static class QuestEntryData {
 		public String key;
 	}
-	
-	public static class QuestCostData {
-		public String quest_entry_key;
-		public String resource_key;
-		public int count;
+
+	public static class QuestCostResourceChangeData extends
+			AbstractResourceChangeD {
 	}
 
 	public static class QuestInstance {
