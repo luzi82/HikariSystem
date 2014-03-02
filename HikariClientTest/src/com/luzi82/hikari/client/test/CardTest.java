@@ -23,14 +23,15 @@ public class CardTest extends AbstractTest {
 
 		Assert.assertEquals("cardtype_0", cardTypeDataList.get(0).key);
 	}
-	
+
 	@Test
 	public void testCardStatus() throws Exception {
 		HsClient client = createClient();
 		createLogin(client);
 		client.syncData(null).get();
 
-		CardListStatus cardList = Card.getCardListStatusValue(client).get();
+		CardListStatus cardList = Card.getCardListStatusObservable(client)
+				.get();
 		Assert.assertEquals(5, cardList.size());
 	}
 

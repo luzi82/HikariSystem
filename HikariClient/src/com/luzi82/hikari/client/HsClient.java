@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Observable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
@@ -21,13 +20,10 @@ import com.luzi82.concurrent.GuriFuture;
 import com.luzi82.concurrent.RetryableFuture;
 import com.luzi82.hikari.client.endpoint.HsCmdManager;
 import com.luzi82.hikari.client.protocol.gen.out.ClientInit;
-import com.luzi82.homuvalue.Value;
-import com.luzi82.homuvalue.Value.Variable;
 import com.luzi82.lang.GuriObservable;
 
 public class HsClient implements HsCmdManager {
 
-	// final public String server;
 	String server;
 	String serverHost;
 	final HsStorage storage;
@@ -37,13 +33,9 @@ public class HsClient implements HsCmdManager {
 	List<DataLoad> dataLoadList = new LinkedList<HsClient.DataLoad>();
 	final Map<String, Object> tmpMap;
 	final Map<String, List> dataMap;
-	final Map<String, Variable> statusVariableMap;
 	final Map<String, GuriObservable> statusObservableMap;
 	final Map<String, Class> statusClassMap;
-	final GuriObservable<Long> statusObservable;
 	long serverTimeOffset;
-
-	// final HsCmdManager cmdManager;
 
 	public HsClient(String aServer, HsStorage storage, Executor executor,
 			HsHttpClient jsonClient) throws URISyntaxException {
@@ -54,11 +46,8 @@ public class HsClient implements HsCmdManager {
 		mObjectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		this.dataMap = new HashMap<String, List>();
 		this.tmpMap = new HashMap<String, Object>();
-		this.statusVariableMap = new HashMap<String, Variable>();
 		this.statusObservableMap = new HashMap<String, GuriObservable>();
 		this.statusClassMap = new HashMap<String, Class>();
-		// this.statusUpdateVar = new Variable<Long>();
-		this.statusObservable = new GuriObservable();
 
 		serverHost = new URI(server).getHost();
 
@@ -117,10 +106,6 @@ public class HsClient implements HsCmdManager {
 			public void _run() throws Exception {
 				String url = String.format("%s/ajax/%s/%s.json", server,
 						appName, string);
-				// String url = server + "/ajax/hikari/" + appName + "__" +
-				// string
-				// + ".json";
-				// System.err.println(url);
 
 				String json = null;
 				json = mObjectMapper.writeValueAsString(request);
@@ -145,17 +130,12 @@ public class HsClient implements HsCmdManager {
 						Object status = mObjectMapper.convertValue(
 								status_update.getValue(),
 								statusClassMap.get(appName));
-						statusVariableMap.get(appName).set(status);
 						statusObservableMap.get(appName).setNotify(status);
 					}
-					statusObservable.setNotify(System.currentTimeMillis());
 				}
 				serverTimeOffset = res.time - System.currentTimeMillis();
 
-				// StatusUpdate statusUpdate =
-				// mObjectMapper.convertValue(res.data, StatusUpdate.class);
 				Result result = mObjectMapper.convertValue(res.data, class1);
-				// AbstractResult result0 = (AbstractResult) result;
 				completed(result);
 			}
 
@@ -290,29 +270,13 @@ public class HsClient implements HsCmdManager {
 	}
 
 	private String statusKey(String appName, String statusName) {
-		// return String.format("%s__%s", appName, statusName);
 		return statusName;
-	}
-
-	@Override
-	public <Status> Value<Status> getStatusValue(String appName,
-			String statusName, Class<Status> class1) {
-		// System.err.println("faYQHNEC getStatusValue "+appName);
-		String key = statusKey(appName, statusName);
-		return (Value<Status>) statusVariableMap.get(key);
-	}
-
-	public Observable getStatusObservable() {
-		return statusObservable;
 	}
 
 	@Override
 	public <Status> void addStatus(String appName, String statusName,
 			Class<Status> statusClass) {
-		// System.err.println("V0n72BRm addStatus "+appName);
 		String key = statusKey(appName, statusName);
-		Variable<Status> var = new Variable<Status>();
-		statusVariableMap.put(key, var);
 		GuriObservable<Status> observable = new GuriObservable<Status>();
 		statusObservableMap.put(key, observable);
 		statusClassMap.put(key, statusClass);
@@ -332,16 +296,6 @@ public class HsClient implements HsCmdManager {
 		String key = statusKey(appName, statusName);
 		return statusObservableMap.get(key);
 	}
-
-	// public Observable getObservable(String appName, String obsName) {
-	// String key = String.format("%s__%s", appName, obsName);
-	// Observable ret = appObservable.get(key);
-	// if (ret != null) {
-	// ret = new Observable();
-	// appObservable.put(key, ret);
-	// }
-	// return ret;
-	// }
 
 	// TODO change to load data from disk to memory
 	// public <Data> Future<List<Data>> getDataList(String appName,

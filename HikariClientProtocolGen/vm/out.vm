@@ -25,16 +25,6 @@ public class ${main}Protocol extends ${main}ProtocolDef {
 #end
 #foreach( $status in $status_list )
 
-	public static Value<${status.Cnamefull}> get${status.Cname}Value(
-		final HsCmdManager cmdManager
-	) {
-		return cmdManager.getStatusValue(
-			APP_NAME,
-			"${status.Jname}",
-			${status.Cnamefull}.class
-		);
-	}
-
 	public static GuriObservable<${status.Cnamefull}> get${status.Cname}Observable(
 		final HsCmdManager cmdManager
 	) {

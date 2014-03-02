@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.luzi82.hikari.client.protocol.HikariResourceProtocol;
-import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ResourceConvertChangeData;
 
 public class Resource extends HikariResourceProtocol {
 
 	public static long value(HsClient client, String resource_key, long now) {
-		Map<String, ResourceValue> dataList = getResourceStatusValue(client).get();
+		Map<String, ResourceValue> dataList = getResourceStatusObservable(
+				client).get();
 		ResourceValue rv = dataList.get(resource_key);
 		if (rv == null)
 			return 0;

@@ -14,15 +14,8 @@ public interface HsCmdManager {
 			String string, Object request, Class<Result> class1,
 			FutureCallback<Result> futureCallback);
 
-	public <Status> Value<Status> getStatusValue(String appName,
-			String statusName, Class<Status> class1);
-
 	public <Status> GuriObservable<Status> getStatusObservable(String appName,
 			String string, Class<Status> class1);
-
-	// public <Data> Future<List<Data>> getDataList(String appName, String
-	// string,
-	// Class<Data> class1, FutureCallback<List<Data>> futureCallback);
 
 	public <Data> List<Data> getDataList(String appName, String dataName,
 			Class<Data> class1);
