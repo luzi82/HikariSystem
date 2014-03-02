@@ -25,7 +25,7 @@ public class Resource extends HikariResourceProtocol {
 		return 0;
 	}
 
-	public static List<String> getConvertList(HsClient client) {
+	public static List<String> getConvertKeyList(HsClient client) {
 		List<String> ret = new LinkedList<String>();
 		List<ResourceConvertChangeData> resourceConvertChangeDataList = getResourceConvertChangeDataList(client);
 

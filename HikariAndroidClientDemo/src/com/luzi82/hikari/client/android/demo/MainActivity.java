@@ -210,6 +210,12 @@ public class MainActivity extends FragmentActivity {
 					return new QuestView(context);
 				}
 			}, //
+			new PageDef("Convert") {
+				@Override
+				public View onCreateView(Context context) {
+					return new ConvertListView(context);
+				}
+			},//
 	};
 
 }
