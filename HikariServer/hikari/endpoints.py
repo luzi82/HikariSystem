@@ -4,7 +4,7 @@ from ajax.decorators import login_required
 
 def get_time(request):
     return {
-        'time': hikari.now64()
+        'time': request.hikari.time
     }
 
 @login_required

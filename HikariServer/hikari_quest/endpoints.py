@@ -1,7 +1,6 @@
 import json
 
 from ajax.decorators import login_required
-from hikari import now64
 from hikari_quest.models import HsQuestEntry, HsQuestInstance
 
 
@@ -46,7 +45,7 @@ def quest_end(request):
     
     argJson = request.POST['arg']
     arg = json.loads(argJson)
-    now = now64()
+    now = request.hikari.time
 
     quest_instance_id = arg['quest_instance_id']
     success = arg['success']

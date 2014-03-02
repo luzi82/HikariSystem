@@ -3,8 +3,6 @@ from django.http import HttpResponse
 from django.http.response import HttpResponseServerError
 import json
 
-from hikari import now64
-
 
 # def to_response(data):
 #     if isinstance(data, HttpResponse):
@@ -36,7 +34,7 @@ def seqid(f, *args, **kwargs):
 #         result = to_response(result)
         
         if result.status_code == 200:
-            next_seqid = now64()
+            next_seqid = request.hikari.time
             request.session['next_seqid'] = next_seqid
             result.set_cookie('seqid', str(next_seqid))
         

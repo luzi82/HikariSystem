@@ -1,4 +1,3 @@
-import hikari;
 import json
 from ajax.exceptions import AJAXError
 
@@ -6,7 +5,7 @@ def pass_time(request):
     
     argJson = request.POST['arg']
     arg = json.loads(argJson)
-    now = hikari.now64()
+    now = request.hikari.time
 
     start = arg['start']
     end = arg['end']

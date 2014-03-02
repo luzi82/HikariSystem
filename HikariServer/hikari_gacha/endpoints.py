@@ -2,7 +2,6 @@ from django.contrib.auth.models import User
 import json
 
 from ajax.decorators import login_required, stuff_required
-from hikari import now64
 from hikari_resource.models import HsUserResource, HsResourceConvertChange
 from hikari_gacha.models import HsGacha
 

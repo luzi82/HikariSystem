@@ -4,7 +4,7 @@ import json
 import django.contrib.auth as auth
 import sys
 from ajax.decorators import login_required
-from hikari import now64, status
+from hikari import status
 from hikari_user.models import HsUser
 from hikari_user import on_user_created_func_list
 
@@ -12,7 +12,7 @@ def create_user(request):
     
     argJson = request.POST['arg']
     arg = json.loads(argJson)
-    now = now64()
+    now = request.hikari.time
     
     device_model = arg["device_model"]
     

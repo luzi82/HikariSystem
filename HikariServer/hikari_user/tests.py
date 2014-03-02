@@ -29,8 +29,9 @@ class SimpleTest(TestCase):
         user = User.objects.get(username=result['data']['username'])
         hsuser = HsUser.objects.get(user=user)
         self.assertEqual(hsuser.device_model, SimpleTest.TEST_DEVICE_MODEL)
-        self.assertTrue(hsuser.create_at <= now64())
-        self.assertTrue(hsuser.create_at >= now64() - 1000)
+        now = now64()
+        self.assertTrue(hsuser.create_at <= now)
+        self.assertTrue(hsuser.create_at >= now - 1000)
 
     def test_login(self):
         

@@ -2,7 +2,6 @@ from django.test import TestCase
 from django.test.client import Client
 import simplejson
 from django.contrib.auth.models import User
-from hikari import now64
 from django.core.management import call_command
 from hikari_user.models import HsUser
 from hikari_quest.models import HsQuestEntry
