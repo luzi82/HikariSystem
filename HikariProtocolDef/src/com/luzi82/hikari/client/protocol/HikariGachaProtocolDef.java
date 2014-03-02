@@ -2,16 +2,16 @@ package com.luzi82.hikari.client.protocol;
 
 import java.util.List;
 
+import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.AbstractResourceChangeD;
+
 public class HikariGachaProtocolDef {
 
 	public static class GachaData {
 		public String key;
 	}
 
-	public static class GachaCostData {
-		public String gacha_key;
-		public String resource_key;
-		public long value;
+	public static class GachaCostResourceChangeData extends
+			AbstractResourceChangeD {
 	}
 
 	public static class GachaCmd {

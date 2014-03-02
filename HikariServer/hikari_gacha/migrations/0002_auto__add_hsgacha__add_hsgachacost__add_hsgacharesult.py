@@ -15,15 +15,6 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'hikari_gacha', ['HsGacha'])
 
-        # Adding model 'HsGachaCost'
-        db.create_table(u'hikari_gacha_hsgachacost', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('gacha_key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
-            ('resource_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
-            ('value', self.gf('django.db.models.fields.BigIntegerField')()),
-        ))
-        db.send_create_signal(u'hikari_gacha', ['HsGachaCost'])
-
         # Adding model 'HsGachaResult'
         db.create_table(u'hikari_gacha_hsgacharesult', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -33,16 +24,25 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'hikari_gacha', ['HsGachaResult'])
 
+        # Adding model 'HsGachaCostResourceChange'
+        db.create_table(u'hikari_gacha_hsgachacostresourcechange', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('parent_key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+            ('resource_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
+            ('change', self.gf('django.db.models.fields.BigIntegerField')()),
+        ))
+        db.send_create_signal(u'hikari_gacha', ['HsGachaCostResourceChange'])
+
 
     def backwards(self, orm):
         # Deleting model 'HsGacha'
         db.delete_table(u'hikari_gacha_hsgacha')
 
-        # Deleting model 'HsGachaCost'
-        db.delete_table(u'hikari_gacha_hsgachacost')
-
         # Deleting model 'HsGachaResult'
         db.delete_table(u'hikari_gacha_hsgacharesult')
+
+        # Deleting model 'HsGachaCostResourceChange'
+        db.delete_table(u'hikari_gacha_hsgachacostresourcechange')
 
 
     models = {
@@ -51,12 +51,12 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
         },
-        u'hikari_gacha.hsgachacost': {
-            'Meta': {'object_name': 'HsGachaCost'},
-            'gacha_key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
+        u'hikari_gacha.hsgachacostresourcechange': {
+            'Meta': {'object_name': 'HsGachaCostResourceChange'},
+            'change': ('django.db.models.fields.BigIntegerField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'resource_key': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
-            'value': ('django.db.models.fields.BigIntegerField', [], {})
+            'parent_key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
+            'resource_key': ('django.db.models.fields.CharField', [], {'max_length': '64'})
         },
         u'hikari_gacha.hsgacharesult': {
             'Meta': {'object_name': 'HsGachaResult'},

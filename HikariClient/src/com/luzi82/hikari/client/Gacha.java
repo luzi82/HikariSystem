@@ -10,9 +10,9 @@ public class Gacha extends HikariGachaProtocol {
 
 	public static Map<String, Entry> getEntryDict(HsClient client) {
 		List<GachaData> gachaDataList = getGachaDataList(client);
-		List<GachaCostData> gachaCostDataList = getGachaCostDataList(client);
-		
-		if(gachaDataList==null)
+		List<GachaCostResourceChangeData> gachaCostDataList = getGachaCostResourceChangeDataList(client);
+
+		if (gachaDataList == null)
 			return null;
 
 		Map<String, Entry> ret = new HashMap<String, Entry>();
@@ -23,11 +23,11 @@ public class Gacha extends HikariGachaProtocol {
 			ret.put(entry.key, entry);
 		}
 
-		for (GachaCostData gachaCostData : gachaCostDataList) {
+		for (GachaCostResourceChangeData gachaCostData : gachaCostDataList) {
 			Cost cost = new Cost();
 			cost.resource_key = gachaCostData.resource_key;
-			cost.value = gachaCostData.value;
-			ret.get(gachaCostData.gacha_key).costDict.put(cost.resource_key,
+			cost.change = gachaCostData.change;
+			ret.get(gachaCostData.parent_key).resourceChangeDict.put(cost.resource_key,
 					cost);
 		}
 
@@ -37,13 +37,13 @@ public class Gacha extends HikariGachaProtocol {
 	public static class Entry {
 
 		public String key;
-		public Map<String, Cost> costDict = new HashMap<String, Gacha.Cost>();
+		public Map<String, Cost> resourceChangeDict = new HashMap<String, Gacha.Cost>();
 
 	}
 
 	public static class Cost {
 		public String resource_key;
-		public long value;
+		public long change;
 	}
 
 }
