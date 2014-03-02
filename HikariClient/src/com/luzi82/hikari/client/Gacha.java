@@ -9,10 +9,13 @@ import com.luzi82.hikari.client.protocol.HikariGachaProtocol;
 public class Gacha extends HikariGachaProtocol {
 
 	public static Map<String, Entry> getEntryDict(HsClient client) {
-		Map<String, Entry> ret = new HashMap<String, Entry>();
-
 		List<GachaData> gachaDataList = getGachaDataList(client);
 		List<GachaCostData> gachaCostDataList = getGachaCostDataList(client);
+		
+		if(gachaDataList==null)
+			return null;
+
+		Map<String, Entry> ret = new HashMap<String, Entry>();
 
 		for (GachaData gachaData : gachaDataList) {
 			Entry entry = new Entry();

@@ -55,7 +55,7 @@ public class QuestListView extends HikariListView implements
 							@Override
 							public void completed(Result result) {
 								getMain().questInstanceObservableVar
-										.set(result.quest_instance);
+										.setNotify(result.quest_instance);
 								super.completed(result);
 							}
 						}) {

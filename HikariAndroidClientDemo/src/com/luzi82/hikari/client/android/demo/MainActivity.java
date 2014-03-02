@@ -221,6 +221,12 @@ public class MainActivity extends FragmentActivity {
 					return new ConvertListView(context);
 				}
 			},//
+			new PageDef("Gacha") {
+				@Override
+				public View onCreateView(Context context) {
+					return new GachaListView(context);
+				}
+			},//
 	};
 
 }
