@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     
     'hikari',
     'hikari_admin',
+    'hikari_card',
     'hikari_dev',
     'hikari_quest',
     'hikari_resource',
