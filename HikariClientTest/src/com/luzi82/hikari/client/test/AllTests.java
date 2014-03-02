@@ -5,8 +5,9 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ AdminTest.class, CacheTest.class, ClientTest.class,
-		QuestTest.class, ResourceTest.class, SystemTest.class, UserTest.class })
+@SuiteClasses({ AdminTest.class, CacheTest.class, CardTest.class,
+		ClientTest.class, QuestTest.class, ResourceTest.class,
+		SystemTest.class, UserTest.class })
 public class AllTests {
 
 }

@@ -25,7 +25,7 @@ public class HikariCardProtocolDef {
 //	public static class CardStringValueData extends CardValueD<String> {
 //	}
 
-	public static class CardListStatus extends HashMap<String, OwnCard> {
+	public static class CardListStatus extends HashMap<Integer, Card> {
 
 		/**
 		 * 
@@ -34,7 +34,7 @@ public class HikariCardProtocolDef {
 
 	}
 
-	public static class OwnCard {
+	public static class Card {
 		public int id;
 		public String card_type_key;
 	}

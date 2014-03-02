@@ -19,9 +19,9 @@ public class CardTest extends AbstractTest {
 		client.syncData(null).get();
 
 		List<CardTypeData> cardTypeDataList = Card.getCardTypeDataList(client);
-		Assert.assertEquals(3, cardTypeDataList);
+		Assert.assertEquals(3, cardTypeDataList.size());
 
-		Assert.assertEquals("card_type_0", cardTypeDataList.get(0).key);
+		Assert.assertEquals("cardtype_0", cardTypeDataList.get(0).key);
 	}
 	
 	@Test
