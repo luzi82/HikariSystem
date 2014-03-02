@@ -1,7 +1,6 @@
 package com.luzi82.hikari.client.android.demo;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -11,14 +10,12 @@ import android.view.View;
 import android.widget.BaseAdapter;
 
 import com.luzi82.hikari.client.Resource;
-import com.luzi82.hikari.client.User;
-import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ResourceData;
+import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ResourceStatus;
+import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ResourceValue;
 import com.luzi82.lang.WeakObserver;
 
 public class ResourceView extends HikariListView implements
 		HikariListView.UpdateList {
-
-	// Resource.Mgr resourceMgr;
 
 	UpdateListObserver updateListObserver;
 
@@ -27,8 +24,10 @@ public class ResourceView extends HikariListView implements
 
 		updateListObserver = new UpdateListObserver(this);
 
-		getMain().dataSyncTimeObservable.addObserver(updateListObserver);
-		User.loginDoneObservable(getClient()).addObserver(updateListObserver);
+		// getMain().dataSyncTimeObservable.addObserver(updateListObserver);
+		// User.loginDoneObservable(getClient()).addObserver(updateListObserver);
+		Resource.getResourceStatusObservable(getClient()).addObserver(
+				updateListObserver);
 		updateList();
 
 		getMain().foregroundObservable
@@ -39,21 +38,20 @@ public class ResourceView extends HikariListView implements
 	public void updateList() {
 		LinkedList<Item> itemList = new LinkedList<HikariListView.Item>();
 
-		List<ResourceData> resourceList = Resource
-				.getResourceDataList(getClient());
-		if ((User.loginDoneObservable(getClient()).get())
-				&& (resourceList != null)) {
-			// resourceMgr = new Resource.Mgr(getClient());
-			for (ResourceData resource : resourceList) {
-				itemList.add(new Item(resource.key) {
+		ResourceStatus resourceStatus = Resource.getResourceStatusObservable(
+				getClient()).get();
+
+		if (resourceStatus != null) {
+			for (ResourceValue resource : resourceStatus.values()) {
+				itemList.add(new Item(resource.resource_key) {
 					@Override
 					public String toString() {
 						String key = super.toString();
-						return "res."
-								+ key
-								+ " = "
-								+ Resource.value(getClient(), key,
-										System.currentTimeMillis());
+						return String.format(
+								"%s: %s",
+								key,
+								Resource.value(getClient(), key,
+										System.currentTimeMillis()));
 					}
 				});
 			}

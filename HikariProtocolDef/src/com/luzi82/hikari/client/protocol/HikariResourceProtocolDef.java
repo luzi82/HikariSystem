@@ -1,6 +1,6 @@
 package com.luzi82.hikari.client.protocol;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 
 public class HikariResourceProtocolDef {
 
@@ -17,7 +17,7 @@ public class HikariResourceProtocolDef {
 		public long change;
 	}
 
-	public static class ResourceStatus extends HashMap<String, ResourceValue> {
+	public static class ResourceStatus extends TreeMap<String, ResourceValue> {
 
 		/**
 		 * 
@@ -27,7 +27,7 @@ public class HikariResourceProtocolDef {
 	}
 
 	public static class ResourceValue {
-		// public String resource_key;
+		public String resource_key;
 		public Integer count;
 		public Long time;
 		public Long max;

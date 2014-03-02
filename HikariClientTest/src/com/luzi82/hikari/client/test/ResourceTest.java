@@ -9,8 +9,25 @@ import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.Resource;
 import com.luzi82.hikari.client.User;
 import com.luzi82.hikari.client.protocol.HikariProtocol;
+import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ResourceStatus;
+import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ResourceValue;
 
 public class ResourceTest extends AbstractTest {
+
+	@Test
+	public void testStatus() throws Exception {
+		HsClient client = createClient();
+		client.syncData(null).get();
+		createLogin(client);
+
+		ResourceStatus resourceStatus = Resource.getResourceStatusObservable(
+				client).get();
+		Assert.assertTrue(resourceStatus.size() > 0);
+
+		for (ResourceValue resourceValue : resourceStatus.values()) {
+			Assert.assertNotNull(resourceValue.resource_key);
+		}
+	}
 
 	@Test
 	public void testConvert() throws Exception {

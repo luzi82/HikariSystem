@@ -6,6 +6,7 @@ def resource(request):
     user_resource_db_set = HsUserResource.objects.filter(user=request.user)
     for user_resource_db in user_resource_db_set:
         resource_value = {
+            'resource_key': user_resource_db.resource_key,
             'max': user_resource_db.max(),
         }
 
