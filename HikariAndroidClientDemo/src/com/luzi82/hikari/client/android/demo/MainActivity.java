@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.HsMemStorage;
 import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestInstance;
-import com.luzi82.homuvalue.Value.Variable;
 import com.luzi82.lang.GuriObservable;
 
 public class MainActivity extends FragmentActivity {
@@ -54,7 +53,7 @@ public class MainActivity extends FragmentActivity {
 
 	public final GuriObservable<Boolean> foregroundObservable = new GuriObservable<Boolean>();
 
-	public final Variable<QuestInstance> questInstanceVar = new Variable<QuestInstance>();
+	public final GuriObservable<QuestInstance> questInstanceObservableVar = new GuriObservable<QuestInstance>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

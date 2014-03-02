@@ -11,31 +11,22 @@ import com.luzi82.hikari.client.Quest;
 import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestEndCmd;
 import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestEndCmd.Result;
 import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestInstance;
-import com.luzi82.homuvalue.Value;
-import com.luzi82.homuvalue.Value.Listener;
 
-public class QuestView extends HikariListView {
+public class QuestView extends HikariListView implements
+		HikariListView.UpdateList {
 
-	Listener<QuestInstance> questInstanceListener;
+	UpdateListObserver updateListObserver = new UpdateListObserver(this);
 
 	public QuestView(Context context) {
 		super(context);
 
-		questInstanceListener = new Listener<QuestInstance>() {
-			@Override
-			public void onValueDirty(Value<QuestInstance> v) {
-				refresh();
-			}
-		};
-
-		getMain().questInstanceVar.addListener(questInstanceListener);
-		questInstanceListener.onValueDirty(getMain().questInstanceVar);
-
+		getMain().questInstanceObservableVar.addObserver(updateListObserver);
+		updateList();
 	}
 
-	public void refresh() {
+	public void updateList() {
 		final List<Item> itemList = new LinkedList<Item>();
-		QuestInstance questInstance = getMain().questInstanceVar.get();
+		QuestInstance questInstance = getMain().questInstanceObservableVar.get();
 		if (questInstance != null) {
 			itemList.add(resultItem("Success", true));
 			itemList.add(resultItem("Fail", false));
@@ -48,14 +39,14 @@ public class QuestView extends HikariListView {
 				new DummyFutureCallback<QuestEndCmd.Result>(null) {
 					@Override
 					public void completed(Result result) {
-						getMain().questInstanceVar.set(null);
+						getMain().questInstanceObservableVar.set(null);
 						super.completed(result);
 					}
 				}) {
 			@Override
 			public Future<Result> getFuture() {
 				return Quest.questEnd(getClient(),
-						getMain().questInstanceVar.get().id, success, this);
+						getMain().questInstanceObservableVar.get().id, success, this);
 			}
 		};
 	}

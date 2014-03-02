@@ -54,7 +54,7 @@ public class QuestListView extends HikariListView implements
 						new DummyFutureCallback<QuestStartCmd.Result>(null) {
 							@Override
 							public void completed(Result result) {
-								getMain().questInstanceVar
+								getMain().questInstanceObservableVar
 										.set(result.quest_instance);
 								super.completed(result);
 							}

@@ -6,7 +6,6 @@ import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.concurrent.RetryableFuture;
 import com.luzi82.lang.GuriObservable;
 import com.luzi82.hikari.client.endpoint.HsCmdManager;
-import com.luzi82.homuvalue.Value;
 
 public class ${main}Protocol extends ${main}ProtocolDef {
 
