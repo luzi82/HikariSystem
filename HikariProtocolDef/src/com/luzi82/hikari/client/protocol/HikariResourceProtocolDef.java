@@ -11,8 +11,12 @@ public class HikariResourceProtocolDef {
 		public int type;
 	}
 
+	public static class ResourceConvertData {
+		public String key;
+	}
+
 	public static class ResourceConvertChangeData {
-		public String resource_convert_key;
+		public String parent_key;
 		public String resource_key;
 		public long change;
 	}

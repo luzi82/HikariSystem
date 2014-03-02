@@ -1,14 +1,11 @@
 package com.luzi82.hikari.client;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import com.luzi82.hikari.client.protocol.HikariResourceProtocol;
-import com.luzi82.hikari.client.protocol.HikariGachaProtocolDef.GachaCostData;
-import com.luzi82.hikari.client.protocol.HikariGachaProtocolDef.GachaData;
 
 public class Resource extends HikariResourceProtocol {
 
@@ -30,19 +27,23 @@ public class Resource extends HikariResourceProtocol {
 	}
 
 	public static Map<String, ConvertEntry> getConvertEntryMap(HsClient client) {
-		List<ResourceConvertChangeData> resourceConvertChangeDataList = getResourceConvertChangeDataList(client);
-		if (resourceConvertChangeDataList == null)
+		List<ResourceConvertData> resourceConvertDataList = getResourceConvertDataList(client);
+		if (resourceConvertDataList == null)
 			return null;
 
+		List<ResourceConvertChangeData> resourceConvertChangeDataList = getResourceConvertChangeDataList(client);
+
 		Map<String, ConvertEntry> ret = new TreeMap<String, Resource.ConvertEntry>();
+
+		for (ResourceConvertData resourceConvertData : resourceConvertDataList) {
+			ConvertEntry convertEntry = new ConvertEntry();
+			convertEntry.key = resourceConvertData.key;
+			ret.put(convertEntry.key, convertEntry);
+		}
+
 		for (ResourceConvertChangeData resourceConvertChangeData : resourceConvertChangeDataList) {
-			String convert_key = resourceConvertChangeData.resource_convert_key;
+			String convert_key = resourceConvertChangeData.parent_key;
 			ConvertEntry convertEntry = ret.get(convert_key);
-			if (convertEntry == null) {
-				convertEntry = new ConvertEntry();
-				convertEntry.key = convert_key;
-				ret.put(convert_key, convertEntry);
-			}
 			Change change = new Change();
 			change.resource_key = resourceConvertChangeData.resource_key;
 			change.change = resourceConvertChangeData.change;

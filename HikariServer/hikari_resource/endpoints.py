@@ -2,8 +2,8 @@ from django.contrib.auth.models import User
 import json
 
 from ajax.decorators import login_required, stuff_required
-from hikari import now64
-from hikari_resource.models import HsUserResource, HsResourceConvertChange
+from hikari_resource.models import HsUserResource, HsResourceConvertChange,\
+    HsResourceConvert
 
 
 @stuff_required
@@ -34,14 +34,16 @@ def convert(request):
      
     resource_convert_key = arg["resource_convert_key"]
     count = arg["count"]
-     
-    resource_convert_change_db_list = HsResourceConvertChange.objects.filter(resource_convert_key=resource_convert_key)
-    for resource_convert_change_db in resource_convert_change_db_list:
-        resource_convert_change_db.check_resource(user,count,now)
-        
-    for resource_convert_change_db in resource_convert_change_db_list:
-        resource_convert_change_db.process(user,count,now)
     
+    # check
+    
+    resource_convert_db = HsResourceConvert.objects.get(key=resource_convert_key)
+    resource_convert_db.check_resource(user,now,count)
+    
+    # process
+    
+    resource_convert_db.process(user,now,count)
+     
     request.hikari.status_update_set.add('resource')
 
     return {}

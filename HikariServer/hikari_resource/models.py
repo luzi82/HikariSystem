@@ -5,21 +5,46 @@ from django.core.exceptions import ObjectDoesNotExist
 
 class HsResourceChangeModel(models.Model):
 
+    parent_key = models.CharField(max_length=64, db_index=True)
     resource_key = models.CharField(max_length=64)
     change = models.BigIntegerField()
     
     class Meta:
         abstract = True
 
-    def check_resource(self,user,count,now):
+    def check_resource(self,user,now,count):
         if self.change > 0 :
             return
         user_resource = HsUserResource.objects.get(user=user,resource_key=self.resource_key)
         user_resource.check(count*(-self.change),now)
 
-    def process(self,user,count,now):
+    def process(self,user,now,count):
         user_resource = HsUserResource.objects.get(user=user,resource_key=self.resource_key)
         user_resource.change(count*self.change,now)
+
+
+class HsResourceChangeGroupModel(models.Model):
+    
+    class Meta:
+        abstract = True
+
+    def check_resource(self,user,time,count=1,change_model=None,parent_key=None):
+        if change_model == None:
+            change_model = self.__class__.change_model
+        if parent_key == None:
+            parent_key = self.key
+        change_db_query = change_model.objects.filter(parent_key=parent_key)
+        for change_db in change_db_query:
+            change_db.check_resource(user,time,count)
+
+    def process(self,user,time,count=1,change_model=None,parent_key=None):
+        if change_model == None:
+            change_model = self.__class__.change_model
+        if parent_key == None:
+            parent_key = self.key
+        change_db_query = change_model.objects.filter(parent_key=parent_key)
+        for change_db in change_db_query:
+            change_db.process(user,time,count)
 
 
 class HsResource(models.Model):
@@ -136,4 +161,11 @@ class HsResourceConvertChange(HsResourceChangeModel):
 
     HIKARI_STATIC_NAME = "resource_convert_change"
 
-    resource_convert_key = models.CharField(max_length=64, db_index=True)
+
+class HsResourceConvert(HsResourceChangeGroupModel):
+    
+    HIKARI_STATIC_NAME = "resource_convert"
+    
+    key = models.CharField(max_length=64, db_index=True)
+    
+    change_model = HsResourceConvertChange
