@@ -6,6 +6,7 @@ import java.util.concurrent.Future;
 import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.concurrent.RetryableFuture;
 import com.luzi82.homuvalue.Value;
+import com.luzi82.lang.GuriObservable;
 
 public interface HsCmdManager {
 
@@ -15,6 +16,9 @@ public interface HsCmdManager {
 
 	public <Status> Value<Status> getStatusValue(String appName,
 			String statusName, Class<Status> class1);
+
+	public <Status> GuriObservable<Status> getStatusObservable(String appName,
+			String string, Class<Status> class1);
 
 	// public <Data> Future<List<Data>> getDataList(String appName, String
 	// string,

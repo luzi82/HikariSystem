@@ -38,6 +38,7 @@ public class HsClient implements HsCmdManager {
 	final Map<String, Object> tmpMap;
 	final Map<String, List> dataMap;
 	final Map<String, Variable> statusVariableMap;
+	final Map<String, GuriObservable> statusObservableMap;
 	final Map<String, Class> statusClassMap;
 	final GuriObservable<Long> statusObservable;
 	long serverTimeOffset;
@@ -54,6 +55,7 @@ public class HsClient implements HsCmdManager {
 		this.dataMap = new HashMap<String, List>();
 		this.tmpMap = new HashMap<String, Object>();
 		this.statusVariableMap = new HashMap<String, Variable>();
+		this.statusObservableMap = new HashMap<String, GuriObservable>();
 		this.statusClassMap = new HashMap<String, Class>();
 		// this.statusUpdateVar = new Variable<Long>();
 		this.statusObservable = new GuriObservable();
@@ -144,6 +146,7 @@ public class HsClient implements HsCmdManager {
 								status_update.getValue(),
 								statusClassMap.get(appName));
 						statusVariableMap.get(appName).set(status);
+						statusObservableMap.get(appName).setNotify(status);
 					}
 					statusObservable.setNotify(System.currentTimeMillis());
 				}
@@ -310,6 +313,8 @@ public class HsClient implements HsCmdManager {
 		String key = statusKey(appName, statusName);
 		Variable<Status> var = new Variable<Status>();
 		statusVariableMap.put(key, var);
+		GuriObservable<Status> observable = new GuriObservable<Status>();
+		statusObservableMap.put(key, observable);
 		statusClassMap.put(key, statusClass);
 	}
 
@@ -319,6 +324,13 @@ public class HsClient implements HsCmdManager {
 
 	public long getServerTime(long clientTime) {
 		return clientTime + getServerTimeOffset();
+	}
+
+	@Override
+	public <Status> GuriObservable<Status> getStatusObservable(String appName,
+			String statusName, Class<Status> class1) {
+		String key = statusKey(appName, statusName);
+		return statusObservableMap.get(key);
 	}
 
 	// public Observable getObservable(String appName, String obsName) {

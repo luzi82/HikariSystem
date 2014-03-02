@@ -4,6 +4,7 @@ import java.util.concurrent.Future;
 import java.util.List;
 import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.concurrent.RetryableFuture;
+import com.luzi82.lang.GuriObservable;
 import com.luzi82.hikari.client.endpoint.HsCmdManager;
 import com.luzi82.homuvalue.Value;
 
@@ -28,6 +29,16 @@ public class ${main}Protocol extends ${main}ProtocolDef {
 		final HsCmdManager cmdManager
 	) {
 		return cmdManager.getStatusValue(
+			APP_NAME,
+			"${status.Jname}",
+			${status.Cnamefull}.class
+		);
+	}
+
+	public static GuriObservable<${status.Cnamefull}> get${status.Cname}Observable(
+		final HsCmdManager cmdManager
+	) {
+		return cmdManager.getStatusObservable(
 			APP_NAME,
 			"${status.Jname}",
 			${status.Cnamefull}.class

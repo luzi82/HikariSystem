@@ -198,6 +198,12 @@ public class MainActivity extends FragmentActivity {
 					return new ResourceView(context);
 				}
 			}, //
+			new PageDef("Card") {
+				@Override
+				public View onCreateView(Context context) {
+					return new CardView(context);
+				}
+			}, //
 			new PageDef("Quest list") {
 				@Override
 				public View onCreateView(Context context) {

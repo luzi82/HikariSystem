@@ -1,6 +1,7 @@
 package com.luzi82.hikari.client.protocol;
 
-import java.util.HashMap;
+import java.util.TreeMap;
+
 
 public class HikariCardProtocolDef {
 
@@ -25,7 +26,7 @@ public class HikariCardProtocolDef {
 //	public static class CardStringValueData extends CardValueD<String> {
 //	}
 
-	public static class CardListStatus extends HashMap<Integer, Card> {
+	public static class CardListStatus extends TreeMap<Integer, Card> {
 
 		/**
 		 * 
