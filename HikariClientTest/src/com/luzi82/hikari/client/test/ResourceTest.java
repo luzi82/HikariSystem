@@ -27,8 +27,15 @@ public class ResourceTest extends AbstractTest {
 
 		HikariProtocol.syncStatus(client, null).get();
 
+		Assert.assertEquals(10000,
+				Resource.value(client, "coin", System.currentTimeMillis()));
+		Assert.assertEquals(0,
+				Resource.value(client, "gold", System.currentTimeMillis()));
+
 		Resource.convert(client, "coin_to_gold", 1, null).get();
 
+		Assert.assertEquals(0,
+				Resource.value(client, "coin", System.currentTimeMillis()));
 		Assert.assertEquals(10,
 				Resource.value(client, "gold", System.currentTimeMillis()));
 	}
@@ -39,7 +46,7 @@ public class ResourceTest extends AbstractTest {
 		client.syncData(null).get();
 		createLogin(client);
 
-		List<String> convertList = Resource.getConvertList(client);
+		List<String> convertList = Resource.getConvertKeyList(client);
 		Assert.assertTrue(convertList.size() >= 1);
 		Assert.assertEquals("coin_to_gold", convertList.get(0));
 
