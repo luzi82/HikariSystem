@@ -1,12 +1,13 @@
 package com.luzi82.hikari.client.test;
 
-import java.util.List;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.Resource;
+import com.luzi82.hikari.client.Resource.ConvertEntry;
 import com.luzi82.hikari.client.User;
 import com.luzi82.hikari.client.protocol.HikariProtocol;
 import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ResourceStatus;
@@ -58,20 +59,13 @@ public class ResourceTest extends AbstractTest {
 	}
 
 	@Test
-	public void testConvertList() throws Exception {
+	public void testConvertEntryMap() throws Exception {
 		HsClient client = createClient();
 		client.syncData(null).get();
-		createLogin(client);
 
-		List<String> convertList = Resource.getConvertKeyList(client);
-		Assert.assertTrue(convertList.size() >= 1);
-		Assert.assertEquals("coin_to_gold", convertList.get(0));
-
-		if (convertList.size() > 1) {
-			for (int i = 1; i < convertList.size(); ++i) {
-				Assert.assertNotEquals("coin_to_gold", convertList.get(i));
-			}
-		}
+		Map<String, ConvertEntry> convertEntryMap = Resource
+				.getConvertEntryMap(client);
+		Assert.assertTrue(convertEntryMap.containsKey("coin_to_gold"));
 	}
 
 }

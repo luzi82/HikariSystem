@@ -21,7 +21,7 @@ class Migration(SchemaMigration):
         # Adding model 'HsResourceConvertChange'
         db.create_table(u'hikari_resource_hsresourceconvertchange', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+            ('resource_convert_key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
             ('resource_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
             ('change', self.gf('django.db.models.fields.BigIntegerField')()),
         ))
@@ -104,7 +104,7 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'HsResourceConvertChange'},
             'change': ('django.db.models.fields.BigIntegerField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
+            'resource_convert_key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
             'resource_key': ('django.db.models.fields.CharField', [], {'max_length': '64'})
         },
         u'hikari_resource.hsuserresource': {

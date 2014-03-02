@@ -117,7 +117,7 @@ class HsResourceConvertChange(models.Model):
 
     HIKARI_STATIC_NAME = "resource_convert_change"
 
-    key = models.CharField(max_length=64, db_index=True)
+    resource_convert_key = models.CharField(max_length=64, db_index=True)
     resource_key = models.CharField(max_length=64)
     change = models.BigIntegerField()
 

@@ -35,7 +35,7 @@ def convert(request):
     resource_convert_key = arg["resource_convert_key"]
     count = arg["count"]
      
-    resource_convert_change_db_list = HsResourceConvertChange.objects.filter(key=resource_convert_key)
+    resource_convert_change_db_list = HsResourceConvertChange.objects.filter(resource_convert_key=resource_convert_key)
     for resource_convert_change_db in resource_convert_change_db_list:
         resource_convert_change_db.check_resource(user,count,now)
         

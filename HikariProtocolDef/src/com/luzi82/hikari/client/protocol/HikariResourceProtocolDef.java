@@ -12,7 +12,7 @@ public class HikariResourceProtocolDef {
 	}
 
 	public static class ResourceConvertChangeData {
-		public String key;
+		public String resource_convert_key;
 		public String resource_key;
 		public long change;
 	}
