@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import com.luzi82.hikari.client.Card;
 import com.luzi82.hikari.client.HsClient;
-import com.luzi82.hikari.client.protocol.HikariCardProtocolDef.CardListStatus;
+import com.luzi82.hikari.client.protocol.HikariCardProtocolDef.CardStatus;
 import com.luzi82.hikari.client.protocol.HikariCardProtocolDef.CardTypeData;
 
 public class CardTest extends AbstractTest {
@@ -30,9 +30,21 @@ public class CardTest extends AbstractTest {
 		createLogin(client);
 		client.syncData(null).get();
 
-		CardListStatus cardList = Card.getCardListStatusObservable(client)
+		CardStatus cardList = Card.getCardStatusObservable(client)
 				.get();
 		Assert.assertEquals(5, cardList.size());
 	}
+
+//	@Test
+//	public void testCardValue() throws Exception {
+//		HsClient client = createClient();
+//		createLogin(client);
+//		client.syncData(null).get();
+//
+//		CardMapStatus cardList = Card.getCardMapStatusObservable(client)
+//				.get();
+//		Assert.assertEquals(5, cardList.size());
+//		
+//	}
 
 }

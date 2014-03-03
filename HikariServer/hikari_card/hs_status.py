@@ -1,7 +1,7 @@
 from hikari_card.models import HsUserCard
 
-def card_list(request):
-    card_dict = {}
+def card(request):
+    ret = {}
 
     user_card_db_set = HsUserCard.objects.filter(user=request.user)
     for user_card_db in user_card_db_set:
@@ -10,10 +10,10 @@ def card_list(request):
             'card_type_key': user_card_db.card_type_key
         }
             
-        card_dict[user_card_db.id]=card_value
+        ret[user_card_db.id]=card_value
     
-    return card_dict
+    return ret
 
 status_update_dict = {
-    'card_list': card_list
+    'card': card
 }

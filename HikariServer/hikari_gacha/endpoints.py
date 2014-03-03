@@ -26,7 +26,7 @@ def gacha(request):
     
     user_card_id_list = gacha_db.process(request.user,now)
       
-    request.hikari.status_update_set.add('card_list')
+    request.hikari.status_update_set.add('card')
     request.hikari.status_update_set.add('resource')
 
     return {

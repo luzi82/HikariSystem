@@ -17,7 +17,7 @@ public class CardView extends HikariListView implements
 
 		updateListObserver = new UpdateListObserver(this);
 
-		Card.getCardListStatusObservable(getClient()).addObserver(
+		Card.getCardStatusObservable(getClient()).addObserver(
 				updateListObserver);
 		updateList();
 	}
@@ -25,8 +25,8 @@ public class CardView extends HikariListView implements
 	public void updateList() {
 		LinkedList<Item> itemList = new LinkedList<HikariListView.Item>();
 
-		HikariCardProtocolDef.CardListStatus cardListStatus = Card
-				.getCardListStatusObservable(getClient()).get();
+		HikariCardProtocolDef.CardStatus cardListStatus = Card
+				.getCardStatusObservable(getClient()).get();
 		if (cardListStatus != null) {
 			for (Card.Card card : cardListStatus.values()) {
 				itemList.add(new Item(String.format("%d: %s", card.id,

@@ -40,7 +40,7 @@ public class GachaTest extends AbstractTest {
 				Resource.value(client, "gold", System.currentTimeMillis()));
 		Assert.assertEquals(1, gachaResult.user_card_id_list.size());
 
-		Assert.assertTrue(Card.getCardListStatusObservable(client).get()
+		Assert.assertTrue(Card.getCardStatusObservable(client).get()
 				.containsKey(gachaResult.user_card_id_list.get(0)));
 	}
 
