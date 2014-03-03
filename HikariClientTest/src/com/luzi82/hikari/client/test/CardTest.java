@@ -30,21 +30,21 @@ public class CardTest extends AbstractTest {
 		createLogin(client);
 		client.syncData(null).get();
 
-		CardStatus cardList = Card.getCardStatusObservable(client)
-				.get();
+		CardStatus cardList = Card.getCardStatusObservable(client).get();
 		Assert.assertEquals(5, cardList.size());
 	}
 
-//	@Test
-//	public void testCardValue() throws Exception {
-//		HsClient client = createClient();
-//		createLogin(client);
-//		client.syncData(null).get();
-//
-//		CardMapStatus cardList = Card.getCardMapStatusObservable(client)
-//				.get();
-//		Assert.assertEquals(5, cardList.size());
-//		
-//	}
+	@Test
+	public void testCardValue() throws Exception {
+		HsClient client = createClient();
+		createLogin(client);
+		client.syncData(null).get();
+
+		CardStatus cardStatus = Card.getCardStatusObservable(client).get();
+		Assert.assertEquals(5, cardStatus.size());
+
+		Card.Card card = cardStatus.firstEntry().getValue();
+		Assert.assertEquals(1, card.value_dict.get("power"));
+	}
 
 }
