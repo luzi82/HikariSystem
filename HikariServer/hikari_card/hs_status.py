@@ -7,7 +7,8 @@ def card(request):
     for user_card_db in user_card_db_set:
         card_value = {
             'id': user_card_db.id,
-            'card_type_key': user_card_db.card_type_key
+            'card_type_key': user_card_db.card_type_key,
+            'value_dict': user_card_db.value_dict()
         }
             
         ret[user_card_db.id]=card_value

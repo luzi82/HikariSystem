@@ -38,7 +38,7 @@ public class CardTest extends AbstractTest {
 	public void testCardValue() throws Exception {
 		HsClient client = createClient();
 		createLogin(client);
-		client.syncData(null).get();
+//		client.syncData(null).get();
 
 		CardStatus cardStatus = Card.getCardStatusObservable(client).get();
 		Assert.assertEquals(5, cardStatus.size());

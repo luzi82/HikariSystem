@@ -8,18 +8,20 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'HsUserCard'
-        db.create_table(u'hikari_card_hsusercard', (
+        # Adding model 'HsCardValue'
+        db.create_table(u'hikari_card_hscardvalue', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('card_type_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
+            ('card_type_key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+            ('card_value_type_key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+            ('value', self.gf('django.db.models.fields.IntegerField')()),
         ))
-        db.send_create_signal(u'hikari_card', ['HsUserCard'])
+        db.send_create_signal(u'hikari_card', ['HsCardValue'])
 
         # Adding model 'HsCardType'
         db.create_table(u'hikari_card_hscardtype', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+            ('card_category_key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
         ))
         db.send_create_signal(u'hikari_card', ['HsCardType'])
 
@@ -30,16 +32,48 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'hikari_card', ['HsInitUserCard'])
 
+        # Adding model 'HsUserCard'
+        db.create_table(u'hikari_card_hsusercard', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('card_type_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
+        ))
+        db.send_create_signal(u'hikari_card', ['HsUserCard'])
+
+        # Adding model 'HsCardValueType'
+        db.create_table(u'hikari_card_hscardvaluetype', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+            ('card_category_key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+        ))
+        db.send_create_signal(u'hikari_card', ['HsCardValueType'])
+
+        # Adding model 'HsCardCategory'
+        db.create_table(u'hikari_card_hscardcategory', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+        ))
+        db.send_create_signal(u'hikari_card', ['HsCardCategory'])
+
 
     def backwards(self, orm):
-        # Deleting model 'HsUserCard'
-        db.delete_table(u'hikari_card_hsusercard')
+        # Deleting model 'HsCardValue'
+        db.delete_table(u'hikari_card_hscardvalue')
 
         # Deleting model 'HsCardType'
         db.delete_table(u'hikari_card_hscardtype')
 
         # Deleting model 'HsInitUserCard'
         db.delete_table(u'hikari_card_hsinitusercard')
+
+        # Deleting model 'HsUserCard'
+        db.delete_table(u'hikari_card_hsusercard')
+
+        # Deleting model 'HsCardValueType'
+        db.delete_table(u'hikari_card_hscardvaluetype')
+
+        # Deleting model 'HsCardCategory'
+        db.delete_table(u'hikari_card_hscardcategory')
 
 
     models = {
@@ -79,8 +113,27 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
+        u'hikari_card.hscardcategory': {
+            'Meta': {'object_name': 'HsCardCategory'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
+        },
         u'hikari_card.hscardtype': {
             'Meta': {'object_name': 'HsCardType'},
+            'card_category_key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
+        },
+        u'hikari_card.hscardvalue': {
+            'Meta': {'object_name': 'HsCardValue'},
+            'card_type_key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
+            'card_value_type_key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'value': ('django.db.models.fields.IntegerField', [], {})
+        },
+        u'hikari_card.hscardvaluetype': {
+            'Meta': {'object_name': 'HsCardValueType'},
+            'card_category_key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
         },

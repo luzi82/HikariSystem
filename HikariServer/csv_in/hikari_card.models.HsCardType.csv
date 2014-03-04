@@ -1,4 +1,4 @@
-key
-cardtype_0
-cardtype_1
-cardtype_2
+card_category_key,key
+pet,cardtype_0
+pet,cardtype_1
+pet,cardtype_2
