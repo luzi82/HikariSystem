@@ -123,6 +123,6 @@ public class CardTest extends AbstractTest {
 		Assert.assertEquals(400, sce.code);
 	}
 	
-	// desk set invalid card test
+	// TODO desk set invalid card test
 
 }
