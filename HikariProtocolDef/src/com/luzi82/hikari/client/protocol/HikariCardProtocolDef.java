@@ -1,9 +1,8 @@
 package com.luzi82.hikari.client.protocol;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
-import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestInstance;
 
 public class HikariCardProtocolDef {
 
@@ -13,16 +12,7 @@ public class HikariCardProtocolDef {
 
 	public static class CardStatus extends TreeMap<Integer, Card> {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -2417872520439884077L;
-
-	}
-
-	public static class DeskStatus {
-
-		public Integer[][] desk_card_list_list;
 
 	}
 
@@ -32,9 +22,16 @@ public class HikariCardProtocolDef {
 		public Map<String, Object> value_dict;
 	}
 
+	public static class DeskStatus extends TreeMap<String, List<Integer[]>> {
+
+		private static final long serialVersionUID = -3890914451228135129L;
+
+	}
+
 	public static class SetDeskCmd {
 
 		public static class Request {
+			public String desk_type;
 			public int desk_id;
 			public Integer[] card_list;
 		}
