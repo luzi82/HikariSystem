@@ -99,7 +99,7 @@ public class Main {
 						for (Field field : reqClass.getFields()) {
 							Fieldd fd = new Fieldd();
 							fd.name = field.getName();
-							fd.type = field.getType().getName();
+							fd.type = field.getType().getCanonicalName();
 							cmd.reqList.add(fd);
 						}
 						Class<?> resClass = Class.forName(cmdClass.getName()
@@ -107,7 +107,7 @@ public class Main {
 						for (Field field : resClass.getFields()) {
 							Fieldd fd = new Fieldd();
 							fd.name = field.getName();
-							fd.type = field.getType().getName();
+							fd.type = field.getType().getCanonicalName();
 							cmd.resList.add(fd);
 						}
 						cmdList.add(cmd);
@@ -139,13 +139,13 @@ public class Main {
 				}
 				vc.put("data_list", dataList);
 
-//				boolean statusExist = false;
+				// boolean statusExist = false;
 				List<Status> statusList0 = new LinkedList<Status>();
 				for (Class<?> dataClass : cls.getDeclaredClasses()) {
 					String classSimpleName = dataClass.getSimpleName();
 					if (!classSimpleName.endsWith("Status"))
 						continue;
-//					statusExist = true;
+					// statusExist = true;
 					Status status = new Status();
 					status.appName = appName;
 					status.jname = camelToLower(classSimpleName.substring(0,
@@ -155,7 +155,7 @@ public class Main {
 					statusList0.add(status);
 					statusList.add(status);
 				}
-//				vc.put("status_exist", statusExist);
+				// vc.put("status_exist", statusExist);
 				vc.put("status_list", statusList0);
 
 				BufferedWriter bw = new BufferedWriter(new FileWriter(out));
