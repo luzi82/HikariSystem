@@ -110,11 +110,12 @@ public class CardTest extends AbstractTest {
 		createLogin(client);
 
 		CardStatus cardStatus = Card.getCardStatusObservable(client).get();
+		Integer[] cardIdAry = cardStatus.keySet().toArray(new Integer[0]);
 
 		Integer[] deskCardList = {//
-		cardStatus.get(0).id,//
-				cardStatus.get(0).id,//
-				cardStatus.get(1).id,//
+		cardIdAry[0],//
+				cardIdAry[0],//
+				cardIdAry[1],//
 		};
 
 		StatusCodeException sce = null;

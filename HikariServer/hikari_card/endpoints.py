@@ -23,6 +23,12 @@ def set_desk(request):
         raise AJAXError(400, "desk_id >= desk_type_db.size")
     if len(card_list) != desk_type_db.card_list_length:
         raise AJAXError(400, "len(card_list) != desk_type_db.card_list_length")
+    for i in xrange(len(card_list)):
+        for j in xrange(len(card_list)):
+            if i == j:
+                continue
+            if card_list[i] == card_list[j]:
+                raise AJAXError(400, "card_list[i] == card_list[j]")
     
     for i in xrange(desk_type_db.card_list_length):
         user_card_db = HsUserCard.objects.get(id=card_list[i])
