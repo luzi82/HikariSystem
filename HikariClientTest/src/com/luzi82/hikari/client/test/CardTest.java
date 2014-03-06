@@ -178,4 +178,26 @@ public class CardTest extends AbstractTest {
 		Assert.assertEquals(400, sce.code);
 	}
 
+	@Test
+	public void testSetNegativeDesk() throws Exception {
+		HsClient client = createClient();
+		createLogin(client);
+
+		CardStatus cardStatus = Card.getCardStatusObservable(client).get();
+		Integer[] cardIdAry = cardStatus.keySet().toArray(new Integer[0]);
+
+		Integer[] deskCardList = {//
+		cardIdAry[2],//
+				cardIdAry[3],//
+				cardIdAry[4],//
+		};
+		StatusCodeException sce = null;
+		try {
+			Card.setDesk(client, "pet", -1, deskCardList, null).get();
+			Assert.fail();
+		} catch (ExecutionException ee) {
+			sce = (StatusCodeException) ee.getCause();
+		}
+		Assert.assertEquals(400, sce.code);
+	}
 }
