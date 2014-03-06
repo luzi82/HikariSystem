@@ -19,6 +19,8 @@ def set_desk(request):
     card_list = arg["card_list"]
 
     desk_type_db = HsDeskType.objects.get(key=desk_type_key)
+    if desk_id < 0:
+        raise AJAXError(400, "desk_id < 0")
     if desk_id >= desk_type_db.desk_count:
         raise AJAXError(400, "desk_id >= desk_type_db.size")
     if len(card_list) != desk_type_db.card_list_length:
