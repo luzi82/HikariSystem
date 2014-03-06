@@ -78,29 +78,30 @@ public class CardTest extends AbstractTest {
 		createLogin(client);
 
 		CardStatus cardStatus = Card.getCardStatusObservable(client).get();
+		Integer[] cardIdAry = cardStatus.keySet().toArray(new Integer[0]);
 
 		DeskStatus deskStatus = Card.getDeskStatusObservable(client).get();
-		Assert.assertEquals((int) deskStatus.get("pet").get(0)[0],
-				cardStatus.get(0).id);
-		Assert.assertEquals((int) deskStatus.get("pet").get(0)[1],
-				cardStatus.get(1).id);
-		Assert.assertEquals((int) deskStatus.get("pet").get(0)[2],
-				cardStatus.get(2).id);
+		Assert.assertEquals((int) cardIdAry[0], (int) deskStatus.get("pet")
+				.get(0)[0]);
+		Assert.assertEquals((int) cardIdAry[1], (int) deskStatus.get("pet")
+				.get(0)[1]);
+		Assert.assertEquals((int) cardIdAry[2], (int) deskStatus.get("pet")
+				.get(0)[2]);
 
 		Integer[] deskCardList = {//
-		cardStatus.get(2).id,//
-				cardStatus.get(3).id,//
-				cardStatus.get(4).id,//
+		cardIdAry[2],//
+				cardIdAry[3],//
+				cardIdAry[4],//
 		};
 		Card.setDesk(client, "pet", 0, deskCardList, null).get();
 
 		deskStatus = Card.getDeskStatusObservable(client).get();
-		Assert.assertEquals((int) deskStatus.get("pet").get(0)[0],
-				cardStatus.get(2).id);
-		Assert.assertEquals((int) deskStatus.get("pet").get(0)[1],
-				cardStatus.get(3).id);
-		Assert.assertEquals((int) deskStatus.get("pet").get(0)[2],
-				cardStatus.get(4).id);
+		Assert.assertEquals((int) cardIdAry[2], (int) deskStatus.get("pet")
+				.get(0)[0]);
+		Assert.assertEquals((int) cardIdAry[3], (int) deskStatus.get("pet")
+				.get(0)[1]);
+		Assert.assertEquals((int) cardIdAry[4], (int) deskStatus.get("pet")
+				.get(0)[2]);
 	}
 
 	@Test

@@ -31,7 +31,7 @@ public class HikariCardProtocolDef {
 	public static class SetDeskCmd {
 
 		public static class Request {
-			public String desk_type;
+			public String desk_type_key;
 			public int desk_id;
 			public Integer[] card_list;
 		}
