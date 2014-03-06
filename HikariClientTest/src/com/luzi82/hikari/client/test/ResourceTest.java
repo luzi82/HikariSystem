@@ -1,6 +1,7 @@
 package com.luzi82.hikari.client.test;
 
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -8,6 +9,7 @@ import org.junit.Test;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.Resource;
 import com.luzi82.hikari.client.Resource.ConvertEntry;
+import com.luzi82.hikari.client.apache.HsClientApache.StatusCodeException;
 import com.luzi82.hikari.client.User;
 import com.luzi82.hikari.client.protocol.HikariProtocol;
 import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ResourceStatus;
@@ -56,6 +58,43 @@ public class ResourceTest extends AbstractTest {
 				Resource.value(client, "coin", System.currentTimeMillis()));
 		Assert.assertEquals(10,
 				Resource.value(client, "gold", System.currentTimeMillis()));
+	}
+
+	@Test
+	public void testNegativeConvert() throws Exception {
+		HsClient client = createClient();
+		client.syncData(null).get();
+		createLogin(client);
+
+		String clientUsername = client.get(User.APP_NAME, User.DB_USERNAME,
+				null).get();
+
+		HsClient admin = createAdmin();
+		Resource.setUserResourceCount(admin, clientUsername, "coin", 10000,
+				null).get();
+
+		HikariProtocol.syncStatus(client, null).get();
+
+		Assert.assertEquals(10000,
+				Resource.value(client, "coin", System.currentTimeMillis()));
+		Assert.assertEquals(0,
+				Resource.value(client, "gold", System.currentTimeMillis()));
+
+		Resource.convert(client, "coin_to_gold", 1, null).get();
+
+		Assert.assertEquals(0,
+				Resource.value(client, "coin", System.currentTimeMillis()));
+		Assert.assertEquals(10,
+				Resource.value(client, "gold", System.currentTimeMillis()));
+
+		StatusCodeException sce = null;
+		try {
+			Resource.convert(client, "coin_to_gold", -1, null).get();
+			Assert.fail();
+		} catch (ExecutionException ee) {
+			sce = (StatusCodeException) ee.getCause();
+		}
+		Assert.assertEquals(400, sce.code);
 	}
 
 	@Test
