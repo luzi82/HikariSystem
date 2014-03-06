@@ -4,6 +4,7 @@ import json
 from ajax.decorators import login_required, stuff_required
 from hikari_resource.models import HsUserResource, HsResourceConvertChange,\
     HsResourceConvert
+from ajax.exceptions import AJAXError
 
 
 @stuff_required
@@ -36,7 +37,9 @@ def convert(request):
     count = arg["count"]
     
     # check
-    
+
+    if count <= 0:
+        raise AJAXError(400, "count <= 0")
     resource_convert_db = HsResourceConvert.objects.get(key=resource_convert_key)
     resource_convert_db.check_resource(user,now,count)
     
