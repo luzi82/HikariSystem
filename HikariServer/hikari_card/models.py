@@ -80,4 +80,32 @@ class HsUserCard(models.Model):
 
 class HsInitUserCard(models.Model):
 
+    key = models.CharField(max_length=64, db_index=True)
     card_type_key = models.CharField(max_length=64)
+
+
+class HsDeskType(models.Model):
+    
+    key = models.CharField(max_length=64, db_index=True)
+    card_category_key = models.CharField(max_length=64)
+    desk_count = models.IntegerField()
+    card_list_length = models.IntegerField()
+    
+    HIKARI_STATIC_NAME = "desk_type"
+
+
+class HsUserDeskCard(models.Model):
+
+    user = models.ForeignKey(User,db_index=True)
+    desk_type_key = models.CharField(max_length=64)
+    desk_id = models.IntegerField()
+    desk_pos = models.IntegerField()
+    card = models.ForeignKey(HsUserCard,db_index=True) # need db_index
+
+
+class HsInitUserDeskCard(models.Model):
+
+    desk_type_key = models.CharField(max_length=64)
+    desk_id = models.IntegerField()
+    desk_pos = models.IntegerField()
+    init_user_card_key = models.CharField(max_length=64)

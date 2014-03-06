@@ -61,12 +61,15 @@ public class CardTest extends AbstractTest {
 		Assert.assertEquals(4, deskStatus.get("pet").size());
 		Assert.assertEquals(3, deskStatus.get("pet").get(0).length);
 
-		Assert.assertEquals((int) deskStatus.get("pet").get(0)[0],
-				cardStatus.get(0).id);
-		Assert.assertEquals((int) deskStatus.get("pet").get(0)[1],
-				cardStatus.get(1).id);
-		Assert.assertEquals((int) deskStatus.get("pet").get(0)[2],
-				cardStatus.get(2).id);
+		Assert.assertNotNull(deskStatus.get("pet").get(0)[0]);
+		Integer[] cardIdAry = cardStatus.keySet().toArray(new Integer[0]);
+		Assert.assertNotNull(cardStatus.firstEntry().getValue().id);
+		Assert.assertEquals((int) cardIdAry[0], (int) deskStatus.get("pet")
+				.get(0)[0]);
+		Assert.assertEquals((int) cardIdAry[1], (int) deskStatus.get("pet")
+				.get(0)[1]);
+		Assert.assertEquals((int) cardIdAry[2], (int) deskStatus.get("pet")
+				.get(0)[2]);
 	}
 
 	@Test
@@ -122,7 +125,7 @@ public class CardTest extends AbstractTest {
 		}
 		Assert.assertEquals(400, sce.code);
 	}
-	
+
 	// TODO desk set invalid card test
 
 }

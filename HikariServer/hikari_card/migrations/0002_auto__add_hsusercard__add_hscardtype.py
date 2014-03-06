@@ -17,6 +17,17 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'hikari_card', ['HsCardValue'])
 
+        # Adding model 'HsUserDeskCard'
+        db.create_table(u'hikari_card_hsuserdeskcard', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('desk_type_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
+            ('desk_id', self.gf('django.db.models.fields.IntegerField')()),
+            ('desk_pos', self.gf('django.db.models.fields.IntegerField')()),
+            ('card', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hikari_card.HsUserCard'])),
+        ))
+        db.send_create_signal(u'hikari_card', ['HsUserDeskCard'])
+
         # Adding model 'HsCardType'
         db.create_table(u'hikari_card_hscardtype', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -25,9 +36,30 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'hikari_card', ['HsCardType'])
 
+        # Adding model 'HsInitUserDeskCard'
+        db.create_table(u'hikari_card_hsinituserdeskcard', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('desk_type_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
+            ('desk_id', self.gf('django.db.models.fields.IntegerField')()),
+            ('desk_pos', self.gf('django.db.models.fields.IntegerField')()),
+            ('init_user_card_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
+        ))
+        db.send_create_signal(u'hikari_card', ['HsInitUserDeskCard'])
+
+        # Adding model 'HsDeskType'
+        db.create_table(u'hikari_card_hsdesktype', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+            ('card_category_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
+            ('desk_count', self.gf('django.db.models.fields.IntegerField')()),
+            ('card_list_length', self.gf('django.db.models.fields.IntegerField')()),
+        ))
+        db.send_create_signal(u'hikari_card', ['HsDeskType'])
+
         # Adding model 'HsInitUserCard'
         db.create_table(u'hikari_card_hsinitusercard', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
             ('card_type_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
         ))
         db.send_create_signal(u'hikari_card', ['HsInitUserCard'])
@@ -60,8 +92,17 @@ class Migration(SchemaMigration):
         # Deleting model 'HsCardValue'
         db.delete_table(u'hikari_card_hscardvalue')
 
+        # Deleting model 'HsUserDeskCard'
+        db.delete_table(u'hikari_card_hsuserdeskcard')
+
         # Deleting model 'HsCardType'
         db.delete_table(u'hikari_card_hscardtype')
+
+        # Deleting model 'HsInitUserDeskCard'
+        db.delete_table(u'hikari_card_hsinituserdeskcard')
+
+        # Deleting model 'HsDeskType'
+        db.delete_table(u'hikari_card_hsdesktype')
 
         # Deleting model 'HsInitUserCard'
         db.delete_table(u'hikari_card_hsinitusercard')
@@ -137,14 +178,40 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
         },
+        u'hikari_card.hsdesktype': {
+            'Meta': {'object_name': 'HsDeskType'},
+            'card_category_key': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
+            'card_list_length': ('django.db.models.fields.IntegerField', [], {}),
+            'desk_count': ('django.db.models.fields.IntegerField', [], {}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
+        },
         u'hikari_card.hsinitusercard': {
             'Meta': {'object_name': 'HsInitUserCard'},
             'card_type_key': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
+        },
+        u'hikari_card.hsinituserdeskcard': {
+            'Meta': {'object_name': 'HsInitUserDeskCard'},
+            'desk_id': ('django.db.models.fields.IntegerField', [], {}),
+            'desk_pos': ('django.db.models.fields.IntegerField', [], {}),
+            'desk_type_key': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'init_user_card_key': ('django.db.models.fields.CharField', [], {'max_length': '64'})
         },
         u'hikari_card.hsusercard': {
             'Meta': {'object_name': 'HsUserCard'},
             'card_type_key': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
+        },
+        u'hikari_card.hsuserdeskcard': {
+            'Meta': {'object_name': 'HsUserDeskCard'},
+            'card': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hikari_card.HsUserCard']"}),
+            'desk_id': ('django.db.models.fields.IntegerField', [], {}),
+            'desk_pos': ('django.db.models.fields.IntegerField', [], {}),
+            'desk_type_key': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
         }
