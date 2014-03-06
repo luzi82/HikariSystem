@@ -29,9 +29,14 @@ def set_desk(request):
                 continue
             if card_list[i] == card_list[j]:
                 raise AJAXError(400, "card_list[i] == card_list[j]")
+    for card_id in card_list:
+        exist = HsUserCard.objects.filter(user=request.user,id=card_id).exists()
+        if not exist:
+            raise AJAXError(400, "not exist or not own")
+        
     
     for i in xrange(desk_type_db.card_list_length):
-        user_card_db = HsUserCard.objects.get(id=card_list[i])
+        user_card_db = HsUserCard.objects.get(user=request.user,id=card_list[i])
         user_desk_card_db, created = HsUserDeskCard.objects.get_or_create(
             user=request.user,
             desk_type_key=desk_type_key,
