@@ -4,8 +4,9 @@ import json
 from ajax.decorators import login_required, stuff_required
 from hikari_resource.models import HsUserResource, HsResourceConvertChange, \
     HsResourceConvert
-from hikari_card.models import HsDeskType, HsUserCard, HsUserDeskCard
+from hikari_card.models import HsDeskType, HsUserCard, HsUserDeskCard, HsCardTag
 from ajax.exceptions import AJAXError
+from django.core.exceptions import ObjectDoesNotExist
 
 
 @login_required
@@ -32,9 +33,12 @@ def set_desk(request):
             if card_list[i] == card_list[j]:
                 raise AJAXError(400, "card_list[i] == card_list[j]")
     for card_id in card_list:
-        exist = HsUserCard.objects.filter(user=request.user,id=card_id).exists()
-        if not exist:
+        try:
+            user_card = HsUserCard.objects.filter(user=request.user,id=card_id).get()
+        except ObjectDoesNotExist:
             raise AJAXError(400, "not exist or not own")
+        if not HsCardTag.objects.filter(card_tag_type_key=desk_type_db.card_tag_type_key,card_type_key=user_card.card_type_key).exists():
+            raise AJAXError(400, "bad card type")
         
     
     for i in xrange(desk_type_db.card_list_length):
