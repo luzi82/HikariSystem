@@ -4,18 +4,26 @@ from django.core.exceptions import ObjectDoesNotExist
 
 # Create your models here.
 
-class HsCardCategory(models.Model):
-    
-    HIKARI_STATIC_NAME = "card_category"
-    
-    key = models.CharField(max_length=64, db_index=True)
-
 class HsCardType(models.Model):
     
     HIKARI_STATIC_NAME = "card_type"
 
     key = models.CharField(max_length=64, db_index=True)
-    card_category_key = models.CharField(max_length=64, db_index=True)
+    
+
+class HsCardTagType(models.Model):
+    
+    HIKARI_STATIC_NAME = "card_tag_type"
+    
+    key = models.CharField(max_length=64, db_index=True)
+
+
+class HsCardTag(models.Model):
+    
+    HIKARI_STATIC_NAME = "card_tag"
+    
+    card_tag_type_key = models.CharField(max_length=64, db_index=True)
+    card_type_key = models.CharField(max_length=64, db_index=True)
 
 
 class HsCardValueType(models.Model):
@@ -23,7 +31,7 @@ class HsCardValueType(models.Model):
     HIKARI_STATIC_NAME = "card_value_type"
     
     key = models.CharField(max_length=64, db_index=True)
-    card_category_key = models.CharField(max_length=64, db_index=True)
+    card_tag_type_key = models.CharField(max_length=64, db_index=True)
 
 
 class HsCardValueManager(models.Manager):
@@ -62,19 +70,22 @@ class HsUserCard(models.Model):
     user = models.ForeignKey(User,db_index=True)
     card_type_key = models.CharField(max_length=64)
     
-    def category(self):
-        return HsCardType.objects.get(key=self.card_type_key).card_category_key
-    
     def value_dict(self):
-        category = self.category()
+        card_tag_q = HsCardTag.objects.filter(card_type_key=self.card_type_key)
+        card_tag_type_key_list = []
+        for card_tag_db in card_tag_q:
+            card_tag_type_key_list.append(card_tag_db.card_tag_type_key)
+
         ret = {}
-        card_value_type_db_set = HsCardValueType.objects.filter(card_category_key=category)
+
+        card_value_type_db_set = HsCardValueType.objects.filter(card_tag_type_key__in=card_tag_type_key_list)
         for card_value_type_db in card_value_type_db_set:
             v = HsCardValue.objects.get(
                 card_type_key=self.card_type_key,
                 card_value_type_key=card_value_type_db.key,
             ).value
             ret[card_value_type_db.key] = v
+
         return ret
 
 
@@ -87,7 +98,7 @@ class HsInitUserCard(models.Model):
 class HsDeskType(models.Model):
     
     key = models.CharField(max_length=64, db_index=True)
-    card_category_key = models.CharField(max_length=64)
+    card_tag_type_key = models.CharField(max_length=64)
     desk_count = models.IntegerField()
     card_list_length = models.IntegerField()
     
