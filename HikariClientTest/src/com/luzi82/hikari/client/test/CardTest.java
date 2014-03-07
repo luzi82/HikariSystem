@@ -22,7 +22,7 @@ public class CardTest extends AbstractTest {
 		client.syncData(null).get();
 
 		List<CardTypeData> cardTypeDataList = Card.getCardTypeDataList(client);
-		Assert.assertEquals(3, cardTypeDataList.size());
+		Assert.assertEquals(6, cardTypeDataList.size());
 
 		Assert.assertEquals("cardtype_0", cardTypeDataList.get(0).key);
 	}
@@ -34,7 +34,7 @@ public class CardTest extends AbstractTest {
 		client.syncData(null).get();
 
 		CardStatus cardList = Card.getCardStatusObservable(client).get();
-		Assert.assertEquals(5, cardList.size());
+		Assert.assertEquals(6, cardList.size());
 	}
 
 	@Test
@@ -44,8 +44,6 @@ public class CardTest extends AbstractTest {
 		// client.syncData(null).get();
 
 		CardStatus cardStatus = Card.getCardStatusObservable(client).get();
-		Assert.assertEquals(5, cardStatus.size());
-
 		Card.Card card = cardStatus.firstEntry().getValue();
 		Assert.assertEquals(1, card.value_dict.get("power"));
 	}
@@ -217,6 +215,29 @@ public class CardTest extends AbstractTest {
 		StatusCodeException sce = null;
 		try {
 			Card.setDesk(client, "pet", 4, deskCardList, null).get();
+			Assert.fail();
+		} catch (ExecutionException ee) {
+			sce = (StatusCodeException) ee.getCause();
+		}
+		Assert.assertEquals(400, sce.code);
+	}
+
+	@Test
+	public void testSetDeskBadTag() throws Exception {
+		HsClient client = createClient();
+		createLogin(client);
+
+		CardStatus cardStatus = Card.getCardStatusObservable(client).get();
+		Integer[] cardIdAry = cardStatus.keySet().toArray(new Integer[0]);
+
+		Integer[] deskCardList = {//
+		cardIdAry[0],//
+				cardIdAry[1],//
+				cardIdAry[5],//
+		};
+		StatusCodeException sce = null;
+		try {
+			Card.setDesk(client, "pet", 0, deskCardList, null).get();
 			Assert.fail();
 		} catch (ExecutionException ee) {
 			sce = (StatusCodeException) ee.getCause();
