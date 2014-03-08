@@ -14,8 +14,8 @@ public class L10n extends HikariL10nProtocol {
 	public static Map<String, String> getTextMap(HsClient client) {
 		Map<String, String> ret = new HashMap<String, String>();
 
-		for (L10nData ld : getL10nDataList(client)) {
-			ret.put(ld.key, ld.text);
+		for (L10nTextData ld : getL10nTextDataList(client)) {
+			ret.put(ld.text_key, ld.text);
 		}
 
 		return ret;

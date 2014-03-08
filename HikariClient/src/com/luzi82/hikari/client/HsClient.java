@@ -221,8 +221,8 @@ public class HsClient implements HsCmdManager {
 				}
 				currentDataLoad = dataLoadItr.next();
 
-				System.err.println("currentDataLoad.dataName "
-						+ currentDataLoad.dataName);
+				// System.err.println("currentDataLoad.dataName "
+				// + currentDataLoad.dataName);
 
 				StringBuffer param = new StringBuffer();
 				try {
@@ -230,9 +230,11 @@ public class HsClient implements HsCmdManager {
 							.getField("PARAM");
 					String[] paramList = (String[]) paramField.get(null);
 					for (String p : paramList) {
-						if (!staticDataParam.containsKey(p))
-							continue;
-						param.append(staticDataParam.get(p));
+						String pp = staticDataParam.get(p);
+						if (pp == null)
+							pp = "_";
+						param.append("-");
+						param.append(pp);
 					}
 				} catch (NoSuchFieldException e) {
 				}
