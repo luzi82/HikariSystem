@@ -1,5 +1,6 @@
 package com.luzi82.hikari.client.test;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -12,6 +13,7 @@ import com.luzi82.hikari.client.Resource.ConvertEntry;
 import com.luzi82.hikari.client.apache.HsClientApache.StatusCodeException;
 import com.luzi82.hikari.client.User;
 import com.luzi82.hikari.client.protocol.HikariProtocol;
+import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ConvertHistory;
 import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ResourceStatus;
 import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ResourceValue;
 
@@ -105,6 +107,37 @@ public class ResourceTest extends AbstractTest {
 		Map<String, ConvertEntry> convertEntryMap = Resource
 				.getConvertEntryMap(client);
 		Assert.assertTrue(convertEntryMap.containsKey("coin_to_gold"));
+	}
+
+	@Test
+	public void testConvertHistory() throws Exception {
+		HsClient client = createClient();
+
+		List<ConvertHistory> convertHistoryList = Resource
+				.getConvertHistoryList(client, 10, null).get();
+		Assert.assertEquals(0, convertHistoryList.size());
+
+		String clientUsername = client.get(User.APP_NAME, User.DB_USERNAME,
+				null).get();
+
+		HsClient admin = createAdmin();
+		Resource.setUserResourceCount(admin, clientUsername, "coin", 10000,
+				null).get();
+
+		long serverTime0 = client.getServerTime(System.currentTimeMillis());
+
+		Resource.convert(client, "coin_to_gold", 1, null).get();
+
+		long serverTime1 = client.getServerTime(System.currentTimeMillis());
+
+		convertHistoryList = Resource.getConvertHistoryList(client, 10, null)
+				.get();
+		Assert.assertEquals(1, convertHistoryList.size());
+		Assert.assertTrue(convertHistoryList.get(0).time >= serverTime0 - 1000);
+		Assert.assertTrue(convertHistoryList.get(0).time <= serverTime1 + 1000);
+		Assert.assertEquals("coin_to_gold",
+				convertHistoryList.get(0).resource_convert_key);
+		Assert.assertEquals("count", convertHistoryList.get(0).count);
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.luzi82.hikari.client.protocol;
 
+import java.util.LinkedList;
 import java.util.TreeMap;
 
 public class HikariResourceProtocolDef {
@@ -14,14 +15,15 @@ public class HikariResourceProtocolDef {
 	public static class ResourceConvertData {
 		public String key;
 	}
-	
+
 	public static class AbstractResourceChangeD {
 		public String parent_key;
 		public String resource_key;
 		public long change;
 	}
 
-	public static class ResourceConvertChangeData extends AbstractResourceChangeD {
+	public static class ResourceConvertChangeData extends
+			AbstractResourceChangeD {
 	}
 
 	public static class ResourceStatus extends TreeMap<String, ResourceValue> {
@@ -48,6 +50,24 @@ public class HikariResourceProtocolDef {
 		}
 
 		public static class Result {
+		}
+
+	}
+
+	public static class ConvertHistory {
+		public long time;
+		public String resource_convert_key;
+		public long count;
+	}
+
+	public static class GetConvertHistoryListCmd {
+
+		public static class Request {
+			public int count;
+		}
+
+		public static class Result extends LinkedList<ConvertHistory> {
+			private static final long serialVersionUID = -1236770084966746653L;
 		}
 
 	}
