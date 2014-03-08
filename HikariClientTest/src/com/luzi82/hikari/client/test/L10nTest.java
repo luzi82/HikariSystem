@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.luzi82.hikari.client.HsClient;
+import com.luzi82.hikari.client.L10n;
 
 public class L10nTest extends AbstractTest {
 
@@ -15,7 +16,7 @@ public class L10nTest extends AbstractTest {
 		L10n.setL10n(client, "en");
 		client.syncData(null).get();
 
-		Map<String, String> langTextMap = L10n.getTextMapData(client);
+		Map<String, String> langTextMap = L10n.getTextMap(client);
 		Assert.assertEquals("Quest 0", langTextMap.get("quest_entry__quest_0"));
 		Assert.assertEquals("Coin", langTextMap.get("resource__coin"));
 		Assert.assertEquals("Coin to gold",

@@ -1,5 +1,6 @@
 package com.luzi82.hikari.client;
 
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ public class HsClient implements HsCmdManager {
 	final Map<String, GuriObservable> statusObservableMap;
 	final Map<String, Class> statusClassMap;
 	long serverTimeOffset;
+	final Map<String, String> staticDataParam;
 
 	public HsClient(String aServer, HsStorage storage, Executor executor,
 			HsHttpClient jsonClient) throws URISyntaxException {
@@ -48,6 +50,7 @@ public class HsClient implements HsCmdManager {
 		this.tmpMap = new HashMap<String, Object>();
 		this.statusObservableMap = new HashMap<String, GuriObservable>();
 		this.statusClassMap = new HashMap<String, Class>();
+		this.staticDataParam = new HashMap<String, String>();
 
 		serverHost = new URI(server).getHost();
 
@@ -218,8 +221,24 @@ public class HsClient implements HsCmdManager {
 				}
 				currentDataLoad = dataLoadItr.next();
 
+				System.err.println("currentDataLoad.dataName "
+						+ currentDataLoad.dataName);
+
+				StringBuffer param = new StringBuffer();
+				try {
+					Field paramField = currentDataLoad.dataClass
+							.getField("PARAM");
+					String[] paramList = (String[]) paramField.get(null);
+					for (String p : paramList) {
+						if (!staticDataParam.containsKey(p))
+							continue;
+						param.append(staticDataParam.get(p));
+					}
+				} catch (NoSuchFieldException e) {
+				}
+
 				String url = server + "/static/csv/" + currentDataLoad.dataName
-						+ ".csv";
+						+ param.toString() + ".csv";
 				f1 = jsonClient.get(url, new Callback<String>(new Step2()));
 				setFuture(f1);
 			}
@@ -295,6 +314,10 @@ public class HsClient implements HsCmdManager {
 			String statusName, Class<Status> class1) {
 		String key = statusKey(appName, statusName);
 		return statusObservableMap.get(key);
+	}
+
+	public void setStaticDataParam(String key, String value) {
+		staticDataParam.put(key, value);
 	}
 
 	// TODO change to load data from disk to memory
