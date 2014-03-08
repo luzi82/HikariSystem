@@ -63,6 +63,7 @@ public class HikariResourceProtocolDef {
 	public static class GetConvertHistoryListCmd {
 
 		public static class Request {
+			public long offset;
 			public int count;
 		}
 

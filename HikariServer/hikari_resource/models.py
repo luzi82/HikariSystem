@@ -169,3 +169,16 @@ class HsResourceConvert(HsResourceChangeGroupModel):
     key = models.CharField(max_length=64, db_index=True)
     
     change_model = HsResourceConvertChange
+
+
+class HsResourceConvertHistory(models.Model):
+
+    user = user = models.ForeignKey(User,db_index=True)
+    time = models.BigIntegerField(db_index=True)
+    resource_convert_key = models.CharField(max_length=64, db_index=True)
+    count = models.IntegerField()
+
+    class Meta:
+        index_together = [
+            ["user", "time"],
+        ]

@@ -112,9 +112,10 @@ public class ResourceTest extends AbstractTest {
 	@Test
 	public void testConvertHistory() throws Exception {
 		HsClient client = createClient();
+		createLogin(client);
 
 		List<ConvertHistory> convertHistoryList = Resource
-				.getConvertHistoryList(client, 10, null).get();
+				.getConvertHistoryList(client, 0, 10, null).get();
 		Assert.assertEquals(0, convertHistoryList.size());
 
 		String clientUsername = client.get(User.APP_NAME, User.DB_USERNAME,
@@ -130,14 +131,14 @@ public class ResourceTest extends AbstractTest {
 
 		long serverTime1 = client.getServerTime(System.currentTimeMillis());
 
-		convertHistoryList = Resource.getConvertHistoryList(client, 10, null)
-				.get();
+		convertHistoryList = Resource
+				.getConvertHistoryList(client, 0, 10, null).get();
 		Assert.assertEquals(1, convertHistoryList.size());
 		Assert.assertTrue(convertHistoryList.get(0).time >= serverTime0 - 1000);
 		Assert.assertTrue(convertHistoryList.get(0).time <= serverTime1 + 1000);
 		Assert.assertEquals("coin_to_gold",
 				convertHistoryList.get(0).resource_convert_key);
-		Assert.assertEquals("count", convertHistoryList.get(0).count);
+		Assert.assertEquals(1, convertHistoryList.get(0).count);
 	}
 
 }

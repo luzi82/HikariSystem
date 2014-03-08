@@ -3,7 +3,7 @@ import json
 
 from ajax.decorators import login_required, stuff_required
 from hikari_resource.models import HsUserResource, HsResourceConvertChange,\
-    HsResourceConvert
+    HsResourceConvert, HsResourceConvertHistory
 from ajax.exceptions import AJAXError
 
 
@@ -46,7 +46,45 @@ def convert(request):
     # process
     
     resource_convert_db.process(user,now,count)
+    HsResourceConvertHistory.objects.create(
+        user=user,
+        time=now,
+        resource_convert_key=resource_convert_key,
+        count=count
+    ).save()
      
     request.hikari.status_update_set.add('resource')
 
     return {}
+
+
+@login_required
+def get_convert_history_list(request):
+
+    argJson = request.POST['arg']
+    arg = json.loads(argJson)
+    user = request.user
+
+    offset = arg["offset"]
+    count = arg["count"]
+
+    # check
+    
+    if count <= 0:
+        raise AJAXError(400, "count <= 0")
+
+    # process
+
+    convert_history_list_q = HsResourceConvertHistory.objects.filter(user=user).order_by('-time').all()[offset:offset+count]
+    
+    ret = []
+
+    for convert_history_list_db in convert_history_list_q:
+        pass
+        ret.append({
+            'time': convert_history_list_db.time,
+            'resource_convert_key': convert_history_list_db.resource_convert_key,
+            'count': convert_history_list_db.count,
+        })
+
+    return ret
