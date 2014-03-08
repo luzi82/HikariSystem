@@ -7,12 +7,14 @@ import java.util.concurrent.ExecutionException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.Resource;
 import com.luzi82.hikari.client.Resource.ConvertEntry;
 import com.luzi82.hikari.client.apache.HsClientApache.StatusCodeException;
 import com.luzi82.hikari.client.User;
 import com.luzi82.hikari.client.protocol.HikariProtocol;
+import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ChangeHistory;
 import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ConvertHistory;
 import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ResourceStatus;
 import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ResourceValue;
@@ -141,4 +143,47 @@ public class ResourceTest extends AbstractTest {
 		Assert.assertEquals(1, convertHistoryList.get(0).count);
 	}
 
+	@Test
+	public void testChangeHistory() throws Exception {
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		HsClient client = createClient();
+		createLogin(client);
+
+		List<ChangeHistory> changeHistoryList = Resource.getChangeHistoryList(
+				client, "coin", 0, 10, null).get();
+		Assert.assertEquals(0, changeHistoryList.size());
+		changeHistoryList = Resource.getChangeHistoryList(client, "gold", 0,
+				10, null).get();
+		Assert.assertEquals(0, changeHistoryList.size());
+
+		String clientUsername = client.get(User.APP_NAME, User.DB_USERNAME,
+				null).get();
+
+		HsClient admin = createAdmin();
+		Resource.setUserResourceCount(admin, clientUsername, "coin", 10000,
+				null).get();
+
+		long serverTime0 = client.getServerTime(System.currentTimeMillis());
+
+		Resource.convert(client, "coin_to_gold", 1, null).get();
+
+		long serverTime1 = client.getServerTime(System.currentTimeMillis());
+
+		changeHistoryList = Resource.getChangeHistoryList(client, "gold", 0,
+				10, null).get();
+		Assert.assertEquals(1, changeHistoryList.size());
+		Assert.assertTrue(changeHistoryList.get(0).time >= serverTime0 - 1000);
+		Assert.assertTrue(changeHistoryList.get(0).time <= serverTime1 + 1000);
+		Assert.assertEquals("convert", changeHistoryList.get(0).change_reason_key);
+		Assert.assertEquals("gold", changeHistoryList.get(0).resource_key);
+		Assert.assertEquals(10, changeHistoryList.get(0).count);
+		Map<String, Object> msg = objectMapper.readValue(
+				changeHistoryList.get(0).msg, Map.class);
+		Assert.assertEquals("coin_to_gold", msg.get("resource_convert_key"));
+
+		changeHistoryList = Resource.getChangeHistoryList(client, "coin", 0,
+				10, null).get();
+		Assert.assertEquals(0, changeHistoryList.size());
+	}
 }

@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from ajax.exceptions import AJAXError
 from django.core.exceptions import ObjectDoesNotExist
+import json
 
 class HsResourceChangeModel(models.Model):
 
@@ -18,9 +19,9 @@ class HsResourceChangeModel(models.Model):
         user_resource = HsUserResource.objects.get(user=user,resource_key=self.resource_key)
         user_resource.check(count*(-self.change),now)
 
-    def process(self,user,now,count):
+    def process(self,user,now,count,reason_key,reason_msg):
         user_resource = HsUserResource.objects.get(user=user,resource_key=self.resource_key)
-        user_resource.change(count*self.change,now)
+        user_resource.change(count*self.change,now,reason_key,reason_msg)
 
 
 class HsResourceChangeGroupModel(models.Model):
@@ -37,14 +38,18 @@ class HsResourceChangeGroupModel(models.Model):
         for change_db in change_db_query:
             change_db.check_resource(user,time,count)
 
-    def process(self,user,time,count=1,change_model=None,parent_key=None):
+    def process(self,user,time,count=1,change_model=None,parent_key=None,reason_key=None,reason_msg=None):
         if change_model == None:
             change_model = self.__class__.change_model
         if parent_key == None:
             parent_key = self.key
+        if reason_key == None:
+            reason_key = self.__class__.reason_key
+        if reason_msg == None:
+            reason_msg = self.reason_msg()
         change_db_query = change_model.objects.filter(parent_key=parent_key)
         for change_db in change_db_query:
-            change_db.process(user,time,count)
+            change_db.process(user,time,count,reason_key,reason_msg)
 
 
 class HsResource(models.Model):
@@ -122,7 +127,7 @@ class HsUserResource(models.Model):
         if self_value < value:
             raise AJAXError(400,'bN3XaWtF: self_value={self_value}, value={value}'.format(self_value=self_value,value=value))
     
-    def change(self,value,time):
+    def change(self,value,time,reason_key,reason_msg):
         if(value>0):
             self_value = self.value(time)
             self_type = self.type()
@@ -149,6 +154,15 @@ class HsUserResource(models.Model):
                     self.time = time
                 self.time -= value
             self.save()
+        if HsResourceChangeHistoryEnable.objects.filter(resource_key=self.resource_key).exists():
+            HsResourceChangeHistory.objects.create(
+                user=self.user,
+                time=time,
+                resource_key=self.resource_key,
+                count=value,
+                change_reason_key=reason_key,
+                msg=reason_msg
+            ).save()
 
 
 class HsResourceConvertChange(HsResourceChangeModel):
@@ -163,6 +177,10 @@ class HsResourceConvert(HsResourceChangeGroupModel):
     key = models.CharField(max_length=64, db_index=True)
     
     change_model = HsResourceConvertChange
+    reason_key = "convert"
+    
+    def reason_msg(self):
+        return json.dumps({'resource_convert_key':self.key})
 
 
 class HsResourceConvertHistory(models.Model):
@@ -176,3 +194,25 @@ class HsResourceConvertHistory(models.Model):
         index_together = [
             ["user", "time"],
         ]
+
+
+class HsResourceChangeHistory(models.Model):
+
+    user = user = models.ForeignKey(User,db_index=True)
+    time = models.BigIntegerField(db_index=True)
+    resource_key = models.CharField(max_length=64, db_index=True)
+    count = models.IntegerField()
+    change_reason_key = models.CharField(max_length=64, db_index=True)
+    msg = models.TextField()
+
+    class Meta:
+        index_together = [
+            ["user", "time"],
+            ["user", "resource_key", "time"],
+            ["user", "resource_key", "change_reason_key", "time"],
+        ]
+
+
+class HsResourceChangeHistoryEnable(models.Model):
+
+    resource_key = models.CharField(max_length=64, db_index=True)

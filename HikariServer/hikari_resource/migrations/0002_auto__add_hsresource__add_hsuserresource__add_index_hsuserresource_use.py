@@ -8,24 +8,12 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'HsResource'
-        db.create_table(u'hikari_resource_hsresource', (
+        # Adding model 'HsResourceConvert'
+        db.create_table(u'hikari_resource_hsresourceconvert', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
-            ('type', self.gf('django.db.models.fields.IntegerField')()),
-            ('max', self.gf('django.db.models.fields.BigIntegerField')()),
-            ('init_count', self.gf('django.db.models.fields.IntegerField')()),
         ))
-        db.send_create_signal(u'hikari_resource', ['HsResource'])
-
-        # Adding model 'HsResourceConvertChange'
-        db.create_table(u'hikari_resource_hsresourceconvertchange', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('parent_key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
-            ('resource_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
-            ('change', self.gf('django.db.models.fields.BigIntegerField')()),
-        ))
-        db.send_create_signal(u'hikari_resource', ['HsResourceConvertChange'])
+        db.send_create_signal(u'hikari_resource', ['HsResourceConvert'])
 
         # Adding model 'HsUserResource'
         db.create_table(u'hikari_resource_hsuserresource', (
@@ -40,12 +28,22 @@ class Migration(SchemaMigration):
         # Adding index on 'HsUserResource', fields ['user', 'resource_key']
         db.create_index(u'hikari_resource_hsuserresource', ['user_id', 'resource_key'])
 
-        # Adding model 'HsResourceConvert'
-        db.create_table(u'hikari_resource_hsresourceconvert', (
+        # Adding model 'HsResourceChangeHistoryEnable'
+        db.create_table(u'hikari_resource_hsresourcechangehistoryenable', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('resource_key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+        ))
+        db.send_create_signal(u'hikari_resource', ['HsResourceChangeHistoryEnable'])
+
+        # Adding model 'HsResource'
+        db.create_table(u'hikari_resource_hsresource', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+            ('type', self.gf('django.db.models.fields.IntegerField')()),
+            ('max', self.gf('django.db.models.fields.BigIntegerField')()),
+            ('init_count', self.gf('django.db.models.fields.IntegerField')()),
         ))
-        db.send_create_signal(u'hikari_resource', ['HsResourceConvert'])
+        db.send_create_signal(u'hikari_resource', ['HsResource'])
 
         # Adding model 'HsResourceConvertHistory'
         db.create_table(u'hikari_resource_hsresourceconverthistory', (
@@ -60,28 +58,73 @@ class Migration(SchemaMigration):
         # Adding index on 'HsResourceConvertHistory', fields ['user', 'time']
         db.create_index(u'hikari_resource_hsresourceconverthistory', ['user_id', 'time'])
 
+        # Adding model 'HsResourceChangeHistory'
+        db.create_table(u'hikari_resource_hsresourcechangehistory', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('time', self.gf('django.db.models.fields.BigIntegerField')(db_index=True)),
+            ('resource_key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+            ('count', self.gf('django.db.models.fields.IntegerField')()),
+            ('change_reason_key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+            ('msg', self.gf('django.db.models.fields.TextField')()),
+        ))
+        db.send_create_signal(u'hikari_resource', ['HsResourceChangeHistory'])
+
+        # Adding index on 'HsResourceChangeHistory', fields ['user', 'time']
+        db.create_index(u'hikari_resource_hsresourcechangehistory', ['user_id', 'time'])
+
+        # Adding index on 'HsResourceChangeHistory', fields ['user', 'resource_key', 'time']
+        db.create_index(u'hikari_resource_hsresourcechangehistory', ['user_id', 'resource_key', 'time'])
+
+        # Adding index on 'HsResourceChangeHistory', fields ['user', 'resource_key', 'change_reason_key', 'time']
+        db.create_index(u'hikari_resource_hsresourcechangehistory', ['user_id', 'resource_key', 'change_reason_key', 'time'])
+
+        # Adding model 'HsResourceConvertChange'
+        db.create_table(u'hikari_resource_hsresourceconvertchange', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('parent_key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+            ('resource_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
+            ('change', self.gf('django.db.models.fields.BigIntegerField')()),
+        ))
+        db.send_create_signal(u'hikari_resource', ['HsResourceConvertChange'])
+
 
     def backwards(self, orm):
+        # Removing index on 'HsResourceChangeHistory', fields ['user', 'resource_key', 'change_reason_key', 'time']
+        db.delete_index(u'hikari_resource_hsresourcechangehistory', ['user_id', 'resource_key', 'change_reason_key', 'time'])
+
+        # Removing index on 'HsResourceChangeHistory', fields ['user', 'resource_key', 'time']
+        db.delete_index(u'hikari_resource_hsresourcechangehistory', ['user_id', 'resource_key', 'time'])
+
+        # Removing index on 'HsResourceChangeHistory', fields ['user', 'time']
+        db.delete_index(u'hikari_resource_hsresourcechangehistory', ['user_id', 'time'])
+
         # Removing index on 'HsResourceConvertHistory', fields ['user', 'time']
         db.delete_index(u'hikari_resource_hsresourceconverthistory', ['user_id', 'time'])
 
         # Removing index on 'HsUserResource', fields ['user', 'resource_key']
         db.delete_index(u'hikari_resource_hsuserresource', ['user_id', 'resource_key'])
 
-        # Deleting model 'HsResource'
-        db.delete_table(u'hikari_resource_hsresource')
-
-        # Deleting model 'HsResourceConvertChange'
-        db.delete_table(u'hikari_resource_hsresourceconvertchange')
+        # Deleting model 'HsResourceConvert'
+        db.delete_table(u'hikari_resource_hsresourceconvert')
 
         # Deleting model 'HsUserResource'
         db.delete_table(u'hikari_resource_hsuserresource')
 
-        # Deleting model 'HsResourceConvert'
-        db.delete_table(u'hikari_resource_hsresourceconvert')
+        # Deleting model 'HsResourceChangeHistoryEnable'
+        db.delete_table(u'hikari_resource_hsresourcechangehistoryenable')
+
+        # Deleting model 'HsResource'
+        db.delete_table(u'hikari_resource_hsresource')
 
         # Deleting model 'HsResourceConvertHistory'
         db.delete_table(u'hikari_resource_hsresourceconverthistory')
+
+        # Deleting model 'HsResourceChangeHistory'
+        db.delete_table(u'hikari_resource_hsresourcechangehistory')
+
+        # Deleting model 'HsResourceConvertChange'
+        db.delete_table(u'hikari_resource_hsresourceconvertchange')
 
 
     models = {
@@ -128,6 +171,21 @@ class Migration(SchemaMigration):
             'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
             'max': ('django.db.models.fields.BigIntegerField', [], {}),
             'type': ('django.db.models.fields.IntegerField', [], {})
+        },
+        u'hikari_resource.hsresourcechangehistory': {
+            'Meta': {'object_name': 'HsResourceChangeHistory', 'index_together': "[['user', 'time'], ['user', 'resource_key', 'time'], ['user', 'resource_key', 'change_reason_key', 'time']]"},
+            'change_reason_key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
+            'count': ('django.db.models.fields.IntegerField', [], {}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'msg': ('django.db.models.fields.TextField', [], {}),
+            'resource_key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
+            'time': ('django.db.models.fields.BigIntegerField', [], {'db_index': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
+        },
+        u'hikari_resource.hsresourcechangehistoryenable': {
+            'Meta': {'object_name': 'HsResourceChangeHistoryEnable'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'resource_key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
         },
         u'hikari_resource.hsresourceconvert': {
             'Meta': {'object_name': 'HsResourceConvert'},

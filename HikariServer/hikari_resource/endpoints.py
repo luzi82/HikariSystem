@@ -3,7 +3,7 @@ import json
 
 from ajax.decorators import login_required, stuff_required
 from hikari_resource.models import HsUserResource, HsResourceConvertChange,\
-    HsResourceConvert, HsResourceConvertHistory
+    HsResourceConvert, HsResourceConvertHistory, HsResourceChangeHistory
 from ajax.exceptions import AJAXError
 
 
@@ -85,6 +85,42 @@ def get_convert_history_list(request):
             'time': convert_history_list_db.time,
             'resource_convert_key': convert_history_list_db.resource_convert_key,
             'count': convert_history_list_db.count,
+        })
+
+    return ret
+
+@login_required
+def get_change_history_list(request):
+    
+    argJson = request.POST['arg']
+    arg = json.loads(argJson)
+    user = request.user
+
+    resource_key = arg["resource_key"]
+    offset = arg["offset"]
+    count = arg["count"]
+
+    # check
+    
+    if offset < 0:
+        raise AJAXError(400, "count <= 0")
+    if count <= 0:
+        raise AJAXError(400, "count <= 0")
+
+    # process
+    
+    convert_change_list_q = HsResourceChangeHistory.objects.filter(user=user,resource_key=resource_key).order_by('-time').all()[offset:offset+count]
+    
+    ret = []
+    
+    for convert_change_list_db in convert_change_list_q:
+        pass
+        ret.append({
+            'time': convert_change_list_db.time,
+            'resource_key': convert_change_list_db.resource_key,
+            'count': convert_change_list_db.count,
+            'change_reason_key': convert_change_list_db.change_reason_key,
+            'msg': convert_change_list_db.msg,
         })
 
     return ret

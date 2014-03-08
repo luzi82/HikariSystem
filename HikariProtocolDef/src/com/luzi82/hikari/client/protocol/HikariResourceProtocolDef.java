@@ -57,6 +57,8 @@ public class HikariResourceProtocolDef {
 	public static class ConvertHistory {
 		public long time;
 		public String resource_convert_key;
+		public String resource_key;
+		public String msg;
 		public long count;
 	}
 
@@ -68,6 +70,28 @@ public class HikariResourceProtocolDef {
 		}
 
 		public static class Result extends LinkedList<ConvertHistory> {
+			private static final long serialVersionUID = -1236770084966746653L;
+		}
+
+	}
+
+	public static class ChangeHistory {
+		public long time;
+		public String resource_key;
+		public long count;
+		public String change_reason_key;
+		public String msg;
+	}
+
+	public static class GetChangeHistoryListCmd {
+
+		public static class Request {
+			public String resource_key;
+			public long offset;
+			public int count;
+		}
+
+		public static class Result extends LinkedList<ChangeHistory> {
 			private static final long serialVersionUID = -1236770084966746653L;
 		}
 

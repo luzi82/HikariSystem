@@ -4,6 +4,7 @@ from hikari_resource.models import HsUserResource, HsResourceChangeGroupModel, \
 import random
 from hikari_card.models import HsUserCard
 from ajax.exceptions import AJAXError
+import json
 
 # Create your models here.
 
@@ -18,6 +19,7 @@ class HsGacha(HsResourceChangeGroupModel):
     key = models.CharField(max_length=64, db_index=True)
     
     change_model = HsGachaCostResourceChange
+    reason_key = "gacha"
     
     def process(self, user, time):
         HsResourceChangeGroupModel.process(self, user, time)
@@ -44,6 +46,8 @@ class HsGacha(HsResourceChangeGroupModel):
    
         raise AJAXError(500, "4v9DNeCI unable to create card")
 
+    def reason_msg(self):
+        return json.dumps({'gacha_key':self.key})
 
 class HsGachaResult(models.Model):
     
