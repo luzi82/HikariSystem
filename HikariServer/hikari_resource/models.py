@@ -122,39 +122,33 @@ class HsUserResource(models.Model):
         if self_value < value:
             raise AJAXError(400,'bN3XaWtF: self_value={self_value}, value={value}'.format(self_value=self_value,value=value))
     
-    def consume(self,value,time):
-        self_value = self.value(time)
-        if self_value < value:
-            # should be 500, dev should check before consume
-            raise AJAXError(500,'b7lWLaop: self_value={self_value}, value={value}'.format(self_value=self_value,value=value))
-        selftype = self.type()
-        if selftype == HsResource.TYPE_COUNT:
-            self.count = self_value-value
-        elif selftype == HsResource.TYPE_TIME:
-            if self.time < time:
-                self.time = time
-            self.time += value
-        self.save()
-
-    def add(self,value,time):
-        self_value = self.value(time)
-        self_type = self.type()
-        if self_type == HsResource.TYPE_COUNT:
-            self_max = self.max()
-            self.count = self_value+value
-            if self.count > self_max:
-                self.count = self_max
-        elif self_type == HsResource.TYPE_TIME:
-            self.time -= value
-            if self.time < time:
-                self.time = time
-        self.save()
-        
     def change(self,value,time):
         if(value>0):
-            self.add(value,time)
+            self_value = self.value(time)
+            self_type = self.type()
+            if self_type == HsResource.TYPE_COUNT:
+                self_max = self.max()
+                self.count = self_value+value
+                if self.count > self_max:
+                    self.count = self_max
+            elif self_type == HsResource.TYPE_TIME:
+                self.time -= value
+                if self.time < time:
+                    self.time = time
+            self.save()
         else:
-            self.consume(-value,time)
+            self_value = self.value(time)
+            if self_value < -value:
+                # should be 500, dev should check before consume
+                raise AJAXError(500,'b7lWLaop: self_value={self_value}, value={value}'.format(self_value=self_value,value=value))
+            selftype = self.type()
+            if selftype == HsResource.TYPE_COUNT:
+                self.count = self_value+value
+            elif selftype == HsResource.TYPE_TIME:
+                if self.time < time:
+                    self.time = time
+                self.time -= value
+            self.save()
 
 
 class HsResourceConvertChange(HsResourceChangeModel):
