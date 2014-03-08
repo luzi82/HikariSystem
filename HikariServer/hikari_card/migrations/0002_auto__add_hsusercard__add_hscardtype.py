@@ -28,6 +28,13 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'hikari_card', ['HsUserDeskCard'])
 
+        # Adding model 'HsCardType'
+        db.create_table(u'hikari_card_hscardtype', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+        ))
+        db.send_create_signal(u'hikari_card', ['HsCardType'])
+
         # Adding model 'HsInitUserDeskCard'
         db.create_table(u'hikari_card_hsinituserdeskcard', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -37,13 +44,6 @@ class Migration(SchemaMigration):
             ('init_user_card_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
         ))
         db.send_create_signal(u'hikari_card', ['HsInitUserDeskCard'])
-
-        # Adding model 'HsCardType'
-        db.create_table(u'hikari_card_hscardtype', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
-        ))
-        db.send_create_signal(u'hikari_card', ['HsCardType'])
 
         # Adding model 'HsDeskType'
         db.create_table(u'hikari_card_hsdesktype', (
@@ -102,11 +102,11 @@ class Migration(SchemaMigration):
         # Deleting model 'HsUserDeskCard'
         db.delete_table(u'hikari_card_hsuserdeskcard')
 
-        # Deleting model 'HsInitUserDeskCard'
-        db.delete_table(u'hikari_card_hsinituserdeskcard')
-
         # Deleting model 'HsCardType'
         db.delete_table(u'hikari_card_hscardtype')
+
+        # Deleting model 'HsInitUserDeskCard'
+        db.delete_table(u'hikari_card_hsinituserdeskcard')
 
         # Deleting model 'HsDeskType'
         db.delete_table(u'hikari_card_hsdesktype')
