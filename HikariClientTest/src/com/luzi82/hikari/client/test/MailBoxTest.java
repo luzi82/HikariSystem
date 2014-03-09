@@ -74,6 +74,7 @@ public class MailBoxTest extends AbstractTest {
 
 		List<Mail> mailList = MailBox.getMailList(client, true, true, null)
 				.get();
+		Assert.assertEquals(1, mailList.size());
 
 		MailStatus mailStatus = MailBox.getMailStatusObservable(client).get();
 		Assert.assertEquals(1, mailStatus.readCount);
