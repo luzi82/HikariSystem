@@ -40,4 +40,16 @@ public class HikariMailBoxProtocolDef {
 		}
 	}
 
+	public static class SetReadCmd {
+		
+		public static class Request {
+			public int id;
+			public boolean read;
+		}
+
+		public static class Result {
+		}
+		
+	}
+
 }
