@@ -75,35 +75,32 @@ public class MailBoxTest extends AbstractTest {
 		List<Mail> mailList = MailBox.getMailList(client, true, true, 0, 10,
 				null).get();
 		Assert.assertEquals(1, mailList.size());
-
-		MailStatus mailStatus = MailBox.getMailStatusObservable(client).get();
-		Assert.assertEquals(1, mailStatus.read_count);
-		Assert.assertEquals(0, mailStatus.unread_count);
-
+		
 		int mailId = mailList.get(0).id;
 
-		mailList = MailBox.getMailList(client0, true, false, 0, 10, null).get();
+		mailList = MailBox.getMailList(client, true, false, 0, 10, null).get();
 		Assert.assertEquals(0, mailList.size());
 
-		mailList = MailBox.getMailList(client0, false, true, 0, 10, null).get();
+		mailList = MailBox.getMailList(client, false, true, 0, 10, null).get();
 		Assert.assertEquals(1, mailList.size());
 		Assert.assertEquals(mailId, mailList.get(0).id);
 
 		MailBox.setRead(client, mailId, true, null).get();
 
+		MailStatus mailStatus;
 		mailStatus = MailBox.getMailStatusObservable(client).get();
 		Assert.assertEquals(1, mailStatus.read_count);
 		Assert.assertEquals(0, mailStatus.unread_count);
 
-		mailList = MailBox.getMailList(client0, true, true, 0, 10, null).get();
+		mailList = MailBox.getMailList(client, true, true, 0, 10, null).get();
 		Assert.assertEquals(1, mailList.size());
 		Assert.assertEquals(mailId, mailList.get(0).id);
 
-		mailList = MailBox.getMailList(client0, true, false, 0, 10, null).get();
+		mailList = MailBox.getMailList(client, true, false, 0, 10, null).get();
 		Assert.assertEquals(1, mailList.size());
 		Assert.assertEquals(mailId, mailList.get(0).id);
 
-		mailList = MailBox.getMailList(client0, false, true, 0, 10, null).get();
+		mailList = MailBox.getMailList(client, false, true, 0, 10, null).get();
 		Assert.assertEquals(0, mailList.size());
 
 		MailBox.setRead(client, mailId, false, null).get();
@@ -112,14 +109,14 @@ public class MailBoxTest extends AbstractTest {
 		Assert.assertEquals(0, mailStatus.read_count);
 		Assert.assertEquals(1, mailStatus.unread_count);
 
-		mailList = MailBox.getMailList(client0, true, true, 0, 10, null).get();
+		mailList = MailBox.getMailList(client, true, true, 0, 10, null).get();
 		Assert.assertEquals(1, mailList.size());
 		Assert.assertEquals(mailId, mailList.get(0).id);
 
-		mailList = MailBox.getMailList(client0, true, false, 0, 10, null).get();
+		mailList = MailBox.getMailList(client, true, false, 0, 10, null).get();
 		Assert.assertEquals(0, mailList.size());
 
-		mailList = MailBox.getMailList(client0, false, true, 0, 10, null).get();
+		mailList = MailBox.getMailList(client, false, true, 0, 10, null).get();
 		Assert.assertEquals(1, mailList.size());
 		Assert.assertEquals(mailId, mailList.get(0).id);
 	}
