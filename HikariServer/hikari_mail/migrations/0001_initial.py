@@ -17,4 +17,4 @@ class Migration(SchemaMigration):
         
     }
 
-    complete_apps = ['hikari_mailbox']
+    complete_apps = ['hikari_mail']

@@ -45,7 +45,7 @@ INSTALLED_APPS = (
     'hikari_dev',
     'hikari_gacha',
     'hikari_l10n',
-    'hikari_mailbox',
+    'hikari_mail',
     'hikari_quest',
     'hikari_resource',
     'hikari_user',

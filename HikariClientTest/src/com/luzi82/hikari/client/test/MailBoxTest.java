@@ -8,9 +8,9 @@ import org.junit.Test;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.MailBox;
 import com.luzi82.hikari.client.User;
-import com.luzi82.hikari.client.protocol.HikariMailBoxProtocolDef.MailStatus;
+import com.luzi82.hikari.client.protocol.HikariMailProtocolDef.MailStatus;
 import com.luzi82.hikari.client.protocol.HikariProtocol;
-import com.luzi82.hikari.client.protocol.HikariMailBoxProtocolDef.Mail;
+import com.luzi82.hikari.client.protocol.HikariMailProtocolDef.Mail;
 
 public class MailBoxTest extends AbstractTest {
 
@@ -27,13 +27,13 @@ public class MailBoxTest extends AbstractTest {
 		String clientUsername0 = client0.get(User.APP_NAME, User.DB_USERNAME,
 				null).get();
 
-		List<Mail> mailList = MailBox.getMailList(client, true, true, null)
-				.get();
+		List<Mail> mailList = MailBox.getMailList(client, true, true, 0, 10,
+				null).get();
 		Assert.assertEquals(0, mailList.size());
 
 		MailStatus mailStatus = MailBox.getMailStatusObservable(client).get();
-		Assert.assertEquals(0, mailStatus.readCount);
-		Assert.assertEquals(0, mailStatus.unreadCount);
+		Assert.assertEquals(0, mailStatus.read_count);
+		Assert.assertEquals(0, mailStatus.unread_count);
 
 		long t0 = client.getServerTime(System.currentTimeMillis());
 
@@ -45,10 +45,10 @@ public class MailBoxTest extends AbstractTest {
 		HikariProtocol.syncStatus(client, null).get();
 
 		mailStatus = MailBox.getMailStatusObservable(client).get();
-		Assert.assertEquals(0, mailStatus.readCount);
-		Assert.assertEquals(1, mailStatus.unreadCount);
+		Assert.assertEquals(0, mailStatus.read_count);
+		Assert.assertEquals(1, mailStatus.unread_count);
 
-		mailList = MailBox.getMailList(client0, true, true, null).get();
+		mailList = MailBox.getMailList(client, true, true, 0, 10, null).get();
 		Assert.assertEquals(1, mailList.size());
 		Assert.assertTrue(mailList.get(0).time >= t0 - 1000);
 		Assert.assertTrue(mailList.get(0).time <= t1 + 1000);
@@ -72,54 +72,54 @@ public class MailBoxTest extends AbstractTest {
 		MailBox.sendMail(client0, clientUsername, "HelloTitle", "HelloWorld",
 				null).get();
 
-		List<Mail> mailList = MailBox.getMailList(client, true, true, null)
-				.get();
+		List<Mail> mailList = MailBox.getMailList(client, true, true, 0, 10,
+				null).get();
 		Assert.assertEquals(1, mailList.size());
 
 		MailStatus mailStatus = MailBox.getMailStatusObservable(client).get();
-		Assert.assertEquals(1, mailStatus.readCount);
-		Assert.assertEquals(0, mailStatus.unreadCount);
+		Assert.assertEquals(1, mailStatus.read_count);
+		Assert.assertEquals(0, mailStatus.unread_count);
 
 		int mailId = mailList.get(0).id;
 
-		mailList = MailBox.getMailList(client0, true, false, null).get();
+		mailList = MailBox.getMailList(client0, true, false, 0, 10, null).get();
 		Assert.assertEquals(0, mailList.size());
 
-		mailList = MailBox.getMailList(client0, false, true, null).get();
+		mailList = MailBox.getMailList(client0, false, true, 0, 10, null).get();
 		Assert.assertEquals(1, mailList.size());
 		Assert.assertEquals(mailId, mailList.get(0).id);
 
 		MailBox.setRead(client, mailId, true, null).get();
 
 		mailStatus = MailBox.getMailStatusObservable(client).get();
-		Assert.assertEquals(1, mailStatus.readCount);
-		Assert.assertEquals(0, mailStatus.unreadCount);
+		Assert.assertEquals(1, mailStatus.read_count);
+		Assert.assertEquals(0, mailStatus.unread_count);
 
-		mailList = MailBox.getMailList(client0, true, true, null).get();
+		mailList = MailBox.getMailList(client0, true, true, 0, 10, null).get();
 		Assert.assertEquals(1, mailList.size());
 		Assert.assertEquals(mailId, mailList.get(0).id);
 
-		mailList = MailBox.getMailList(client0, true, false, null).get();
+		mailList = MailBox.getMailList(client0, true, false, 0, 10, null).get();
 		Assert.assertEquals(1, mailList.size());
 		Assert.assertEquals(mailId, mailList.get(0).id);
 
-		mailList = MailBox.getMailList(client0, false, true, null).get();
+		mailList = MailBox.getMailList(client0, false, true, 0, 10, null).get();
 		Assert.assertEquals(0, mailList.size());
 
 		MailBox.setRead(client, mailId, false, null).get();
 
 		mailStatus = MailBox.getMailStatusObservable(client).get();
-		Assert.assertEquals(0, mailStatus.readCount);
-		Assert.assertEquals(1, mailStatus.unreadCount);
+		Assert.assertEquals(0, mailStatus.read_count);
+		Assert.assertEquals(1, mailStatus.unread_count);
 
-		mailList = MailBox.getMailList(client0, true, true, null).get();
+		mailList = MailBox.getMailList(client0, true, true, 0, 10, null).get();
 		Assert.assertEquals(1, mailList.size());
 		Assert.assertEquals(mailId, mailList.get(0).id);
 
-		mailList = MailBox.getMailList(client0, true, false, null).get();
+		mailList = MailBox.getMailList(client0, true, false, 0, 10, null).get();
 		Assert.assertEquals(0, mailList.size());
 
-		mailList = MailBox.getMailList(client0, false, true, null).get();
+		mailList = MailBox.getMailList(client0, false, true, 0, 10, null).get();
 		Assert.assertEquals(1, mailList.size());
 		Assert.assertEquals(mailId, mailList.get(0).id);
 	}

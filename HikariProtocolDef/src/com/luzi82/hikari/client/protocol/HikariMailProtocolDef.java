@@ -2,11 +2,11 @@ package com.luzi82.hikari.client.protocol;
 
 import java.util.LinkedList;
 
-public class HikariMailBoxProtocolDef {
+public class HikariMailProtocolDef {
 
 	public static class MailStatus {
-		public int readCount;
-		public int unreadCount;
+		public int read_count;
+		public int unread_count;
 	}
 
 	public static class Mail {
@@ -22,6 +22,8 @@ public class HikariMailBoxProtocolDef {
 		public static class Request {
 			public boolean read;
 			public boolean unread;
+			public int offset;
+			public int count;
 		}
 
 		public static class Result extends LinkedList<Mail> {
