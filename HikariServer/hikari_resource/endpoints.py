@@ -105,7 +105,7 @@ def get_change_history_list(request):
     # check
     
     if offset < 0:
-        raise AJAXError(400, "count <= 0")
+        raise AJAXError(400, "offset < 0")
     if count <= 0:
         raise AJAXError(400, "count <= 0")
 
