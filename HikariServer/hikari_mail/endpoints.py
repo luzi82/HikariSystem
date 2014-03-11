@@ -78,3 +78,26 @@ def get_mail_list(request):
         })
     
     return ret
+
+
+@login_required
+def set_read(request):
+    
+    argJson = request.POST['arg']
+    arg = json.loads(argJson)
+    user = request.user
+    
+    # arg
+
+    mail_id = arg["mail_id"]
+    read = arg["read"]
+
+    # process
+    
+    q = HsMail.objects.get(id=mail_id)
+    q.read = read;
+    q.save()
+    
+    request.hikari.status_update_set.add('mail')
+    
+    return {}

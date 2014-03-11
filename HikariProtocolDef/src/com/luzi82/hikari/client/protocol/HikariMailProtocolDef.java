@@ -45,7 +45,7 @@ public class HikariMailProtocolDef {
 	public static class SetReadCmd {
 		
 		public static class Request {
-			public int id;
+			public int mail_id;
 			public boolean read;
 		}
 
