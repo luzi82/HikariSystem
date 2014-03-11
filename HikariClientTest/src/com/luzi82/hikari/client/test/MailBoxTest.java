@@ -1,6 +1,7 @@
 package com.luzi82.hikari.client.test;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -8,6 +9,7 @@ import org.junit.Test;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.MailBox;
 import com.luzi82.hikari.client.User;
+import com.luzi82.hikari.client.apache.HsClientApache.StatusCodeException;
 import com.luzi82.hikari.client.protocol.HikariMailProtocolDef.MailStatus;
 import com.luzi82.hikari.client.protocol.HikariProtocol;
 import com.luzi82.hikari.client.protocol.HikariMailProtocolDef.Mail;
@@ -75,7 +77,7 @@ public class MailBoxTest extends AbstractTest {
 		List<Mail> mailList = MailBox.getMailList(client, true, true, 0, 10,
 				null).get();
 		Assert.assertEquals(1, mailList.size());
-		
+
 		int mailId = mailList.get(0).id;
 
 		mailList = MailBox.getMailList(client, true, false, 0, 10, null).get();
@@ -119,6 +121,34 @@ public class MailBoxTest extends AbstractTest {
 		mailList = MailBox.getMailList(client, false, true, 0, 10, null).get();
 		Assert.assertEquals(1, mailList.size());
 		Assert.assertEquals(mailId, mailList.get(0).id);
+	}
+
+	@Test
+	public void testSetReadOther() throws Exception {
+		HsClient client = createClient();
+		createLogin(client);
+
+		HsClient client0 = createClient();
+		createLogin(client0);
+
+		String clientUsername = client.get(User.APP_NAME, User.DB_USERNAME,
+				null).get();
+
+		MailBox.sendMail(client0, clientUsername, "HelloTitle", "HelloWorld",
+				null).get();
+
+		List<Mail> mailList = MailBox.getMailList(client, true, true, 0, 10,
+				null).get();
+		int mailId = mailList.get(0).id;
+
+		StatusCodeException sce = null;
+		try {
+			MailBox.setRead(client0, mailId, true, null).get();
+			Assert.fail();
+		} catch (ExecutionException ee) {
+			sce = (StatusCodeException) ee.getCause();
+		}
+		Assert.assertEquals(403, sce.code);
 	}
 
 }
