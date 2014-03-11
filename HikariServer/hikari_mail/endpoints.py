@@ -92,9 +92,14 @@ def set_read(request):
     mail_id = arg["mail_id"]
     read = arg["read"]
 
-    # process
+    # check
     
     q = HsMail.objects.get(id=mail_id)
+    if q.to_user != user:
+        raise AJAXError(403, "no access")
+    
+    # process
+    
     q.read = read;
     q.save()
     
