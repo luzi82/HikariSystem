@@ -1,6 +1,10 @@
 package com.luzi82.hikari.client.protocol;
 
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class HikariMailProtocolDef {
 
@@ -16,6 +20,7 @@ public class HikariMailProtocolDef {
 		public String title;
 		public String message;
 		public boolean read;
+		public Map<String, List<JsonNode>> item_list_map;
 	}
 
 	public static class GetMailListCmd {
@@ -43,7 +48,7 @@ public class HikariMailProtocolDef {
 	}
 
 	public static class SetReadCmd {
-		
+
 		public static class Request {
 			public int mail_id;
 			public boolean read;
@@ -51,7 +56,19 @@ public class HikariMailProtocolDef {
 
 		public static class Result {
 		}
-		
+
+	}
+
+	public static class SendGiftMailCmd {
+		public static class Request {
+			public String username;
+			public String title;
+			public String message;
+			public Item.ListMap item_list_map;
+		}
+
+		public static class Result {
+		}
 	}
 
 }

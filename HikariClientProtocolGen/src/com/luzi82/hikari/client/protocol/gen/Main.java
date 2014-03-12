@@ -17,6 +17,8 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
+import com.luzi82.hikari.client.protocol.Item;
+
 public class Main {
 
 	public static final String[] INPUT_PATH_LIST = { "../HikariProtocolDef/src" };
@@ -158,6 +160,32 @@ public class Main {
 				// vc.put("status_exist", statusExist);
 				vc.put("status_list", statusList0);
 
+				List<Itemm> itemmList = new LinkedList<Itemm>();
+				for (Class<?> dataClass : cls.getDeclaredClasses()) {
+					if (!Item.class.isAssignableFrom(dataClass))
+						continue;
+					String classSimpleName = dataClass.getSimpleName();
+					if (!classSimpleName.endsWith("Item"))
+						continue;
+					// statusExist = true;
+					Itemm itemm = new Itemm();
+					itemm.appName = appName;
+					itemm.jname = camelToLower(classSimpleName.substring(0,
+							classSimpleName.length() - 4));
+					itemm.cname = dataClass.getSimpleName();
+					itemm.cnamefull = dataClass.getCanonicalName();
+
+					for (Field field : dataClass.getFields()) {
+						Fieldd fd = new Fieldd();
+						fd.name = field.getName();
+						fd.type = field.getType().getCanonicalName();
+						itemm.fieldList.add(fd);
+					}
+
+					itemmList.add(itemm);
+				}
+				vc.put("item_list", itemmList);
+
 				BufferedWriter bw = new BufferedWriter(new FileWriter(out));
 				template.merge(vc, bw);
 
@@ -267,6 +295,34 @@ public class Main {
 
 		public String getCnamefull() {
 			return cnamefull;
+		}
+	}
+
+	public static class Itemm {
+		public String appName;
+		public String cnamefull;
+		public String cname;
+		public String jname;
+		public LinkedList<Fieldd> fieldList = new LinkedList<Fieldd>();
+
+		public String getAppName() {
+			return appName;
+		}
+
+		public String getJname() {
+			return jname;
+		}
+
+		public String getCname() {
+			return cname;
+		}
+
+		public String getCnamefull() {
+			return cnamefull;
+		}
+
+		public LinkedList<Fieldd> getFieldList() {
+			return fieldList;
 		}
 	}
 

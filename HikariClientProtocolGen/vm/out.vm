@@ -1,7 +1,10 @@
 package com.luzi82.hikari.client.protocol;
 
 import java.util.concurrent.Future;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.concurrent.RetryableFuture;
 import com.luzi82.lang.GuriObservable;
@@ -32,6 +35,30 @@ public class ${main}Protocol extends ${main}ProtocolDef {
 			"${status.Jname}",
 			${status.Cnamefull}.class
 		);
+	}
+#end
+#foreach( $item in $item_list )
+
+	public static void add${item.Cname}(
+		Item.ListMap itemListMap,
+#foreach( $field in $item.FieldList )
+		${field.Type} ${field.Name}#if( $foreach.hasNext ),
+#end#end
+
+	) {
+		${item.Cname} item = new ${item.Cname}();
+#foreach( $field in $item.FieldList )
+		item.${field.Name} = ${field.Name};
+#end
+		itemListMap.attach("${item.Jname}",item);
+	}
+	
+
+	public static List<${item.Cname}> get${item.Cname}List(
+		final HsCmdManager cmdManager,
+		Map<String, List<JsonNode>> itemListMap
+	) {
+		return Item.ListMap.toList(itemListMap.get("${item.Jname}"),${item.Cname}.class,cmdManager.getObjectMapper());
 	}
 #end
 #foreach( $cmd in $cmd_list )

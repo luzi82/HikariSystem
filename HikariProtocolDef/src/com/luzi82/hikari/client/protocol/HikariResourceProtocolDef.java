@@ -110,4 +110,9 @@ public class HikariResourceProtocolDef {
 
 	}
 
+	public static class ResourceItem implements Item {
+		public String resource_key;
+		public long value;
+	}
+
 }

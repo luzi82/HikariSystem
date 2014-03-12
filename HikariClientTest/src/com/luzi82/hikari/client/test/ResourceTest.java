@@ -9,15 +9,18 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.luzi82.hikari.client.HsClient;
+import com.luzi82.hikari.client.MailBox;
 import com.luzi82.hikari.client.Resource;
 import com.luzi82.hikari.client.Resource.ConvertEntry;
-import com.luzi82.hikari.client.apache.HsClientApache.StatusCodeException;
 import com.luzi82.hikari.client.User;
+import com.luzi82.hikari.client.apache.HsClientApache.StatusCodeException;
+import com.luzi82.hikari.client.protocol.HikariMailProtocolDef.Mail;
 import com.luzi82.hikari.client.protocol.HikariProtocol;
 import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ChangeHistory;
 import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ConvertHistory;
 import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ResourceStatus;
 import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ResourceValue;
+import com.luzi82.hikari.client.protocol.Item;
 
 public class ResourceTest extends AbstractTest {
 
@@ -175,7 +178,8 @@ public class ResourceTest extends AbstractTest {
 		Assert.assertEquals(1, changeHistoryList.size());
 		Assert.assertTrue(changeHistoryList.get(0).time >= serverTime0 - 1000);
 		Assert.assertTrue(changeHistoryList.get(0).time <= serverTime1 + 1000);
-		Assert.assertEquals("convert", changeHistoryList.get(0).change_reason_key);
+		Assert.assertEquals("convert",
+				changeHistoryList.get(0).change_reason_key);
 		Assert.assertEquals("gold", changeHistoryList.get(0).resource_key);
 		Assert.assertEquals(10, changeHistoryList.get(0).count);
 		Map<String, Object> msg = objectMapper.readValue(
@@ -186,4 +190,39 @@ public class ResourceTest extends AbstractTest {
 				10, null).get();
 		Assert.assertEquals(0, changeHistoryList.size());
 	}
+
+	@Test
+	public void testGiftResource() throws Exception {
+		HsClient client = createClient();
+		createLogin(client);
+
+		HsClient admin = createAdmin();
+
+		String clientUsername = client.get(User.APP_NAME, User.DB_USERNAME,
+				null).get();
+		Item.ListMap itemListMap = new Item.ListMap();
+		Resource.addResourceItem(itemListMap, "coin", 689);
+
+		MailBox.sendGiftMail(admin, clientUsername, "HelloTitle", "HelloWorld",
+				itemListMap, null).get();
+
+		List<Mail> mailList = MailBox.getMailList(client, true, true, 0, 10,
+				null).get();
+		Assert.assertEquals(1, mailList.size());
+
+		List<Resource.ResourceItem> mailAttachList = Resource
+				.getResourceItemList(client, mailList.get(0).item_list_map);
+		Assert.assertEquals(1, mailAttachList.size());
+		Assert.assertEquals("coin", mailAttachList.get(0).resource_key);
+		Assert.assertEquals(689, mailAttachList.get(0).value);
+
+		long coin0 = Resource.value(client, "coin", System.currentTimeMillis());
+
+		MailBox.setRead(client, mailList.get(0).id, true, null).get();
+
+		long coin1 = Resource.value(client, "coin", System.currentTimeMillis());
+
+		Assert.assertEquals(coin1, coin0 + 689);
+	}
+
 }

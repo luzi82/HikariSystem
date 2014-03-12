@@ -2,6 +2,7 @@ package com.luzi82.hikari.client.endpoint;
 
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.luzi82.concurrent.FutureCallback;
 import com.luzi82.concurrent.RetryableFuture;
 import com.luzi82.lang.GuriObservable;
@@ -22,5 +23,7 @@ public interface HsCmdManager {
 
 	public <Status> void addStatus(String appName, String statusName,
 			Class<Status> statusClass);
+
+	public ObjectMapper getObjectMapper();
 
 }

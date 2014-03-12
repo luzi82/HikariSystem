@@ -322,6 +322,11 @@ public class HsClient implements HsCmdManager {
 		staticDataParam.put(key, value);
 	}
 
+	@Override
+	public ObjectMapper getObjectMapper() {
+		return mObjectMapper;
+	}
+
 	// TODO change to load data from disk to memory
 	// public <Data> Future<List<Data>> getDataList(String appName,
 	// String dataName, Class<Data> dataClass,
