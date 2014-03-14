@@ -40,5 +40,9 @@ public class HikariCardProtocolDef {
 		}
 
 	}
+	
+	public static class CardItem implements Item {
+		public String card_type_key;
+	}
 
 }

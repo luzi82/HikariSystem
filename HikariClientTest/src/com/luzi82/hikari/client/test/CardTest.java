@@ -1,6 +1,8 @@
 package com.luzi82.hikari.client.test;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import org.junit.Assert;
@@ -8,10 +10,14 @@ import org.junit.Test;
 
 import com.luzi82.hikari.client.Card;
 import com.luzi82.hikari.client.HsClient;
+import com.luzi82.hikari.client.MailBox;
+import com.luzi82.hikari.client.User;
 import com.luzi82.hikari.client.apache.HsClientApache.StatusCodeException;
 import com.luzi82.hikari.client.protocol.HikariCardProtocolDef.CardStatus;
 import com.luzi82.hikari.client.protocol.HikariCardProtocolDef.CardTypeData;
 import com.luzi82.hikari.client.protocol.HikariCardProtocolDef.DeskStatus;
+import com.luzi82.hikari.client.protocol.HikariMailProtocolDef.Mail;
+import com.luzi82.hikari.client.protocol.Item;
 
 public class CardTest extends AbstractTest {
 
@@ -243,5 +249,43 @@ public class CardTest extends AbstractTest {
 			sce = (StatusCodeException) ee.getCause();
 		}
 		Assert.assertEquals(400, sce.code);
+	}
+
+	@Test
+	public void testGiftCard() throws Exception {
+		HsClient client = createClient();
+		createLogin(client);
+
+		HsClient admin = createAdmin();
+
+		String clientUsername = client.get(User.APP_NAME, User.DB_USERNAME,
+				null).get();
+		Item.ListMap itemListMap = new Item.ListMap();
+		Card.addCardItem(itemListMap, "cardtype_0");
+
+		MailBox.sendGiftMail(admin, clientUsername, "HelloTitle", "HelloWorld",
+				itemListMap, null).get();
+
+		List<Mail> mailList = MailBox.getMailList(client, true, true, 0, 10,
+				null).get();
+		Assert.assertEquals(1, mailList.size());
+
+		List<Card.CardItem> mailAttachList = Card.getCardItemList(client,
+				mailList.get(0).item_list_map);
+		Assert.assertEquals(1, mailAttachList.size());
+		Assert.assertEquals("cardtype_0", mailAttachList.get(0).card_type_key);
+
+		CardStatus cardStatus0 = Card.getCardStatusObservable(client).get();
+
+		MailBox.setRead(client, mailList.get(0).id, true, null).get();
+
+		CardStatus cardStatus1 = Card.getCardStatusObservable(client).get();
+
+		Assert.assertEquals(cardStatus0.size() + 1, cardStatus1.size());
+		Set<Integer> extraCard = new HashSet<Integer>(cardStatus1.keySet());
+		extraCard.removeAll(cardStatus0.keySet());
+		Assert.assertEquals(1, extraCard.size());
+		int cardId = extraCard.toArray(new Integer[0])[0];
+		Assert.assertEquals("cardtype_0", cardStatus1.get(cardId).card_type_key);
 	}
 }
