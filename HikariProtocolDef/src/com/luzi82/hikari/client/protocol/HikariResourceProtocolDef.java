@@ -113,6 +113,8 @@ public class HikariResourceProtocolDef {
 	public static class ResourceItem implements Item {
 		public String resource_key;
 		public long value;
+		public String change_reason_key;
+		public String change_reason_msg;
 	}
 
 }

@@ -17,6 +17,7 @@ class Migration(SchemaMigration):
             ('title', self.gf('django.db.models.fields.TextField')()),
             ('message', self.gf('django.db.models.fields.TextField')()),
             ('read', self.gf('django.db.models.fields.BooleanField')()),
+            ('item_pack', self.gf('django.db.models.fields.related.ForeignKey')(default=None, to=orm['hikari.HsItemPack'], null=True)),
         ))
         db.send_create_signal(u'hikari_mail', ['HsMail'])
 
@@ -75,10 +76,16 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
+        u'hikari.hsitempack': {
+            'Meta': {'object_name': 'HsItemPack'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'redeem_done': ('django.db.models.fields.BooleanField', [], {})
+        },
         u'hikari_mail.hsmail': {
             'Meta': {'object_name': 'HsMail', 'index_together': "[['to_user', 'time'], ['to_user', 'read', 'time']]"},
             'from_user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'hsmail_from_user'", 'to': u"orm['auth.User']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'item_pack': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['hikari.HsItemPack']", 'null': 'True'}),
             'message': ('django.db.models.fields.TextField', [], {}),
             'read': ('django.db.models.fields.BooleanField', [], {}),
             'time': ('django.db.models.fields.BigIntegerField', [], {'db_index': 'True'}),

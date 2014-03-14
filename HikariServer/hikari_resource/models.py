@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from ajax.exceptions import AJAXError
 from django.core.exceptions import ObjectDoesNotExist
 import json
+from hikari.models import HsItemPack
 
 class HsResourceChangeModel(models.Model):
 
@@ -198,7 +199,7 @@ class HsResourceConvertHistory(models.Model):
 
 class HsResourceChangeHistory(models.Model):
 
-    user = user = models.ForeignKey(User,db_index=True)
+    user = models.ForeignKey(User,db_index=True)
     time = models.BigIntegerField(db_index=True)
     resource_key = models.CharField(max_length=64, db_index=True)
     count = models.IntegerField()
@@ -216,3 +217,12 @@ class HsResourceChangeHistory(models.Model):
 class HsResourceChangeHistoryEnable(models.Model):
 
     resource_key = models.CharField(max_length=64, db_index=True)
+
+
+class HsResourceItem(models.Model):
+    
+    item_pack = models.ForeignKey(HsItemPack,db_index=True)
+    resource_key = models.CharField(max_length=64, db_index=True)
+    value = models.IntegerField()
+    change_reason_key = models.CharField(max_length=64, db_index=True)
+    change_reason_msg = models.TextField()

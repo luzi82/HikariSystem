@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from hikari.models import HsItemPack
 
 # Create your models here.
 
@@ -11,6 +12,7 @@ class HsMail(models.Model):
     title = models.TextField()
     message = models.TextField()
     read = models.BooleanField()
+    item_pack = models.ForeignKey(HsItemPack,db_index=True,null=True,default=None)
 
     class Meta:
         index_together = [

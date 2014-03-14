@@ -2,10 +2,10 @@ from django.contrib.auth.models import User
 import json
 
 from ajax.decorators import login_required, stuff_required
-from hikari_resource.models import HsUserResource, HsResourceConvertChange
-from hikari_gacha.models import HsGacha
 from ajax.exceptions import AJAXError
 from hikari_mail.models import HsMail
+from hikari.item_pack import item_list_map_to_db, db_to_item_list_map,\
+    item_redeem
 
 @login_required
 def send_mail(request):
@@ -74,7 +74,8 @@ def get_mail_list(request):
             'from_username': mail_db.from_user.username,
             'title': mail_db.title,
             'message': mail_db.message,
-            'read': mail_db.read
+            'read': mail_db.read,
+            'item_list_map': db_to_item_list_map(mail_db.item_pack)
         })
     
     return ret
@@ -100,9 +101,47 @@ def set_read(request):
     
     # process
     
+    if read:
+        if q.item_pack != None:
+            item_redeem(q.item_pack,q.to_user,request)
+    
     q.read = read;
     q.save()
     
     request.hikari.status_update_set.add('mail')
+    
+    return {}
+
+
+@stuff_required
+def send_gift_mail(request):
+    argJson = request.POST['arg']
+    arg = json.loads(argJson)
+    user = request.user
+    now = request.hikari.time
+
+    # arg
+    
+    username = arg["username"]
+    title = arg["title"]
+    message = arg["message"]
+    item_list_map = arg["item_list_map"]
+
+    # check
+    
+    to_user = User.objects.get(username=username)
+    
+    # process
+    
+    item_pack_db = item_list_map_to_db(item_list_map)
+    HsMail.objects.create(
+        time = now,
+        from_user = user,
+        to_user = to_user,
+        title = title,
+        message = message,
+        read = False,
+        item_pack = item_pack_db
+    ).save()
     
     return {}

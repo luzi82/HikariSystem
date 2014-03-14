@@ -201,7 +201,8 @@ public class ResourceTest extends AbstractTest {
 		String clientUsername = client.get(User.APP_NAME, User.DB_USERNAME,
 				null).get();
 		Item.ListMap itemListMap = new Item.ListMap();
-		Resource.addResourceItem(itemListMap, "coin", 689);
+		Resource.addResourceItem(itemListMap, "coin", 689, "reason_key",
+				"reason_msg");
 
 		MailBox.sendGiftMail(admin, clientUsername, "HelloTitle", "HelloWorld",
 				itemListMap, null).get();
@@ -215,6 +216,10 @@ public class ResourceTest extends AbstractTest {
 		Assert.assertEquals(1, mailAttachList.size());
 		Assert.assertEquals("coin", mailAttachList.get(0).resource_key);
 		Assert.assertEquals(689, mailAttachList.get(0).value);
+		Assert.assertEquals("reason_key",
+				mailAttachList.get(0).change_reason_key);
+		Assert.assertEquals("reason_msg",
+				mailAttachList.get(0).change_reason_msg);
 
 		long coin0 = Resource.value(client, "coin", System.currentTimeMillis());
 
@@ -224,5 +229,4 @@ public class ResourceTest extends AbstractTest {
 
 		Assert.assertEquals(coin1, coin0 + 689);
 	}
-
 }
