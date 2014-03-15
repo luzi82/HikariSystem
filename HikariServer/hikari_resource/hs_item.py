@@ -1,5 +1,4 @@
 from hikari_resource.models import HsResourceItem, HsUserResource
-from hikari import now64
 
 def item_to_db(item_pack_db,item):
 
