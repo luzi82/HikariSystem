@@ -93,7 +93,6 @@ public class CacheTest extends AbstractTest {
 		createLogin(client);
 
 		long serverTime = HikariProtocol.getTime(client, null).get().time;
-		long clientTime = System.currentTimeMillis();
 
 		RecordFutureCallback<PassTimeCmd.Result> rfc = new RecordFutureCallback<PassTimeCmd.Result>(
 				null);

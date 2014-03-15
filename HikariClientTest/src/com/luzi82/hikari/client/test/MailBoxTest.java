@@ -10,9 +10,9 @@ import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.MailBox;
 import com.luzi82.hikari.client.User;
 import com.luzi82.hikari.client.apache.HsClientApache.StatusCodeException;
+import com.luzi82.hikari.client.protocol.HikariMailProtocolDef.Mail;
 import com.luzi82.hikari.client.protocol.HikariMailProtocolDef.MailStatus;
 import com.luzi82.hikari.client.protocol.HikariProtocol;
-import com.luzi82.hikari.client.protocol.HikariMailProtocolDef.Mail;
 
 public class MailBoxTest extends AbstractTest {
 

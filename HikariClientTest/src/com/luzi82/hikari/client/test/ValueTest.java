@@ -10,16 +10,16 @@ import org.junit.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.MailBox;
+import com.luzi82.hikari.client.User;
 import com.luzi82.hikari.client.Value;
 import com.luzi82.hikari.client.Value.ConvertEntry;
-import com.luzi82.hikari.client.User;
 import com.luzi82.hikari.client.apache.HsClientApache.StatusCodeException;
 import com.luzi82.hikari.client.protocol.HikariMailProtocolDef.Mail;
 import com.luzi82.hikari.client.protocol.HikariProtocol;
 import com.luzi82.hikari.client.protocol.HikariValueProtocolDef.ChangeHistory;
 import com.luzi82.hikari.client.protocol.HikariValueProtocolDef.ConvertHistory;
-import com.luzi82.hikari.client.protocol.HikariValueProtocolDef.ValueStatus;
 import com.luzi82.hikari.client.protocol.HikariValueProtocolDef.UserValue;
+import com.luzi82.hikari.client.protocol.HikariValueProtocolDef.ValueStatus;
 import com.luzi82.hikari.client.protocol.Item;
 
 public class ValueTest extends AbstractTest {
@@ -182,6 +182,7 @@ public class ValueTest extends AbstractTest {
 				changeHistoryList.get(0).change_reason_key);
 		Assert.assertEquals("gold", changeHistoryList.get(0).value_key);
 		Assert.assertEquals(10, changeHistoryList.get(0).value);
+		@SuppressWarnings("unchecked")
 		Map<String, Object> msg = objectMapper.readValue(
 				changeHistoryList.get(0).change_reason_msg, Map.class);
 		Assert.assertEquals("coin_to_gold", msg.get("value_convert_key"));

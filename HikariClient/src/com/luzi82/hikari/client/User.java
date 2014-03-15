@@ -166,6 +166,7 @@ public class User extends HikariUserProtocol {
 	public static String LOGIN_DONE_KEY = "LOGIN_DONE";
 
 	public static GuriObservable<Boolean> loginDoneObservable(HsClient client) {
+		@SuppressWarnings("unchecked")
 		GuriObservable<Boolean> ret = (GuriObservable<Boolean>) client.getTmp(
 				APP_NAME, LOGIN_DONE_KEY);
 		if (ret == null) {

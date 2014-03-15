@@ -8,8 +8,8 @@ import org.junit.Test;
 import com.luzi82.hikari.client.Card;
 import com.luzi82.hikari.client.Gacha;
 import com.luzi82.hikari.client.HsClient;
-import com.luzi82.hikari.client.Value;
 import com.luzi82.hikari.client.User;
+import com.luzi82.hikari.client.Value;
 import com.luzi82.hikari.client.protocol.HikariGachaProtocolDef.GachaCmd;
 import com.luzi82.hikari.client.protocol.HikariProtocol;
 

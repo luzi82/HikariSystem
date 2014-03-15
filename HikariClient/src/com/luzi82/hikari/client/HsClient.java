@@ -23,6 +23,7 @@ import com.luzi82.hikari.client.endpoint.HsCmdManager;
 import com.luzi82.hikari.client.protocol.gen.out.ClientInit;
 import com.luzi82.lang.GuriObservable;
 
+@SuppressWarnings({"unchecked","rawtypes"})
 public class HsClient implements HsCmdManager {
 
 	String server;

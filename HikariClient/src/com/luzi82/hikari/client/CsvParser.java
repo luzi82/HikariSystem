@@ -49,7 +49,7 @@ public class CsvParser {
 				String fieldname = dataClassField.getName();
 				int colIdx = colNameToIdx.get(fieldname);
 				// System.err.println("yGvAyBxC colIdx "+colIdx);
-				Class dataClassFieldType = dataClassField.getType();
+				Class<?> dataClassFieldType = dataClassField.getType();
 				if (dataClassFieldType == String.class) {
 					dataClassField.set(data, dataRow[colIdx]);
 				} else if (dataClassFieldType == Integer.class) {

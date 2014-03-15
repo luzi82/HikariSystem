@@ -10,8 +10,8 @@ import android.view.View;
 import android.widget.BaseAdapter;
 
 import com.luzi82.hikari.client.Value;
-import com.luzi82.hikari.client.protocol.HikariValueProtocolDef.ValueStatus;
 import com.luzi82.hikari.client.protocol.HikariValueProtocolDef.UserValue;
+import com.luzi82.hikari.client.protocol.HikariValueProtocolDef.ValueStatus;
 import com.luzi82.lang.WeakObserver;
 
 public class ValueView extends HikariListView implements

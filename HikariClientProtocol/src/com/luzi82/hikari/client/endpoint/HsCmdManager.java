@@ -19,7 +19,7 @@ public interface HsCmdManager {
 	public <Data> List<Data> getDataList(String appName, String dataName,
 			Class<Data> class1);
 
-	public void addDataLoad(String appName, String dataName, Class dataClass);
+	public void addDataLoad(String appName, String dataName, Class<?> dataClass);
 
 	public <Status> void addStatus(String appName, String statusName,
 			Class<Status> statusClass);

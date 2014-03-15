@@ -11,8 +11,8 @@ import org.junit.Test;
 
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.Quest;
-import com.luzi82.hikari.client.Value;
 import com.luzi82.hikari.client.User;
+import com.luzi82.hikari.client.Value;
 import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestStartCmd;
 import com.luzi82.hikari.client.protocol.HikariValueProtocolDef.AbstractValueChangeD;
 
@@ -108,8 +108,6 @@ public class QuestTest extends AbstractTest {
 		client.syncData(null).get();
 		createLogin(client);
 
-		List<Quest.QuestEntryData> questEntryList = Quest
-				.getQuestEntryDataList(client);
 		Quest.Entry entry = Quest.getEntryMap(client).get("quest_0");
 
 		long now;
