@@ -14,7 +14,8 @@ public class Value extends HikariValueProtocol {
 				.get();
 		UserValue rv = dataList.get(value_key);
 		if (rv == null)
-			return 0;
+			throw new IllegalArgumentException(String.format(
+					"value_key \"%s\" not valid", value_key));
 		if (rv.count != null)
 			return rv.count;
 		if (rv.time != null) {
