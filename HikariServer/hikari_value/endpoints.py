@@ -122,7 +122,7 @@ def get_change_history_list(request):
             'value_key': convert_change_list_db.value_key,
             'value': convert_change_list_db.value,
             'change_reason_key': convert_change_list_db.change_reason_key,
-            'change_reason_msg': convert_change_list_db.msg,
+            'change_reason_msg': convert_change_list_db.change_reason_msg,
         })
 
     return ret

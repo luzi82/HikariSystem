@@ -162,7 +162,7 @@ class HsUserValue(models.Model):
                 value_key=self.value_key,
                 value=value,
                 change_reason_key=reason_key,
-                msg=reason_msg
+                change_reason_msg=reason_msg
             ).save()
 
 
@@ -204,7 +204,7 @@ class HsValueChangeHistory(models.Model):
     value_key = models.CharField(max_length=64, db_index=True)
     value = models.IntegerField()
     change_reason_key = models.CharField(max_length=64, db_index=True)
-    msg = models.TextField()
+    change_reason_msg = models.TextField()
 
     class Meta:
         index_together = [

@@ -53,9 +53,9 @@ class Migration(SchemaMigration):
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
             ('time', self.gf('django.db.models.fields.BigIntegerField')(db_index=True)),
             ('value_key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
-            ('count', self.gf('django.db.models.fields.IntegerField')()),
+            ('value', self.gf('django.db.models.fields.IntegerField')()),
             ('change_reason_key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
-            ('msg', self.gf('django.db.models.fields.TextField')()),
+            ('change_reason_msg', self.gf('django.db.models.fields.TextField')()),
         ))
         db.send_create_signal(u'hikari_value', ['HsValueChangeHistory'])
 
@@ -202,11 +202,11 @@ class Migration(SchemaMigration):
         u'hikari_value.hsvaluechangehistory': {
             'Meta': {'object_name': 'HsValueChangeHistory', 'index_together': "[['user', 'time'], ['user', 'value_key', 'time'], ['user', 'value_key', 'change_reason_key', 'time']]"},
             'change_reason_key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
-            'count': ('django.db.models.fields.IntegerField', [], {}),
+            'change_reason_msg': ('django.db.models.fields.TextField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'msg': ('django.db.models.fields.TextField', [], {}),
             'time': ('django.db.models.fields.BigIntegerField', [], {'db_index': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"}),
+            'value': ('django.db.models.fields.IntegerField', [], {}),
             'value_key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
         },
         u'hikari_value.hsvaluechangehistoryenable': {
