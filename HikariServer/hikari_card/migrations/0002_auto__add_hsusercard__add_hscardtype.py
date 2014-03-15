@@ -28,22 +28,20 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'hikari_card', ['HsUserDeskCard'])
 
+        # Adding model 'HsCardItem'
+        db.create_table(u'hikari_card_hscarditem', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('item_pack', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hikari.HsItemPack'])),
+            ('card_type_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
+        ))
+        db.send_create_signal(u'hikari_card', ['HsCardItem'])
+
         # Adding model 'HsCardType'
         db.create_table(u'hikari_card_hscardtype', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
         ))
         db.send_create_signal(u'hikari_card', ['HsCardType'])
-
-        # Adding model 'HsInitUserDeskCard'
-        db.create_table(u'hikari_card_hsinituserdeskcard', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('desk_type_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
-            ('desk_id', self.gf('django.db.models.fields.IntegerField')()),
-            ('desk_pos', self.gf('django.db.models.fields.IntegerField')()),
-            ('init_user_card_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
-        ))
-        db.send_create_signal(u'hikari_card', ['HsInitUserDeskCard'])
 
         # Adding model 'HsDeskType'
         db.create_table(u'hikari_card_hsdesktype', (
@@ -86,6 +84,16 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'hikari_card', ['HsCardValueType'])
 
+        # Adding model 'HsInitUserDeskCard'
+        db.create_table(u'hikari_card_hsinituserdeskcard', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('desk_type_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
+            ('desk_id', self.gf('django.db.models.fields.IntegerField')()),
+            ('desk_pos', self.gf('django.db.models.fields.IntegerField')()),
+            ('init_user_card_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
+        ))
+        db.send_create_signal(u'hikari_card', ['HsInitUserDeskCard'])
+
         # Adding model 'HsCardTag'
         db.create_table(u'hikari_card_hscardtag', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -102,11 +110,11 @@ class Migration(SchemaMigration):
         # Deleting model 'HsUserDeskCard'
         db.delete_table(u'hikari_card_hsuserdeskcard')
 
+        # Deleting model 'HsCardItem'
+        db.delete_table(u'hikari_card_hscarditem')
+
         # Deleting model 'HsCardType'
         db.delete_table(u'hikari_card_hscardtype')
-
-        # Deleting model 'HsInitUserDeskCard'
-        db.delete_table(u'hikari_card_hsinituserdeskcard')
 
         # Deleting model 'HsDeskType'
         db.delete_table(u'hikari_card_hsdesktype')
@@ -122,6 +130,9 @@ class Migration(SchemaMigration):
 
         # Deleting model 'HsCardValueType'
         db.delete_table(u'hikari_card_hscardvaluetype')
+
+        # Deleting model 'HsInitUserDeskCard'
+        db.delete_table(u'hikari_card_hsinituserdeskcard')
 
         # Deleting model 'HsCardTag'
         db.delete_table(u'hikari_card_hscardtag')
@@ -163,6 +174,17 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        },
+        u'hikari.hsitempack': {
+            'Meta': {'object_name': 'HsItemPack'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'redeem_done': ('django.db.models.fields.BooleanField', [], {})
+        },
+        u'hikari_card.hscarditem': {
+            'Meta': {'object_name': 'HsCardItem'},
+            'card_type_key': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'item_pack': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hikari.HsItemPack']"})
         },
         u'hikari_card.hscardtag': {
             'Meta': {'object_name': 'HsCardTag'},

@@ -16,6 +16,7 @@ public class AbstractTest {
 
 	public static String SERVER = "http://192.168.1.50";
 //	public static String SERVER = "http://localhost:8000";
+	
 	public static String TEST_DEV = "test_dev";
 	public static String BACKDOOR_FILENAME = "../HikariServer/backdoor.json";
 	public static long BACKDOOR_PERIOD = 10000; // 10 sec backdoor open

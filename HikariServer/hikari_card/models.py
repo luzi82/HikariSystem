@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from hikari.models import HsItemPack
 
 # Create your models here.
 
@@ -120,3 +121,9 @@ class HsInitUserDeskCard(models.Model):
     desk_id = models.IntegerField()
     desk_pos = models.IntegerField()
     init_user_card_key = models.CharField(max_length=64)
+
+
+class HsCardItem(models.Model):
+    
+    item_pack = models.ForeignKey(HsItemPack,db_index=True)
+    card_type_key = models.CharField(max_length=64)
