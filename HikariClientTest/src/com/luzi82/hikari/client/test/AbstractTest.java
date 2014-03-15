@@ -14,8 +14,8 @@ public class AbstractTest {
 
 	public static Random RANDOM = new Random();
 
-	public static String SERVER = "http://192.168.1.50";
-//	public static String SERVER = "http://localhost:8000";
+//	public static String SERVER = "http://192.168.1.50";
+	public static String SERVER = "http://127.0.0.1:8000";
 	
 	public static String TEST_DEV = "test_dev";
 	public static String BACKDOOR_FILENAME = "../HikariServer/backdoor.json";

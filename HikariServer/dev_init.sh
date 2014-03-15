@@ -1,11 +1,11 @@
 #!/bin/bash
 
 rm -rf data 
-rm -f db.sqlite3
+rm -f /run/shm/hikaridev.sqlite3
 
-python manage.py syncdb --migrate --noinput
+python manage_hikaridev.py syncdb --migrate --noinput
 
-python manage.py shell < _dev_init.sh.py.in >> /dev/null
+python manage_hikaridev.py shell < _dev_init.sh.py.in >> /dev/null
 
-python manage.py csv_in
-python manage.py csv_out
+python manage_hikaridev.py csv_in
+python manage_hikaridev.py csv_out

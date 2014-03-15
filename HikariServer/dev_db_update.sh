@@ -7,4 +7,4 @@ if [ "$#" = "0" ]; then
 	exit
 fi
 
-./manage.py schemamigration ${1} --auto --update
+./manage_hikaridev.py schemamigration ${1} --auto --update

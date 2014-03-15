@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd src
-python manage.py shell
+python manage_hikaridev.py shell
