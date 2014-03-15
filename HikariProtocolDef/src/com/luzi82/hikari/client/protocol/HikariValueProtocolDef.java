@@ -3,30 +3,30 @@ package com.luzi82.hikari.client.protocol;
 import java.util.LinkedList;
 import java.util.TreeMap;
 
-public class HikariResourceProtocolDef {
+public class HikariValueProtocolDef {
 
-	public static class ResourceData {
+	public static class ValueData {
 		public final static int TYPE_COUNT = 1;
 		public final static int TYPE_TIME = 2;
 		public String key;
 		public int type;
 	}
 
-	public static class ResourceConvertData {
+	public static class ValueConvertData {
 		public String key;
 	}
 
-	public static class AbstractResourceChangeD {
+	public static class AbstractValueChangeD {
 		public String parent_key;
-		public String resource_key;
+		public String value_key;
 		public long change;
 	}
 
-	public static class ResourceConvertChangeData extends
-			AbstractResourceChangeD {
+	public static class ValueConvertChangeData extends
+			AbstractValueChangeD {
 	}
 
-	public static class ResourceStatus extends TreeMap<String, ResourceValue> {
+	public static class ValueStatus extends TreeMap<String, UserValue> {
 
 		/**
 		 * 
@@ -35,8 +35,8 @@ public class HikariResourceProtocolDef {
 
 	}
 
-	public static class ResourceValue {
-		public String resource_key;
+	public static class UserValue {
+		public String value_key;
 		public Integer count;
 		public Long time;
 		public Long max;
@@ -45,7 +45,7 @@ public class HikariResourceProtocolDef {
 	public static class ConvertCmd {
 
 		public static class Request {
-			public String resource_convert_key;
+			public String value_convert_key;
 			public long count;
 		}
 
@@ -56,9 +56,7 @@ public class HikariResourceProtocolDef {
 
 	public static class ConvertHistory {
 		public long time;
-		public String resource_convert_key;
-		public String resource_key;
-		public String msg;
+		public String value_convert_key;
 		public long count;
 	}
 
@@ -77,16 +75,16 @@ public class HikariResourceProtocolDef {
 
 	public static class ChangeHistory {
 		public long time;
-		public String resource_key;
-		public long count;
+		public String value_key;
+		public long value;
 		public String change_reason_key;
-		public String msg;
+		public String change_reason_msg;
 	}
 
 	public static class GetChangeHistoryListCmd {
 
 		public static class Request {
-			public String resource_key;
+			public String value_key;
 			public long offset;
 			public int count;
 		}
@@ -97,11 +95,11 @@ public class HikariResourceProtocolDef {
 
 	}
 
-	public static class SetUserResourceCountCmd {
+	public static class SetUserValueCountCmd {
 
 		public static class Request {
 			public String username;
-			public String resource_key;
+			public String value_key;
 			public long count;
 		}
 
@@ -110,8 +108,8 @@ public class HikariResourceProtocolDef {
 
 	}
 
-	public static class ResourceItem implements Item {
-		public String resource_key;
+	public static class ValueItem implements Item {
+		public String value_key;
 		public long value;
 		public String change_reason_key;
 		public String change_reason_msg;

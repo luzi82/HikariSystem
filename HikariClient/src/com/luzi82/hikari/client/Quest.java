@@ -7,7 +7,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import com.luzi82.hikari.client.protocol.HikariQuestProtocol;
-import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.AbstractResourceChangeD;
+import com.luzi82.hikari.client.protocol.HikariValueProtocolDef.AbstractValueChangeD;
 
 public class Quest extends HikariQuestProtocol {
 
@@ -16,7 +16,7 @@ public class Quest extends HikariQuestProtocol {
 		if (gachaDataList == null)
 			return null;
 
-		List<QuestCostResourceChangeData> gachaCostDataList = getQuestCostResourceChangeDataList(client);
+		List<QuestCostValueChangeData> gachaCostDataList = getQuestCostValueChangeDataList(client);
 
 		SortedMap<String, Entry> ret = new TreeMap<String, Entry>();
 
@@ -26,9 +26,9 @@ public class Quest extends HikariQuestProtocol {
 			ret.put(entry.key, entry);
 		}
 
-		for (QuestCostResourceChangeData gachaCostData : gachaCostDataList) {
-			ret.get(gachaCostData.parent_key).resourceChangeDict.put(
-					gachaCostData.resource_key, gachaCostData);
+		for (QuestCostValueChangeData gachaCostData : gachaCostDataList) {
+			ret.get(gachaCostData.parent_key).valueChangeDict.put(
+					gachaCostData.value_key, gachaCostData);
 		}
 
 		return ret;
@@ -37,7 +37,7 @@ public class Quest extends HikariQuestProtocol {
 	public static class Entry {
 
 		public String key;
-		public Map<String, AbstractResourceChangeD> resourceChangeDict = new HashMap<String, AbstractResourceChangeD>();
+		public Map<String, AbstractValueChangeD> valueChangeDict = new HashMap<String, AbstractValueChangeD>();
 
 	}
 

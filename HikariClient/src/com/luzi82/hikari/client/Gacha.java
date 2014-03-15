@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.luzi82.hikari.client.protocol.HikariGachaProtocol;
-import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.AbstractResourceChangeD;
+import com.luzi82.hikari.client.protocol.HikariValueProtocolDef.AbstractValueChangeD;
 
 public class Gacha extends HikariGachaProtocol {
 
@@ -15,7 +15,7 @@ public class Gacha extends HikariGachaProtocol {
 		if (gachaDataList == null)
 			return null;
 
-		List<GachaCostResourceChangeData> gachaCostDataList = getGachaCostResourceChangeDataList(client);
+		List<GachaCostValueChangeData> gachaCostDataList = getGachaCostValueChangeDataList(client);
 		
 		Map<String, Entry> ret = new HashMap<String, Entry>();
 
@@ -25,8 +25,8 @@ public class Gacha extends HikariGachaProtocol {
 			ret.put(entry.key, entry);
 		}
 
-		for (GachaCostResourceChangeData gachaCostData : gachaCostDataList) {
-			ret.get(gachaCostData.parent_key).resourceChangeDict.put(gachaCostData.resource_key,
+		for (GachaCostValueChangeData gachaCostData : gachaCostDataList) {
+			ret.get(gachaCostData.parent_key).resourceChangeDict.put(gachaCostData.value_key,
 					gachaCostData);
 		}
 
@@ -36,7 +36,7 @@ public class Gacha extends HikariGachaProtocol {
 	public static class Entry {
 
 		public String key;
-		public Map<String, AbstractResourceChangeD> resourceChangeDict = new HashMap<String, AbstractResourceChangeD>();
+		public Map<String, AbstractValueChangeD> resourceChangeDict = new HashMap<String, AbstractValueChangeD>();
 
 	}
 

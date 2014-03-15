@@ -11,10 +11,10 @@ import org.junit.Test;
 
 import com.luzi82.hikari.client.HsClient;
 import com.luzi82.hikari.client.Quest;
-import com.luzi82.hikari.client.Resource;
+import com.luzi82.hikari.client.Value;
 import com.luzi82.hikari.client.User;
 import com.luzi82.hikari.client.protocol.HikariQuestProtocolDef.QuestStartCmd;
-import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.AbstractResourceChangeD;
+import com.luzi82.hikari.client.protocol.HikariValueProtocolDef.AbstractValueChangeD;
 
 public class QuestTest extends AbstractTest {
 
@@ -117,9 +117,9 @@ public class QuestTest extends AbstractTest {
 
 		Map<String, Long> oldValue = new HashMap<String, Long>();
 
-		for (AbstractResourceChangeD questCost : entry.resourceChangeDict.values()) {
-			String key = questCost.resource_key;
-			long count0 = Resource.value(client, key, now);
+		for (AbstractValueChangeD questCost : entry.valueChangeDict.values()) {
+			String key = questCost.value_key;
+			long count0 = Value.value(client, key, now);
 			long change = questCost.change;
 			Assert.assertTrue(count0 + change >= 0);
 			oldValue.put(key, count0);
@@ -129,10 +129,10 @@ public class QuestTest extends AbstractTest {
 
 		now = System.currentTimeMillis();
 
-		for (AbstractResourceChangeD questCost : entry.resourceChangeDict.values()) {
-			String key = questCost.resource_key;
+		for (AbstractValueChangeD questCost : entry.valueChangeDict.values()) {
+			String key = questCost.value_key;
 			long count0 = oldValue.get(key);
-			long count1 = Resource.value(client, key, now);
+			long count1 = Value.value(client, key, now);
 			long change = questCost.change;
 			System.err.println("count0 " + count0);
 			System.err.println("count1 " + count1);
@@ -147,7 +147,7 @@ public class QuestTest extends AbstractTest {
 		client.syncData(null).get();
 		createLogin(client);
 
-		// Resource.Mgr resMgr = new Resource.Mgr(client);
+		// Value.Mgr resMgr = new Value.Mgr(client);
 
 		List<Quest.QuestEntryData> questEntryList = Quest
 				.getQuestEntryDataList(client);
@@ -156,7 +156,7 @@ public class QuestTest extends AbstractTest {
 		long now;
 		now = System.currentTimeMillis();
 
-		long oldCoin = Resource.value(client, "coin", now);
+		long oldCoin = Value.value(client, "coin", now);
 
 		QuestStartCmd.Result startResult = Quest.questStart(client,
 				questEntry.key, null).get();
@@ -164,7 +164,7 @@ public class QuestTest extends AbstractTest {
 
 		now = System.currentTimeMillis();
 
-		long newCoin = Resource.value(client, "coin", now);
+		long newCoin = Value.value(client, "coin", now);
 
 		Assert.assertTrue(String.format("old: %d,  new: %d", oldCoin, newCoin),
 				newCoin > oldCoin);

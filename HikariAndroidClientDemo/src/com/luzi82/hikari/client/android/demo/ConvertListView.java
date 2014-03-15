@@ -8,9 +8,9 @@ import java.util.concurrent.Future;
 import android.content.Context;
 
 import com.luzi82.concurrent.DummyFutureCallback;
-import com.luzi82.hikari.client.Resource;
-import com.luzi82.hikari.client.Resource.ConvertEntry;
-import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ConvertCmd;
+import com.luzi82.hikari.client.Value;
+import com.luzi82.hikari.client.Value.ConvertEntry;
+import com.luzi82.hikari.client.protocol.HikariValueProtocolDef.ConvertCmd;
 
 public class ConvertListView extends HikariListView implements
 		HikariListView.UpdateList {
@@ -27,7 +27,7 @@ public class ConvertListView extends HikariListView implements
 	public void updateList() {
 		List<Item> itemList = new LinkedList<Item>();
 
-		Map<String, ConvertEntry> convertEntryMap = Resource
+		Map<String, ConvertEntry> convertEntryMap = Value
 				.getConvertEntryMap(getClient());
 
 		if (convertEntryMap != null) {
@@ -37,7 +37,7 @@ public class ConvertListView extends HikariListView implements
 								null)) {
 					@Override
 					public Future<ConvertCmd.Result> getFuture() {
-						return Resource.convert(getClient(), convertKey, 1,
+						return Value.convert(getClient(), convertKey, 1,
 								this);
 					}
 				});

@@ -45,7 +45,7 @@ public class QuestListView extends HikariListView implements
 		List<Item> itemList = new LinkedList<Item>();
 		if (entryMap != null) {
 			for (final Quest.Entry questEntry : entryMap.values()) {
-				long change = questEntry.resourceChangeDict.get("ap").change;
+				long change = questEntry.valueChangeDict.get("ap").change;
 				itemList.add(new FutureDialogItem<QuestStartCmd.Result>(String
 						.format("%s: %d", questEntry.key, change),
 						new DummyFutureCallback<QuestStartCmd.Result>(null) {

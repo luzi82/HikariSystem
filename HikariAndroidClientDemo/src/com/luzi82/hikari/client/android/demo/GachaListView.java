@@ -10,7 +10,7 @@ import android.content.Context;
 import com.luzi82.concurrent.DummyFutureCallback;
 import com.luzi82.hikari.client.Gacha;
 import com.luzi82.hikari.client.Gacha.Entry;
-import com.luzi82.hikari.client.Resource;
+import com.luzi82.hikari.client.Value;
 import com.luzi82.hikari.client.protocol.HikariGachaProtocolDef.GachaCmd;
 
 public class GachaListView extends HikariListView implements

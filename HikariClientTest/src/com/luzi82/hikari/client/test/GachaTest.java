@@ -8,7 +8,7 @@ import org.junit.Test;
 import com.luzi82.hikari.client.Card;
 import com.luzi82.hikari.client.Gacha;
 import com.luzi82.hikari.client.HsClient;
-import com.luzi82.hikari.client.Resource;
+import com.luzi82.hikari.client.Value;
 import com.luzi82.hikari.client.User;
 import com.luzi82.hikari.client.protocol.HikariGachaProtocolDef.GachaCmd;
 import com.luzi82.hikari.client.protocol.HikariProtocol;
@@ -25,19 +25,19 @@ public class GachaTest extends AbstractTest {
 				null).get();
 
 		HsClient admin = createAdmin();
-		Resource.setUserResourceCount(admin, clientUsername, "gold", 10000,
-				null).get();
+		Value.setUserValueCount(admin, clientUsername, "gold", 10000, null)
+				.get();
 
 		HikariProtocol.syncStatus(client, null).get();
 
 		Assert.assertEquals(10000,
-				Resource.value(client, "gold", System.currentTimeMillis()));
+				Value.value(client, "gold", System.currentTimeMillis()));
 
 		GachaCmd.Result gachaResult = Gacha.gacha(client, "gacha_0", null)
 				.get();
 
 		Assert.assertEquals(9995,
-				Resource.value(client, "gold", System.currentTimeMillis()));
+				Value.value(client, "gold", System.currentTimeMillis()));
 		Assert.assertEquals(1, gachaResult.user_card_id_list.size());
 
 		Assert.assertTrue(Card.getCardStatusObservable(client).get()
@@ -58,7 +58,7 @@ public class GachaTest extends AbstractTest {
 		Assert.assertEquals("gacha_0", gacha.key);
 		Assert.assertEquals(1, gacha.resourceChangeDict.size());
 		Assert.assertEquals("gold",
-				gacha.resourceChangeDict.get("gold").resource_key);
+				gacha.resourceChangeDict.get("gold").value_key);
 		Assert.assertEquals(-5, gacha.resourceChangeDict.get("gold").change);
 	}
 

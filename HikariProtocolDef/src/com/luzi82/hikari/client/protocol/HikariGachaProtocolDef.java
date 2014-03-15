@@ -2,7 +2,7 @@ package com.luzi82.hikari.client.protocol;
 
 import java.util.List;
 
-import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.AbstractResourceChangeD;
+import com.luzi82.hikari.client.protocol.HikariValueProtocolDef.AbstractValueChangeD;
 
 public class HikariGachaProtocolDef {
 
@@ -10,8 +10,8 @@ public class HikariGachaProtocolDef {
 		public String key;
 	}
 
-	public static class GachaCostResourceChangeData extends
-			AbstractResourceChangeD {
+	public static class GachaCostValueChangeData extends
+			AbstractValueChangeD {
 	}
 
 	public static class GachaCmd {

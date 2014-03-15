@@ -9,24 +9,24 @@ import android.content.Context;
 import android.view.View;
 import android.widget.BaseAdapter;
 
-import com.luzi82.hikari.client.Resource;
-import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ResourceStatus;
-import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.ResourceValue;
+import com.luzi82.hikari.client.Value;
+import com.luzi82.hikari.client.protocol.HikariValueProtocolDef.ValueStatus;
+import com.luzi82.hikari.client.protocol.HikariValueProtocolDef.UserValue;
 import com.luzi82.lang.WeakObserver;
 
-public class ResourceView extends HikariListView implements
+public class ValueView extends HikariListView implements
 		HikariListView.UpdateList {
 
 	UpdateListObserver updateListObserver;
 
-	public ResourceView(Context context) {
+	public ValueView(Context context) {
 		super(context);
 
 		updateListObserver = new UpdateListObserver(this);
 
 		// getMain().dataSyncTimeObservable.addObserver(updateListObserver);
 		// User.loginDoneObservable(getClient()).addObserver(updateListObserver);
-		Resource.getResourceStatusObservable(getClient()).addObserver(
+		Value.getValueStatusObservable(getClient()).addObserver(
 				updateListObserver);
 		updateList();
 
@@ -38,19 +38,19 @@ public class ResourceView extends HikariListView implements
 	public void updateList() {
 		LinkedList<Item> itemList = new LinkedList<HikariListView.Item>();
 
-		ResourceStatus resourceStatus = Resource.getResourceStatusObservable(
+		ValueStatus valueStatus = Value.getValueStatusObservable(
 				getClient()).get();
 
-		if (resourceStatus != null) {
-			for (ResourceValue resource : resourceStatus.values()) {
-				itemList.add(new Item(resource.resource_key) {
+		if (valueStatus != null) {
+			for (UserValue value : valueStatus.values()) {
+				itemList.add(new Item(value.value_key) {
 					@Override
 					public String toString() {
 						String key = super.toString();
 						return String.format(
 								"%s: %s",
 								key,
-								Resource.value(getClient(), key,
+								Value.value(getClient(), key,
 										System.currentTimeMillis()));
 					}
 				});
@@ -122,14 +122,14 @@ public class ResourceView extends HikariListView implements
 		super.onWindowVisibilityChanged(visibility);
 	}
 
-	static class UpdateTimerObserver extends WeakObserver<ResourceView> {
+	static class UpdateTimerObserver extends WeakObserver<ValueView> {
 
-		public UpdateTimerObserver(ResourceView host) {
+		public UpdateTimerObserver(ValueView host) {
 			super(host);
 		}
 
 		@Override
-		protected void update(ResourceView h, Observable o, Object arg) {
+		protected void update(ValueView h, Observable o, Object arg) {
 			h.updateTimer();
 		}
 

@@ -1,6 +1,6 @@
 package com.luzi82.hikari.client.protocol;
 
-import com.luzi82.hikari.client.protocol.HikariResourceProtocolDef.AbstractResourceChangeD;
+import com.luzi82.hikari.client.protocol.HikariValueProtocolDef.AbstractValueChangeD;
 
 public class HikariQuestProtocolDef {
 
@@ -8,8 +8,8 @@ public class HikariQuestProtocolDef {
 		public String key;
 	}
 
-	public static class QuestCostResourceChangeData extends
-			AbstractResourceChangeD {
+	public static class QuestCostValueChangeData extends
+			AbstractValueChangeD {
 	}
 
 	public static class QuestInstance {

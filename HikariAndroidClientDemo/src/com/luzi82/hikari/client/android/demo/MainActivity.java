@@ -191,10 +191,10 @@ public class MainActivity extends FragmentActivity {
 			return new LoginView(context);
 		}
 	}, //
-			new PageDef("Resource") {
+			new PageDef("Value") {
 				@Override
 				public View onCreateView(Context context) {
-					return new ResourceView(context);
+					return new ValueView(context);
 				}
 			}, //
 			new PageDef("Card") {
