@@ -1,4 +1,4 @@
-parent_key,resource_key,change
+parent_key,value_key,change
 quest_0,coin,10000
 quest_1,coin,20000
 quest_2,coin,30000

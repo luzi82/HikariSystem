@@ -47,7 +47,7 @@ INSTALLED_APPS = (
     'hikari_l10n',
     'hikari_mail',
     'hikari_quest',
-    'hikari_resource',
+    'hikari_value',
     'hikari_user',
     
     'south',

@@ -1,6 +1,6 @@
 from django.db import models
-from hikari_resource.models import HsUserResource, HsResourceChangeGroupModel, \
-    HsResourceChangeModel
+from hikari_value.models import HsUserValue, HsValueChangeGroupModel, \
+    HsValueChangeModel
 import random
 from hikari_card.models import HsUserCard
 from ajax.exceptions import AJAXError
@@ -8,21 +8,21 @@ import json
 
 # Create your models here.
 
-class HsGachaCostResourceChange(HsResourceChangeModel):
+class HsGachaCostValueChange(HsValueChangeModel):
 
-    HIKARI_STATIC_NAME = "gacha_cost_resource_change"
+    HIKARI_STATIC_NAME = "gacha_cost_value_change"
 
-class HsGacha(HsResourceChangeGroupModel):
+class HsGacha(HsValueChangeGroupModel):
 
     HIKARI_STATIC_NAME = "gacha"
 
     key = models.CharField(max_length=64, db_index=True)
     
-    change_model = HsGachaCostResourceChange
+    change_model = HsGachaCostValueChange
     reason_key = "gacha"
     
     def process(self, user, time):
-        HsResourceChangeGroupModel.process(self, user, time)
+        HsValueChangeGroupModel.process(self, user, time)
         gacha_result_db_query = HsGachaResult.objects.filter(gacha_key=self.key)
         chance_sum = 0
         result_list = []

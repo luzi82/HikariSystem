@@ -26,7 +26,7 @@ public class Gacha extends HikariGachaProtocol {
 		}
 
 		for (GachaCostValueChangeData gachaCostData : gachaCostDataList) {
-			ret.get(gachaCostData.parent_key).resourceChangeDict.put(gachaCostData.value_key,
+			ret.get(gachaCostData.parent_key).valueChangeDict.put(gachaCostData.value_key,
 					gachaCostData);
 		}
 
@@ -36,7 +36,7 @@ public class Gacha extends HikariGachaProtocol {
 	public static class Entry {
 
 		public String key;
-		public Map<String, AbstractValueChangeD> resourceChangeDict = new HashMap<String, AbstractValueChangeD>();
+		public Map<String, AbstractValueChangeD> valueChangeDict = new HashMap<String, AbstractValueChangeD>();
 
 	}
 

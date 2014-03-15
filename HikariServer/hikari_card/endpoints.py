@@ -2,8 +2,8 @@ from django.contrib.auth.models import User
 import json
 
 from ajax.decorators import login_required, stuff_required
-from hikari_resource.models import HsUserResource, HsResourceConvertChange, \
-    HsResourceConvert
+from hikari_value.models import HsUserValue, HsValueConvertChange, \
+    HsValueConvert
 from hikari_card.models import HsDeskType, HsUserCard, HsUserDeskCard, HsCardTag
 from ajax.exceptions import AJAXError
 from django.core.exceptions import ObjectDoesNotExist

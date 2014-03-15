@@ -14,7 +14,7 @@ def quest_start(request):
     quest_entry_key = arg['quest_entry_key']
     
     quest_entry = HsQuestEntry.objects.get(key=quest_entry_key)
-    quest_entry.check_resource(request.user,now)
+    quest_entry.check_value(request.user,now)
     quest_entry.process(request.user,now)
     
     HsQuestInstance.objects.filter(
@@ -32,7 +32,7 @@ def quest_start(request):
     )
     quest_instance.save()
 
-    request.hikari.status_update_set.add('resource')
+    request.hikari.status_update_set.add('value')
 
     return {
         'quest_instance': {
@@ -61,8 +61,8 @@ def quest_end(request):
 
     if success :
         quest_entry = HsQuestEntry.objects.get(key=quest_instance.entry_key)
-        quest_entry.reward_resource(request.user,now)
+        quest_entry.reward_value(request.user,now)
     
-    request.hikari.status_update_set.add('resource')
+    request.hikari.status_update_set.add('value')
 
     return {}

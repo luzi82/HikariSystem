@@ -2,36 +2,36 @@ from django.contrib.auth.models import User
 from django.db import models
 import json
 
-from hikari_resource.models import HsResourceChangeModel,\
-    HsResourceChangeGroupModel
+from hikari_value.models import HsValueChangeModel,\
+    HsValueChangeGroupModel
 
 
-class HsQuestCostResourceChange(HsResourceChangeModel):
+class HsQuestCostValueChange(HsValueChangeModel):
     
-    HIKARI_STATIC_NAME = "quest_cost_resource_change"
+    HIKARI_STATIC_NAME = "quest_cost_value_change"
 
 
-class HsQuestRewardResourceChange(HsResourceChangeModel):
+class HsQuestRewardValueChange(HsValueChangeModel):
     
-    HIKARI_STATIC_NAME = "quest_reward_resource_change"
+    HIKARI_STATIC_NAME = "quest_reward_value_change"
 
 
-class HsQuestEntry(HsResourceChangeGroupModel):
+class HsQuestEntry(HsValueChangeGroupModel):
     
     HIKARI_STATIC_NAME = "quest_entry"
     
     key = models.CharField(max_length=64,db_index=True)
     
-    change_model = HsQuestCostResourceChange
+    change_model = HsQuestCostValueChange
     reason_key = "quest_cost"
     
     def reason_msg(self):
         return json.dumps({'quest_entry_key':self.key})
 
-    def reward_resource(self,user,time):
+    def reward_value(self,user,time):
         self.process(
             user, time,
-            change_model=HsQuestRewardResourceChange,
+            change_model=HsQuestRewardValueChange,
             reason_key="quest_reward"
         )
 

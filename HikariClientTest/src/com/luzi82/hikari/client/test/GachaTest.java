@@ -56,10 +56,10 @@ public class GachaTest extends AbstractTest {
 
 		Gacha.Entry gacha = gachaMap.get("gacha_0");
 		Assert.assertEquals("gacha_0", gacha.key);
-		Assert.assertEquals(1, gacha.resourceChangeDict.size());
+		Assert.assertEquals(1, gacha.valueChangeDict.size());
 		Assert.assertEquals("gold",
-				gacha.resourceChangeDict.get("gold").value_key);
-		Assert.assertEquals(-5, gacha.resourceChangeDict.get("gold").change);
+				gacha.valueChangeDict.get("gold").value_key);
+		Assert.assertEquals(-5, gacha.valueChangeDict.get("gold").change);
 	}
 
 }

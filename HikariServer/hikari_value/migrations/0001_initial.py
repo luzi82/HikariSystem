@@ -17,4 +17,4 @@ class Migration(SchemaMigration):
         
     }
 
-    complete_apps = ['hikari_resource']
+    complete_apps = ['hikari_value']

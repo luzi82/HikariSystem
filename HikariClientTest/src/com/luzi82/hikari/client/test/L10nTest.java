@@ -18,9 +18,9 @@ public class L10nTest extends AbstractTest {
 
 		Map<String, String> langTextMap = L10n.getTextMap(client);
 		Assert.assertEquals("Quest 0", langTextMap.get("quest_entry__quest_0"));
-		Assert.assertEquals("Coin", langTextMap.get("resource__coin"));
+		Assert.assertEquals("Coin", langTextMap.get("value__coin"));
 		Assert.assertEquals("Coin to gold",
-				langTextMap.get("resource_convert__coin_to_gold"));
+				langTextMap.get("value_convert__coin_to_gold"));
 	}
 
 }

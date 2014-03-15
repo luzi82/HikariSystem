@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.test.client import Client
 import simplejson
 
-from hikari_resource.models import HsUserResource
+from hikari_value.models import HsUserValue
 
 
 # Create your tests here.
@@ -12,7 +12,7 @@ class SimpleTest(TestCase):
      
     TEST_DEVICE_MODEL = 'test_device_model'
     
-    def test_set_user_resource_count(self):
+    def test_set_user_value_count(self):
         
         call_command('csv_in')
 
@@ -45,9 +45,9 @@ class SimpleTest(TestCase):
 
         self.assertEqual(result['success'], True)
         
-        response = admin.post("/ajax/hikari_resource/set_user_resource_count.json", {"arg":simplejson.dumps({
+        response = admin.post("/ajax/hikari_value/set_user_value_count.json", {"arg":simplejson.dumps({
             "username":username,
-            "resource_key":"coin",
+            "value_key":"coin",
             "count":10000,
         })})
         content = response.content
@@ -57,5 +57,5 @@ class SimpleTest(TestCase):
         
         user_db = User.objects.get(username=username)
         
-        user_resource_db = HsUserResource.objects.get(user=user_db,resource_key="coin")
-        self.assertEqual(user_resource_db.count,10000)
+        user_value_db = HsUserValue.objects.get(user=user_db,value_key="coin")
+        self.assertEqual(user_value_db.count,10000)

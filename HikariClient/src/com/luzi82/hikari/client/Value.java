@@ -27,25 +27,25 @@ public class Value extends HikariValueProtocol {
 	}
 
 	public static Map<String, ConvertEntry> getConvertEntryMap(HsClient client) {
-		List<ValueConvertData> resourceConvertDataList = getValueConvertDataList(client);
-		if (resourceConvertDataList == null)
+		List<ValueConvertData> valueConvertDataList = getValueConvertDataList(client);
+		if (valueConvertDataList == null)
 			return null;
 
-		List<ValueConvertChangeData> resourceConvertChangeDataList = getValueConvertChangeDataList(client);
+		List<ValueConvertChangeData> valueConvertChangeDataList = getValueConvertChangeDataList(client);
 
 		Map<String, ConvertEntry> ret = new TreeMap<String, Value.ConvertEntry>();
 
-		for (ValueConvertData resourceConvertData : resourceConvertDataList) {
+		for (ValueConvertData valueConvertData : valueConvertDataList) {
 			ConvertEntry convertEntry = new ConvertEntry();
-			convertEntry.key = resourceConvertData.key;
+			convertEntry.key = valueConvertData.key;
 			ret.put(convertEntry.key, convertEntry);
 		}
 
-		for (ValueConvertChangeData resourceConvertChangeData : resourceConvertChangeDataList) {
-			String convert_key = resourceConvertChangeData.parent_key;
+		for (ValueConvertChangeData valueConvertChangeData : valueConvertChangeDataList) {
+			String convert_key = valueConvertChangeData.parent_key;
 			ConvertEntry convertEntry = ret.get(convert_key);
-			convertEntry.changeMap.put(resourceConvertChangeData.value_key,
-					resourceConvertChangeData);
+			convertEntry.changeMap.put(valueConvertChangeData.value_key,
+					valueConvertChangeData);
 		}
 
 		return ret;

@@ -24,14 +24,14 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'hikari_gacha', ['HsGachaResult'])
 
-        # Adding model 'HsGachaCostResourceChange'
-        db.create_table(u'hikari_gacha_hsgachacostresourcechange', (
+        # Adding model 'HsGachaCostValueChange'
+        db.create_table(u'hikari_gacha_hsgachacostvaluechange', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('parent_key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
-            ('resource_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
+            ('value_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
             ('change', self.gf('django.db.models.fields.BigIntegerField')()),
         ))
-        db.send_create_signal(u'hikari_gacha', ['HsGachaCostResourceChange'])
+        db.send_create_signal(u'hikari_gacha', ['HsGachaCostValueChange'])
 
 
     def backwards(self, orm):
@@ -41,8 +41,8 @@ class Migration(SchemaMigration):
         # Deleting model 'HsGachaResult'
         db.delete_table(u'hikari_gacha_hsgacharesult')
 
-        # Deleting model 'HsGachaCostResourceChange'
-        db.delete_table(u'hikari_gacha_hsgachacostresourcechange')
+        # Deleting model 'HsGachaCostValueChange'
+        db.delete_table(u'hikari_gacha_hsgachacostvaluechange')
 
 
     models = {
@@ -51,12 +51,12 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
         },
-        u'hikari_gacha.hsgachacostresourcechange': {
-            'Meta': {'object_name': 'HsGachaCostResourceChange'},
+        u'hikari_gacha.hsgachacostvaluechange': {
+            'Meta': {'object_name': 'HsGachaCostValueChange'},
             'change': ('django.db.models.fields.BigIntegerField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'parent_key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
-            'resource_key': ('django.db.models.fields.CharField', [], {'max_length': '64'})
+            'value_key': ('django.db.models.fields.CharField', [], {'max_length': '64'})
         },
         u'hikari_gacha.hsgacharesult': {
             'Meta': {'object_name': 'HsGachaResult'},

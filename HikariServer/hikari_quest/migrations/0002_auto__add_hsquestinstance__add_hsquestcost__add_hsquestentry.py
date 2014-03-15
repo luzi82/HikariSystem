@@ -26,23 +26,23 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'hikari_quest', ['HsQuestInstance'])
 
-        # Adding model 'HsQuestCostResourceChange'
-        db.create_table(u'hikari_quest_hsquestcostresourcechange', (
+        # Adding model 'HsQuestRewardValueChange'
+        db.create_table(u'hikari_quest_hsquestrewardvaluechange', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('parent_key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
-            ('resource_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
+            ('value_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
             ('change', self.gf('django.db.models.fields.BigIntegerField')()),
         ))
-        db.send_create_signal(u'hikari_quest', ['HsQuestCostResourceChange'])
+        db.send_create_signal(u'hikari_quest', ['HsQuestRewardValueChange'])
 
-        # Adding model 'HsQuestRewardResourceChange'
-        db.create_table(u'hikari_quest_hsquestrewardresourcechange', (
+        # Adding model 'HsQuestCostValueChange'
+        db.create_table(u'hikari_quest_hsquestcostvaluechange', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('parent_key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
-            ('resource_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
+            ('value_key', self.gf('django.db.models.fields.CharField')(max_length=64)),
             ('change', self.gf('django.db.models.fields.BigIntegerField')()),
         ))
-        db.send_create_signal(u'hikari_quest', ['HsQuestRewardResourceChange'])
+        db.send_create_signal(u'hikari_quest', ['HsQuestCostValueChange'])
 
 
     def backwards(self, orm):
@@ -52,11 +52,11 @@ class Migration(SchemaMigration):
         # Deleting model 'HsQuestInstance'
         db.delete_table(u'hikari_quest_hsquestinstance')
 
-        # Deleting model 'HsQuestCostResourceChange'
-        db.delete_table(u'hikari_quest_hsquestcostresourcechange')
+        # Deleting model 'HsQuestRewardValueChange'
+        db.delete_table(u'hikari_quest_hsquestrewardvaluechange')
 
-        # Deleting model 'HsQuestRewardResourceChange'
-        db.delete_table(u'hikari_quest_hsquestrewardresourcechange')
+        # Deleting model 'HsQuestCostValueChange'
+        db.delete_table(u'hikari_quest_hsquestcostvaluechange')
 
 
     models = {
@@ -96,12 +96,12 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        u'hikari_quest.hsquestcostresourcechange': {
-            'Meta': {'object_name': 'HsQuestCostResourceChange'},
+        u'hikari_quest.hsquestcostvaluechange': {
+            'Meta': {'object_name': 'HsQuestCostValueChange'},
             'change': ('django.db.models.fields.BigIntegerField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'parent_key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
-            'resource_key': ('django.db.models.fields.CharField', [], {'max_length': '64'})
+            'value_key': ('django.db.models.fields.CharField', [], {'max_length': '64'})
         },
         u'hikari_quest.hsquestentry': {
             'Meta': {'object_name': 'HsQuestEntry'},
@@ -117,12 +117,12 @@ class Migration(SchemaMigration):
             'state': ('django.db.models.fields.IntegerField', [], {}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
         },
-        u'hikari_quest.hsquestrewardresourcechange': {
-            'Meta': {'object_name': 'HsQuestRewardResourceChange'},
+        u'hikari_quest.hsquestrewardvaluechange': {
+            'Meta': {'object_name': 'HsQuestRewardValueChange'},
             'change': ('django.db.models.fields.BigIntegerField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'parent_key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
-            'resource_key': ('django.db.models.fields.CharField', [], {'max_length': '64'})
+            'value_key': ('django.db.models.fields.CharField', [], {'max_length': '64'})
         }
     }
 
