@@ -160,7 +160,7 @@ class HsUserValue(models.Model):
                 user=self.user,
                 time=time,
                 value_key=self.value_key,
-                count=value,
+                value=value,
                 change_reason_key=reason_key,
                 msg=reason_msg
             ).save()
@@ -202,7 +202,7 @@ class HsValueChangeHistory(models.Model):
     user = models.ForeignKey(User,db_index=True)
     time = models.BigIntegerField(db_index=True)
     value_key = models.CharField(max_length=64, db_index=True)
-    count = models.IntegerField()
+    value = models.IntegerField()
     change_reason_key = models.CharField(max_length=64, db_index=True)
     msg = models.TextField()
 
