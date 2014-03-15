@@ -30,8 +30,7 @@ public class ValueTest extends AbstractTest {
 		client.syncData(null).get();
 		createLogin(client);
 
-		ValueStatus valueStatus = Value.getValueStatusObservable(
-				client).get();
+		ValueStatus valueStatus = Value.getValueStatusObservable(client).get();
 		Assert.assertTrue(valueStatus.size() > 0);
 
 		for (UserValue valueValue : valueStatus.values()) {
@@ -49,8 +48,8 @@ public class ValueTest extends AbstractTest {
 				null).get();
 
 		HsClient admin = createAdmin();
-		Value.setUserValueCount(admin, clientUsername, "coin", 10000,
-				null).get();
+		Value.setUserValueCount(admin, clientUsername, "coin", 10000, null)
+				.get();
 
 		HikariProtocol.syncStatus(client, null).get();
 
@@ -77,8 +76,8 @@ public class ValueTest extends AbstractTest {
 				null).get();
 
 		HsClient admin = createAdmin();
-		Value.setUserValueCount(admin, clientUsername, "coin", 10000,
-				null).get();
+		Value.setUserValueCount(admin, clientUsername, "coin", 10000, null)
+				.get();
 
 		HikariProtocol.syncStatus(client, null).get();
 
@@ -119,16 +118,16 @@ public class ValueTest extends AbstractTest {
 		HsClient client = createClient();
 		createLogin(client);
 
-		List<ConvertHistory> convertHistoryList = Value
-				.getConvertHistoryList(client, 0, 10, null).get();
+		List<ConvertHistory> convertHistoryList = Value.getConvertHistoryList(
+				client, 0, 10, null).get();
 		Assert.assertEquals(0, convertHistoryList.size());
 
 		String clientUsername = client.get(User.APP_NAME, User.DB_USERNAME,
 				null).get();
 
 		HsClient admin = createAdmin();
-		Value.setUserValueCount(admin, clientUsername, "coin", 10000,
-				null).get();
+		Value.setUserValueCount(admin, clientUsername, "coin", 10000, null)
+				.get();
 
 		long serverTime0 = client.getServerTime(System.currentTimeMillis());
 
@@ -136,8 +135,8 @@ public class ValueTest extends AbstractTest {
 
 		long serverTime1 = client.getServerTime(System.currentTimeMillis());
 
-		convertHistoryList = Value
-				.getConvertHistoryList(client, 0, 10, null).get();
+		convertHistoryList = Value.getConvertHistoryList(client, 0, 10, null)
+				.get();
 		Assert.assertEquals(1, convertHistoryList.size());
 		Assert.assertTrue(convertHistoryList.get(0).time >= serverTime0 - 1000);
 		Assert.assertTrue(convertHistoryList.get(0).time <= serverTime1 + 1000);
@@ -156,16 +155,16 @@ public class ValueTest extends AbstractTest {
 		List<ChangeHistory> changeHistoryList = Value.getChangeHistoryList(
 				client, "coin", 0, 10, null).get();
 		Assert.assertEquals(0, changeHistoryList.size());
-		changeHistoryList = Value.getChangeHistoryList(client, "gold", 0,
-				10, null).get();
+		changeHistoryList = Value.getChangeHistoryList(client, "gold", 0, 10,
+				null).get();
 		Assert.assertEquals(0, changeHistoryList.size());
 
 		String clientUsername = client.get(User.APP_NAME, User.DB_USERNAME,
 				null).get();
 
 		HsClient admin = createAdmin();
-		Value.setUserValueCount(admin, clientUsername, "coin", 10000,
-				null).get();
+		Value.setUserValueCount(admin, clientUsername, "coin", 10000, null)
+				.get();
 
 		long serverTime0 = client.getServerTime(System.currentTimeMillis());
 
@@ -173,8 +172,8 @@ public class ValueTest extends AbstractTest {
 
 		long serverTime1 = client.getServerTime(System.currentTimeMillis());
 
-		changeHistoryList = Value.getChangeHistoryList(client, "gold", 0,
-				10, null).get();
+		changeHistoryList = Value.getChangeHistoryList(client, "gold", 0, 10,
+				null).get();
 		Assert.assertEquals(1, changeHistoryList.size());
 		Assert.assertTrue(changeHistoryList.get(0).time >= serverTime0 - 1000);
 		Assert.assertTrue(changeHistoryList.get(0).time <= serverTime1 + 1000);
@@ -187,8 +186,8 @@ public class ValueTest extends AbstractTest {
 				changeHistoryList.get(0).change_reason_msg, Map.class);
 		Assert.assertEquals("coin_to_gold", msg.get("value_convert_key"));
 
-		changeHistoryList = Value.getChangeHistoryList(client, "coin", 0,
-				10, null).get();
+		changeHistoryList = Value.getChangeHistoryList(client, "coin", 0, 10,
+				null).get();
 		Assert.assertEquals(0, changeHistoryList.size());
 	}
 
@@ -202,8 +201,7 @@ public class ValueTest extends AbstractTest {
 		String clientUsername = client.get(User.APP_NAME, User.DB_USERNAME,
 				null).get();
 		Item.ListMap itemListMap = new Item.ListMap();
-		Value.addValueItem(itemListMap, "coin", 689, "reason_key",
-				"reason_msg");
+		Value.addValueItem(itemListMap, "coin", 689, "reason_key", "reason_msg");
 
 		MailBox.sendGiftMail(admin, clientUsername, "HelloTitle", "HelloWorld",
 				itemListMap, null).get();
@@ -212,8 +210,8 @@ public class ValueTest extends AbstractTest {
 				null).get();
 		Assert.assertEquals(1, mailList.size());
 
-		List<Value.ValueItem> mailAttachList = Value
-				.getValueItemList(client, mailList.get(0).item_list_map);
+		List<Value.ValueItem> mailAttachList = Value.getValueItemList(client,
+				mailList.get(0).item_list_map);
 		Assert.assertEquals(1, mailAttachList.size());
 		Assert.assertEquals("coin", mailAttachList.get(0).value_key);
 		Assert.assertEquals(689, mailAttachList.get(0).value);
@@ -229,5 +227,17 @@ public class ValueTest extends AbstractTest {
 		long coin1 = Value.value(client, "coin", System.currentTimeMillis());
 
 		Assert.assertEquals(coin1, coin0 + 689);
+	}
+
+	@Test
+	public void testValueNotExist() throws Exception {
+		HsClient client = createClient();
+		createLogin(client);
+
+		try {
+			Value.value(client, "not_exist", System.currentTimeMillis());
+			Assert.fail();
+		} catch (IllegalArgumentException iae) {
+		}
 	}
 }
