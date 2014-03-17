@@ -24,6 +24,8 @@ public class Value extends HikariValueProtocol {
 			ret = Math.max(ret, 0);
 			return ret;
 		}
+		if (rv.value != null)
+			return rv.value;
 		return 0;
 	}
 

@@ -60,11 +60,13 @@ class HsValue(models.Model):
     
     TYPE_COUNT = 1
     TYPE_TIME = 2
+    TYPE_LEVEL = 3
     
     key = models.CharField(max_length=64, db_index=True)
     type = models.IntegerField()
     max = models.BigIntegerField()
     init_count = models.IntegerField()
+    ref_value_key = models.CharField(max_length=64, null=True)
 
 
 class HsUserValueManager(models.Manager):
@@ -120,7 +122,10 @@ class HsUserValue(models.Model):
             v = self.count
         elif selftype == HsValue.TYPE_TIME:
             v = selfmax + now - self.time
-        v = min(v,selfmax)
+        elif selftype == HsValue.TYPE_LEVEL:
+            ref_value_key = HsValue.objects.get(key=self.value_key).ref_value_key
+            v0 = HsUserValue.objects.get(self.user, ref_value_key).value(now)
+            v = HsValueLevelStair.objects.filter(value_key=self.value_key,from_value_min__lte=v0).count()
         return v
     
     def check(self,value,time):
@@ -226,3 +231,14 @@ class HsValueItem(models.Model):
     value = models.IntegerField()
     change_reason_key = models.CharField(max_length=64, db_index=True)
     change_reason_msg = models.TextField()
+
+
+class HsValueLevelStair(models.Model):
+
+    value_key = models.CharField(max_length=64, db_index=True)
+    from_value_min = models.IntegerField()
+
+    class Meta:
+        index_together = [
+            ["value_key", "from_value_min"]
+        ]

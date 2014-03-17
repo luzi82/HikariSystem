@@ -15,6 +15,8 @@ def value(request):
             value_value['count']=user_value_db.count
         elif(value_type==HsValue.TYPE_TIME):
             value_value['time']=user_value_db.time
+        else:
+            value_value['value']=user_value_db.value(request.hikari.time)
             
         value_dict[user_value_db.value_key]=value_value
     

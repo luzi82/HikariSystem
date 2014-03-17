@@ -1,4 +1,6 @@
-key,type,max,init_count
-ap,2,60000,0
-coin,1,99999999,0
-gold,1,99999999,0
+key,type,max,init_count,ref_value_key
+ap,2,60000,0,
+coin,1,99999999,0,
+gold,1,99999999,0,
+exp,1,99999999,0,
+lv,3,99999999,0,exp

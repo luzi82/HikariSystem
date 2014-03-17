@@ -40,6 +40,7 @@ public class HikariValueProtocolDef {
 		public Integer count;
 		public Long time;
 		public Long max;
+		public Long value;
 	}
 
 	public static class ConvertCmd {

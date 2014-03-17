@@ -15,6 +15,7 @@ class Migration(SchemaMigration):
             ('type', self.gf('django.db.models.fields.IntegerField')()),
             ('max', self.gf('django.db.models.fields.BigIntegerField')()),
             ('init_count', self.gf('django.db.models.fields.IntegerField')()),
+            ('ref_value_key', self.gf('django.db.models.fields.CharField')(max_length=64, null=True)),
         ))
         db.send_create_signal(u'hikari_value', ['HsValue'])
 
@@ -37,6 +38,17 @@ class Migration(SchemaMigration):
 
         # Adding index on 'HsValueConvertHistory', fields ['user', 'time']
         db.create_index(u'hikari_value_hsvalueconverthistory', ['user_id', 'time'])
+
+        # Adding model 'HsValueLevelStair'
+        db.create_table(u'hikari_value_hsvaluelevelstair', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('value_key', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+            ('from_value_min', self.gf('django.db.models.fields.IntegerField')()),
+        ))
+        db.send_create_signal(u'hikari_value', ['HsValueLevelStair'])
+
+        # Adding index on 'HsValueLevelStair', fields ['value_key', 'from_value_min']
+        db.create_index(u'hikari_value_hsvaluelevelstair', ['value_key', 'from_value_min'])
 
         # Adding model 'HsValueConvertChange'
         db.create_table(u'hikari_value_hsvalueconvertchange', (
@@ -113,6 +125,9 @@ class Migration(SchemaMigration):
         # Removing index on 'HsValueChangeHistory', fields ['user', 'time']
         db.delete_index(u'hikari_value_hsvaluechangehistory', ['user_id', 'time'])
 
+        # Removing index on 'HsValueLevelStair', fields ['value_key', 'from_value_min']
+        db.delete_index(u'hikari_value_hsvaluelevelstair', ['value_key', 'from_value_min'])
+
         # Removing index on 'HsValueConvertHistory', fields ['user', 'time']
         db.delete_index(u'hikari_value_hsvalueconverthistory', ['user_id', 'time'])
 
@@ -124,6 +139,9 @@ class Migration(SchemaMigration):
 
         # Deleting model 'HsValueConvertHistory'
         db.delete_table(u'hikari_value_hsvalueconverthistory')
+
+        # Deleting model 'HsValueLevelStair'
+        db.delete_table(u'hikari_value_hsvaluelevelstair')
 
         # Deleting model 'HsValueConvertChange'
         db.delete_table(u'hikari_value_hsvalueconvertchange')
@@ -197,6 +215,7 @@ class Migration(SchemaMigration):
             'init_count': ('django.db.models.fields.IntegerField', [], {}),
             'key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'}),
             'max': ('django.db.models.fields.BigIntegerField', [], {}),
+            'ref_value_key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'null': 'True'}),
             'type': ('django.db.models.fields.IntegerField', [], {})
         },
         u'hikari_value.hsvaluechangehistory': {
@@ -241,6 +260,12 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'item_pack': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hikari.HsItemPack']"}),
             'value': ('django.db.models.fields.IntegerField', [], {}),
+            'value_key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
+        },
+        u'hikari_value.hsvaluelevelstair': {
+            'Meta': {'object_name': 'HsValueLevelStair', 'index_together': "[['value_key', 'from_value_min']]"},
+            'from_value_min': ('django.db.models.fields.IntegerField', [], {}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'value_key': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
         }
     }
