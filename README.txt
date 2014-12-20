@@ -9,3 +9,5 @@ sudo aptitude install python-pip
 sudo pip install Django==1.6.1
 sudo easy_install South
 
+cd HikariSystem/HikariServer/deploy
+./deploy.sh
