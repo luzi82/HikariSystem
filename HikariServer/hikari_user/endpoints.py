@@ -7,6 +7,8 @@ from ajax.decorators import login_required
 from hikari import status
 from hikari_user.models import HsUser
 from hikari_user import on_user_created_func_list
+from django.contrib.auth.models import User
+from django.conf import settings
 
 def create_user(request):
     
@@ -16,21 +18,31 @@ def create_user(request):
     
     device_model = arg["device_model"]
     
-    user_data = hikari.create_random_user()
+    username = None
+
+    while(True):
+        username = hikari.create_random_string(settings.RANDOM_USERNAME_LENGTH)
+        if not User.objects.filter(username=username).exists() :
+            break
     
+    password = hikari.create_random_string(settings.RANDOM_PASSWORD_LENGTH)
+    
+    user = User.objects.create_user(username=username,password=password)
+    user.save()
+
     hs_user = HsUser.objects.create(
-        user = user_data['user'],
+        user = user,
         device_model = device_model,
         create_at = now
     )
     hs_user.save()
     
     for on_user_created_func in on_user_created_func_list:
-        on_user_created_func(user_data['user'])
+        on_user_created_func(user)
     
     return {
-        'username': user_data['username'],
-        'password': user_data['password'],
+        'username': username,
+        'password': password,
     }
 
 def login(request):
